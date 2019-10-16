@@ -8,7 +8,12 @@
     <name>dracovm_compiler</name>
     <url>http://maven.apache.org</url>
 
-
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
