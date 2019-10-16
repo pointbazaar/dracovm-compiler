@@ -1,6 +1,7 @@
 # DracoVM Compiler
 [![Build Status](https://travis-ci.org/pointbazaar/dracovm-compiler.svg?branch=master)](https://travis-ci.org/pointbazaar/dracovm-compiler)
 [![CodeFactor](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler/badge)](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler)
+[![](https://jitpack.io/v/pointbazaar/dracovm-compiler.svg)](https://jitpack.io/#pointbazaar/dracovm-compiler)
 
 This is the compiler for the intermediate language produced by https://github.com/pointbazaar/dragon/.
 
