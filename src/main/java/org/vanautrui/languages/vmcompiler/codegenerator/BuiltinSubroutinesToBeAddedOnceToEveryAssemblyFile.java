@@ -1,7 +1,7 @@
 package org.vanautrui.languages.vmcompiler.codegenerator;
 
 import org.vanautrui.languages.vmcompiler.AssemblyWriter;
-import org.vanautrui.languages.vmcompiler.Segments;
+import org.vanautrui.languages.vmcompiler.VMCompilerPhases;
 import org.vanautrui.languages.vmcompiler.instructions.VMInstr;
 import org.vanautrui.languages.vmcompiler.model.Register;
 
@@ -87,7 +87,7 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_malloc",a);
 
     //access our argument, push it onto the stack
-    compile_push(Segments.SEGMENT_ARG,0,a);
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
 
     //this is to multiply by 4, so we allocate 32bit units.
     a.pop(ecx,"size of segment to be allocated"); //pop our argument into ecx
@@ -129,7 +129,7 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_putchar",a);
 
     //access our argument , ARG 0, by pushing it onto the stack
-    compile_push(Segments.SEGMENT_ARG,0,a);
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
 
     a.mov(eax,4,"putchar: sys_write");
     a.mov(ebx,1,"putchar: std_out");
@@ -163,7 +163,7 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
     final String name="putdigit";
 
     //access our argument , ARG 0, by pushing it onto the stack
-    compile_push(Segments.SEGMENT_ARG,0,a);
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
 
     a.mov(eax,4,name+" sys_write");
     a.mov(ebx,1,name+" std_out");
