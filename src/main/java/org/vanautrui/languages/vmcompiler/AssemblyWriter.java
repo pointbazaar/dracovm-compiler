@@ -5,8 +5,6 @@ import java.util.*;
 
 public class AssemblyWriter {
 
-    //TODO: make this class and API more typesafe :)
-
     private List<String> instrs=new ArrayList<>();
     private boolean indented=true;
 

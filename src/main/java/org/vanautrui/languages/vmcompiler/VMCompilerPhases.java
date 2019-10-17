@@ -106,34 +106,4 @@ public class VMCompilerPhases {
     }
 
     private static final String phase_clean_cache_dir=System.getProperty("user.home")+"/.dragoncache/clean/";
-
-    public static String b(String s){
-        return ansi().fg(Ansi.Color.BLUE).a(s).reset().toString();
-    }
-
-    public static String gererateErrorString(String s){
-        return ansi().fg(Ansi.Color.RED).a(s).reset().toString();
-    }
-
-    public static String generateFileNameWithLine(Path path, long line){
-        return ansi().fg(Ansi.Color.CYAN).a(path+":"+line).reset().toString();
-    }
-
-    public static void println(String s,Ansi.Color color, PrintStream out){
-        print(s,color,out);
-        print("\n",color,out);
-    }
-
-    public static void print(String s, Ansi.Color color,PrintStream out){
-        out.print(ansi().fg(color).a(s).reset());
-    }
-
-    public static void println(String s , Ansi.Color color){
-        print(s,color);
-        print("\n",color);
-    }
-
-    public static void print(String s , Ansi.Color color){
-        print(s,color,System.out);
-    }
 }
