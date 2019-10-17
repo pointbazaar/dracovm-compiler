@@ -85,9 +85,6 @@
                 <version>2.21.0</version>
                 <configuration>
                     <excludes>
-                        <exclude>CodeGeneratorTest.java</exclude>
-                        <exclude>StringConstantCodeGeneratorTest.java</exclude>
-
                     </excludes>
                     <includes>
 
@@ -102,7 +99,6 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>org.vanautrui.languages.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -121,7 +117,6 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>org.vanautrui.languages.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

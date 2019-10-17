@@ -1,7 +1,6 @@
 package org.vanautrui.languages.vmcompiler;
 
 import org.fusesource.jansi.Ansi;
-import org.vanautrui.languages.TerminalUtil;
 
 import static org.fusesource.jansi.Ansi.Color.GREEN;
 import static org.fusesource.jansi.Ansi.Color.RED;

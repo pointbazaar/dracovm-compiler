@@ -2,8 +2,10 @@ package org.vanautrui.languages.vmcompiler;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.io.IOUtils;
+import org.fusesource.jansi.Ansi;
 import org.vanautrui.languages.vmcompiler.codegenerator.AssemblyCodeGenerator;
 
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,13 +13,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.System.out;
+import static org.fusesource.jansi.Ansi.ansi;
 import static org.vanautrui.languages.vmcompiler.VMCompilerPhaseUtils.printBeginPhase;
 import static org.vanautrui.languages.vmcompiler.VMCompilerPhaseUtils.printEndPhase;
 
 public class VMCompilerPhases {
 
-    public static final String FLAG_DEBUG="debug";
-    public static final String FLAG_TIMED="timed";
+    //Assembly debugging:
+    //(they are missing a stack display, but it be ok)
+    //https://carlosrafaelgn.com.br/Asm86/
+
+    //general having fun and trying different programming languages:
+    //https://tio.run/#
+    //https://www.tutorialspoint.com/codingground.htm
+
+    //https://asmtutor.com/
+    //https://asmtutor.com/#lesson1
+
+    //https://www.youtube.com/watch?v=ubXXmQzzNGo
+
+    private static final String FLAG_DEBUG="debug";
+    private static final String FLAG_TIMED="timed";
 
     private final boolean debug;
     private final boolean timed;
@@ -91,4 +107,33 @@ public class VMCompilerPhases {
 
     private static final String phase_clean_cache_dir=System.getProperty("user.home")+"/.dragoncache/clean/";
 
+    public static String b(String s){
+        return ansi().fg(Ansi.Color.BLUE).a(s).reset().toString();
+    }
+
+    public static String gererateErrorString(String s){
+        return ansi().fg(Ansi.Color.RED).a(s).reset().toString();
+    }
+
+    public static String generateFileNameWithLine(Path path, long line){
+        return ansi().fg(Ansi.Color.CYAN).a(path+":"+line).reset().toString();
+    }
+
+    public static void println(String s,Ansi.Color color, PrintStream out){
+        print(s,color,out);
+        print("\n",color,out);
+    }
+
+    public static void print(String s, Ansi.Color color,PrintStream out){
+        out.print(ansi().fg(color).a(s).reset());
+    }
+
+    public static void println(String s , Ansi.Color color){
+        print(s,color);
+        print("\n",color);
+    }
+
+    public static void print(String s , Ansi.Color color){
+        print(s,color,System.out);
+    }
 }
