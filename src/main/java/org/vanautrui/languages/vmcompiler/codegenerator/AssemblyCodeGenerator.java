@@ -127,8 +127,14 @@ public class AssemblyCodeGenerator {
             case "gt":
                 compile_gt(instr, a);
                 break;
+            case "geq":
+                compile_geq(instr,a);
+                break;
             case "lt":
                 compile_lt(instr, a);
+                break;
+            case "leq":
+                compile_leq(instr,a);
                 break;
             case "not":
                 compile_not(instr, a);
@@ -173,6 +179,50 @@ public class AssemblyCodeGenerator {
             default:
                 throw new Exception("unrecognized vm instr " + instr.cmd);
         }
+    }
+
+    private static void compile_leq(VMInstr instr, AssemblyWriter a) {
+
+        final String comment = "leq";
+
+        String labeltrue = ".leq_push1";
+        String labelend = ".leq_end";
+
+        a.pop(ebx, comment);
+        a.pop(eax, comment);
+        a.cmp(eax, ebx, comment);
+        a.jle(labeltrue, comment);
+
+        //push 0 (false)
+        a.push(0, comment);
+        a.jmp(labelend, comment);
+
+        a.label(labeltrue, comment);
+        //push 1 (true)
+        a.push(1, comment);
+
+        a.label(labelend, comment);
+    }
+
+    private static void compile_geq(VMInstr instr, AssemblyWriter a) {
+        final String comment = "geq";
+        String labeltrue = ".geq_push1";
+        String labelend = ".geq_end";
+
+        a.pop(ebx, comment);
+        a.pop(eax, comment);
+        a.cmp(eax, ebx, comment);
+        a.jge(labeltrue, comment);
+
+        //push 0 (false)
+        a.push(0, comment);
+        a.jmp(labelend, comment);
+
+        a.label(labeltrue, comment);
+        //push 1 (true)
+        a.push(1, comment);
+
+        a.label(labelend, comment);
     }
 
     private static void compile_lshiftr(VMInstr instr, AssemblyWriter a) {

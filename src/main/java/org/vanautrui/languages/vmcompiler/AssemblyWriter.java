@@ -215,6 +215,12 @@ public class AssemblyWriter {
         any("jg "+label,comment);
     }
 
+
+    public void jge(String label, String comment) {
+        any("jge "+label,comment);
+    }
+
+
     //jump if comparison result was 'lesser'
     public void jl(String label) {
         jl(label,"");
@@ -222,6 +228,12 @@ public class AssemblyWriter {
     public void jl(String label,String comment) {
         any("jl "+label,comment);
     }
+
+
+    public void jle(String label, String comment) {
+        any("jle "+label,comment);
+    }
+
 
     /** dereferences a pointer register,
      * which means to set the value of the register to the value in memory which it points to
@@ -272,4 +284,6 @@ public class AssemblyWriter {
         //usure if we only can shift by cl ?
         any("shr "+register+","+lower_half_of_cx_probably,comment);
     }
+
+
 }
