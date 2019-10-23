@@ -121,7 +121,7 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
     a.pop(ecx,"size of segment to be allocated"); //pop our argument into ecx
 
     //push our size for the length-prefix later on
-    a.push(ecx);
+    a.push(ecx); //LINKED CODE 2 (they only work together)
 
     //increment by 1, as our array should be length-prefixed, and we need a place to store the length
     a.inc(ecx);
@@ -149,7 +149,8 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
 
     //put the length-prefix at the start
     //pop our length-prefix
-    a.pop(ebx);
+    a.pop(ebx); ////LINKED CODE 2 (they only work together)
+
     //mov [eax],ebx //store the length at index 0
     a.store_second_into_memory_location_pointed_to_by_first(eax,ebx);
 

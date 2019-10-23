@@ -80,7 +80,8 @@ public final class ArrayFocusedAssemblyCodeGeneratorTest {
 
         //return value (supposed array length on stack)
         a.call("Builtin","putdigit");
-        a.pop();
+        a.pop(); //pop return value
+        a.pop(); //pop argument
 
         a.iconst(0);
         a.exit();
@@ -91,5 +92,81 @@ public final class ArrayFocusedAssemblyCodeGeneratorTest {
 
         assertEquals(0,pr.exitValue());
         assertEquals("3", IOUtils.toString(pr.getInputStream()));
+    }
+
+    @Test
+    public void test_len_is_ok_with_stack()throws Exception{
+
+        //test that len does not put too much on the stack
+
+        final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+        a.subroutine("Main","main",0,0);
+
+        a.iconst(1);
+        a.iconst(3);
+        a.call("Builtin","new");
+
+        //return value (pointer to array) is on stack
+
+        a.call("Builtin","len");
+        a.pop(); //pop return value, argument still on stack
+
+        a.call("Builtin","len");
+        a.pop(); //pop return value, argument still on stack
+
+        a.call("Builtin","len");
+        a.pop(); //pop return value, argument still on stack
+
+        a.pop(); //pop the array reference
+        a.pop(); //pop the 3
+
+        //earlier value (1) should be on the stack now
+        a.call("Builtin","putdigit");
+        a.pop(); //pop return value
+        a.pop(); //pop argument
+
+        a.iconst(0);
+        a.exit();
+
+        final List<String> vmcodes=a.getDracoVMCodeInstructions();
+
+        final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "len_stack_stability_testing");
+
+        assertEquals(0,pr.exitValue());
+        assertEquals("1", IOUtils.toString(pr.getInputStream()));
+    }
+
+    @Test
+    public void test_new_is_ok_with_stack()throws Exception{
+
+        //test that new does not put too much on the stack
+
+        final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+        a.subroutine("Main","main",0,0);
+
+        a.iconst(5);
+
+        a.call("Builtin","new");
+        //return value (pointer to array) is on stack
+
+        a.pop(); //pop the array reference
+
+
+        //earlier value (1) should be on the stack now
+        a.call("Builtin","putdigit");
+        a.pop(); //pop return value
+        a.pop(); //pop argument
+
+        a.iconst(0);
+        a.exit();
+
+        final List<String> vmcodes=a.getDracoVMCodeInstructions();
+
+        final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "new_stack_stability_testing");
+
+        assertEquals(0,pr.exitValue());
+        assertEquals("5", IOUtils.toString(pr.getInputStream()));
     }
 }
