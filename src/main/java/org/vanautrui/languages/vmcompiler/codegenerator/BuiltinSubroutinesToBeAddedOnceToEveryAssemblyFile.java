@@ -29,8 +29,35 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
     compile_putchar(a);
     compile_putdigit(a);
 
-    compile_malloc(a);
+    compile_new(a);
     compile_free(a);
+
+    compile_len(a);
+  }
+
+  private static void compile_len(AssemblyWriter a) throws Exception{
+    //returns the length of a length-prefixed memory segment
+
+    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_len",a);
+
+    //access our argument , ARG 0, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
+
+    //pointer is now on stack
+    a.pop(eax);
+
+    //mov eax,[eax] //get the length stored at that location
+    a.dereference(eax);
+
+    //push return value
+    a.push(eax);
+
+    //we must swap return value with the return address in order to return
+    //(i am so dumb. took me so long to find this.)
+    compile_swap("swap return address with return value to return",a);
+
+    //return from subroutine
+    SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
   /**
@@ -76,21 +103,29 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
     //TODO: not yet implemented
   }
 
-  private static void compile_malloc(AssemblyWriter a) throws Exception{
+  private static void compile_new(AssemblyWriter a) throws Exception{
     //http://lxr.linux.no/#linux+v3.6/arch/x86/ia32/ia32entry.S#L372
     //http://man7.org/linux/man-pages/man2/mmap.2.html
 
     //TODO: handle the error if memory could not be allocated
-    final String name="malloc";
+    final String name="new";
     //malloc receives as an argument the amount of DWORDs to allocate
 
-    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_malloc",a);
+    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_new",a);
 
     //access our argument, push it onto the stack
     compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
 
+
     //this is to multiply by 4, so we allocate 32bit units.
     a.pop(ecx,"size of segment to be allocated"); //pop our argument into ecx
+
+    //push our size for the length-prefix later on
+    a.push(ecx);
+
+    //increment by 1, as our array should be length-prefixed, and we need a place to store the length
+    a.inc(ecx);
+
     a.mov(eax,4);
     a.mul_eax_with(ecx);
     a.mov(ecx,eax);
@@ -111,6 +146,12 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
 
     //eax should now contain
     //the address of the allocated memory segment
+
+    //put the length-prefix at the start
+    //pop our length-prefix
+    a.pop(ebx);
+    //mov [eax],ebx //store the length at index 0
+    a.store_second_into_memory_location_pointed_to_by_first(eax,ebx);
 
     //now we push that pointer on the stack
     a.push(eax);

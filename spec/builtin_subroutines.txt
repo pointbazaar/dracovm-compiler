@@ -14,6 +14,13 @@ BUILTIN SUBROUTINES:
         float2int(Float f)      //these explain themselves,
         int2float(Integer i)    //and just change the top of stack from one to the other type
 
+
+	/* malloc is deprecated and will be retired. everything should be 
+	 * length-prefixed in memory.
+	 * malloc can remain in this file because of its good description.
+	 * but it should not be enabled to be used in the code.
+	 * deprecating 'malloc' is to enable 'len' to work on all structs and arrays.
+	 */
         malloc(PInt size) //returns a pointer to the allocated memory. size means the size in DWORDs
 
                 //amount is the amount of DWORDs (4 Bytes) to be reserved
@@ -26,6 +33,10 @@ BUILTIN SUBROUTINES:
         free(Integer pointer) //frees the allocated memory
         //deallocates the previously allocated block of memory at that address
 
+
+
+	//these length-prefixed memory segments are handled at the VM level, and do not 
 	
-	arrnew(PInt size)	//TODO	//allocates a new length-prefixed segment of memory
-	arrlen([#])		//TODO 	//returns the length of a length-prefixed array
+	new(PInt size)		//TODO	//allocates a new length-prefixed segment of memory, of length size.
+					//can be used to allocate structs and arrays
+	len([#])		//TODO 	//returns the length of a length-prefixed array/struct

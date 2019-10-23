@@ -119,4 +119,40 @@ public class SubroutineFocusedAssemblyCodeGeneratorTest {
     assertEquals(exit_code,pr.exitValue());
     assertEquals("abc", IOUtils.toString(pr.getInputStream()));
   }
+
+  @Test
+  public void test_compile_new_and_len()throws Exception{
+
+    DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    a.subroutine("Main","main",0,0);
+    a.iconst(3);
+    a.call("Builtin","new");
+
+    //return value is on stack
+    a.swap();
+    a.pop();
+    //removed the initial argument, return value still on stack
+    a.call("Builtin","len");
+
+    a.swap();
+    a.pop();
+    //return value of len on stack
+
+    a.call("Builtin","putdigit");
+
+    //clear return value and argument
+    a.pop();
+    a.pop();
+
+    a.iconst(0);
+    a.exit();
+
+    List<String> vmcodes=a.getDracoVMCodeInstructions();
+
+    Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "putchartesting");
+
+    assertEquals(0,pr.exitValue());
+    assertEquals("3", IOUtils.toString(pr.getInputStream()));
+  }
 }
