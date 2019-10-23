@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
+import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arrayread;
+import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arraystore;
 import static org.vanautrui.languages.vmcompiler.codegenerator.StackFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.codegenerator.SubroutineFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
@@ -290,45 +292,6 @@ public class AssemblyCodeGenerator {
         a.push(eax, instr.toString());
     }
 
-    private static void compile_arrayread(VMInstr instr, AssemblyWriter a) {
-        /*
-         arrayread
-        //stack looks like:
-        //|undefined
-        //|array address
-        //|array index <- esp
-        ////after execution of this command, stack looks like
-        //|undefined
-        //|array[index] <-esp
-        //meaning this vm command reads from an array, and places the value on the stack
-
-         */
-        a.pop(ebx, instr.toString()); //array index
-        a.pop(eax, instr.toString()); //array address in memory
-        a.add(eax, ebx, instr.toString()); //address of the value we want
-
-        a.dereference(eax, instr.toString()); //eax = memory[eax] <=> mov eax,[eax]
-
-        a.push(eax, instr.toString()); //push the value
-    }
-
-    /**
-     * Documentation for the behavior, expected stack state before and after are to be found in
-     * spec/dracovm-specification.txt
-     */
-    private static void compile_arraystore(VMInstr instr, AssemblyWriter a) {
-
-        a.pop(ebx, instr.toString()); //value to store //-1
-
-        a.pop(ecx, instr.toString()); //index //-1
-
-        a.pop(eax, instr.toString()); //array_address //-1
-
-        //address to store into = addray_address + index
-        a.add(eax, ecx, instr.toString()); //0
-
-        a.store_second_into_memory_location_pointed_to_by_first(eax, ebx, instr.toString()); //0
-    }
 
     private static void compile_dec(AssemblyWriter a) {
         a.pop(eax, "dec");

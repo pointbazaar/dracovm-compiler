@@ -99,7 +99,7 @@ FUNCTIONAL PROGRAMMING COMMANDS:
 
 ARRAY READ/WRITE:
 
-->	arraystore INDEX
+->	arraystore 
 	//basically, before calling this vm command, the stack needs to look like:
 	//
 	//(stack grows downwards)
