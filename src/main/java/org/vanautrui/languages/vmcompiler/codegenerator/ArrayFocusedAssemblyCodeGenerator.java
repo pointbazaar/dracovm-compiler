@@ -46,7 +46,7 @@ public final class ArrayFocusedAssemblyCodeGenerator {
 
         a.pop(eax, instr.toString()); //array_address //-1
 
-        //address to store into = addray_address + index
+        //address to store into = array_address + index
         a.add(eax, ecx, instr.toString()); //0
 
         a.store_second_into_memory_location_pointed_to_by_first(eax, ebx, instr.toString()); //0

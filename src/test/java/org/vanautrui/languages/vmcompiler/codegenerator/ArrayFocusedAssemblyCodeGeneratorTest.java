@@ -12,6 +12,37 @@ import static org.junit.Assert.assertEquals;
 public final class ArrayFocusedAssemblyCodeGeneratorTest {
 
     @Test
+    public void test_arraystore_leaves_no_arg_on_stack()throws Exception{
+
+        DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+        a.subroutine("Main","main",0,0);
+        a.iconst(3);
+        a.call("Builtin","new");
+
+        a.iconst(0); //store at index 0
+        a.iconst(9); //store a 9
+        a.arraystore();
+
+        //return value (supposed array length on stack)
+        a.call("Builtin","putdigit");
+
+        //clear return value and argument
+        a.pop();
+        a.pop();
+
+        a.iconst(0);
+        a.exit();
+
+        final List<String> vmcodes=a.getDracoVMCodeInstructions();
+
+        final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "arraystore_testing");
+
+        assertEquals(0,pr.exitValue());
+        assertEquals("3", IOUtils.toString(pr.getInputStream()));
+    }
+
+    @Test
     public void test_compile_arrayread_arraystore()throws Exception{
 
         DracoVMCodeWriter a=new DracoVMCodeWriter();
