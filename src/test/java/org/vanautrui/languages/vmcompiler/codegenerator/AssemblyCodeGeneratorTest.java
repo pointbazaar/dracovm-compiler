@@ -257,4 +257,72 @@ public class AssemblyCodeGeneratorTest {
 
     assertEquals(3,pr.exitValue());
   }
+
+  @Test
+  public void test_and()throws Exception{
+    DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    a.subroutine("Main","main",0,0);
+    a.iconst(1);
+    a.iconst(1);
+
+    a.and();
+    a.exit();
+
+    final List<String> vmcodes = a.getDracoVMCodeInstructions();
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "andtesting");
+
+    assertEquals(1,pr.exitValue());
+  }
+
+  @Test
+  public void test_and2()throws Exception{
+    DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    a.subroutine("Main","main",0,0);
+    a.iconst(1);
+    a.iconst(0);
+
+    a.and();
+    a.exit();
+
+    final List<String> vmcodes = a.getDracoVMCodeInstructions();
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "andtesting2");
+
+    assertEquals(0,pr.exitValue());
+  }
+
+  @Test
+  public void test_or()throws Exception{
+    DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    a.subroutine("Main","main",0,0);
+    a.iconst(0);
+    a.iconst(0);
+
+    a.or();
+    a.exit();
+
+    final List<String> vmcodes = a.getDracoVMCodeInstructions();
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testor");
+
+    assertEquals(0,pr.exitValue());
+  }
+
+  @Test
+  public void test_or2()throws Exception{
+    DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    a.subroutine("Main","main",0,0);
+    a.iconst(1);
+    a.iconst(0);
+
+    a.or();
+    a.exit();
+
+    final List<String> vmcodes = a.getDracoVMCodeInstructions();
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testor2");
+
+    assertEquals(1,pr.exitValue());
+  }
 }

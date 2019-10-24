@@ -141,6 +141,12 @@ public class AssemblyCodeGenerator {
             case "not":
                 compile_not(instr, a);
                 break;
+            case "and":
+                compile_and(instr,a);
+                break;
+            case "or":
+                compile_or(instr,a);
+                break;
 
             //inc,dec
             case "inc":
@@ -181,6 +187,24 @@ public class AssemblyCodeGenerator {
             default:
                 throw new Exception("unrecognized vm instr " + instr.cmd);
         }
+    }
+
+    private static void compile_and(VMInstr instr, AssemblyWriter a) {
+        final String comment = "and";
+
+        a.pop(ebx, comment);
+        a.pop(eax, comment);
+        a.and(eax,ebx,comment);
+        a.push(eax,comment);
+    }
+
+    private static void compile_or(VMInstr instr, AssemblyWriter a) {
+        final String comment = "or";
+
+        a.pop(ebx, comment);
+        a.pop(eax, comment);
+        a.or(eax,ebx,comment);
+        a.push(eax,comment);
     }
 
     private static void compile_leq(VMInstr instr, AssemblyWriter a) {

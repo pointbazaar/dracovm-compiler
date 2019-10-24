@@ -292,4 +292,12 @@ public class AssemblyWriter {
         //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
         any("lea "+register+","+other);
     }
+
+    public void and(Register reg1, Register reg2, String comment) {
+        any("and "+reg1+","+reg2,comment);
+    }
+
+    public void or(Register reg1, Register reg2, String comment) {
+        any("or "+reg1+","+reg2,comment);
+    }
 }

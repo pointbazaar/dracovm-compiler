@@ -230,4 +230,12 @@ public class DracoVMCodeWriter {
   public void lshiftr() {
     any("lshiftr");
   }
+
+  public void and() {
+    any("and");
+  }
+
+  public void or() {
+    any("or");
+  }
 }
