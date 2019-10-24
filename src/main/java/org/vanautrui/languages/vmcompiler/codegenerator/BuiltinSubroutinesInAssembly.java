@@ -16,7 +16,7 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
  * These subroutines must behave like any other subroutine when called.
  */
 
-public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
+public class BuiltinSubroutinesInAssembly {
 
   /**
    * Compiles all builtin subroutines.
@@ -33,6 +33,48 @@ public class BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile {
     compile_free(a);
 
     compile_len(a);
+
+    //we need abs (Math.abs(x), the absolute value of an Integer ) as a builtin subroutine.
+    compile_abs(a);
+  }
+
+  private static void compile_abs(AssemblyWriter a) throws Exception {
+    //receives 1 integer as an argument (x)
+    //returns the absolute value of an integer
+
+    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_abs",a);
+
+    //access our argument , ARG 0, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
+
+    //pointer is now on stack
+    a.pop(eax);
+
+    a.mov(ebx,eax);
+    a.mov(ecx,-1);
+    a.mul_eax_with(ecx);
+
+    //eax = -x
+    //ebx = x
+    a.mov(edx,0);
+
+    a.cmp(eax,edx);
+    //if eax=-x>=0, return eax, otherwise return ebx=x
+    a.jge(".end","");
+
+    a.mov(eax,ebx);
+
+    a.label(".end");
+
+    //push return value
+    a.push(eax);
+
+    //we must swap return value with the return address in order to return
+    //(i am so dumb. took me so long to find this.)
+    compile_swap("swap return address with return value to return",a);
+
+    //return from subroutine
+    SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
   private static void compile_len(AssemblyWriter a) throws Exception{

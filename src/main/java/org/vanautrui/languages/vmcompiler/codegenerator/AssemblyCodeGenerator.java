@@ -370,7 +370,7 @@ public class AssemblyCodeGenerator {
         }
 
         //add the builtin subroutines
-        BuiltinSubroutinesToBeAddedOnceToEveryAssemblyFile.compile_all_builtin_subroutines(a);
+        BuiltinSubroutinesInAssembly.compile_all_builtin_subroutines(a);
 
         a.nop(); //the 2 nops are recommended by my assembly book
 
