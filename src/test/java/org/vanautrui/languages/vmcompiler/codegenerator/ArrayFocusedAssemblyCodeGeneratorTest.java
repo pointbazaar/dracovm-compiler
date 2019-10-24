@@ -86,6 +86,60 @@ public final class ArrayFocusedAssemblyCodeGeneratorTest {
     }
 
     @Test
+    public void test_compile_arrayread_arraystore_2()throws Exception{
+
+        //this test should verify that we are using correct offsetting of 4 bytes.
+        //otherwise, the value at index 1 would be overwritten by the max-value int stored at index 0
+        //https://en.wikipedia.org/wiki/2,147,483,647
+
+        final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+        a.subroutine("Main","main",0,0);
+        a.iconst(2);
+        a.call("Builtin","new");
+
+        //return value is on stack
+        a.swap();
+        a.pop();
+        //removed the argument, return value (pointer to array) still on stack
+        a.dup();
+        a.dup();
+
+
+
+        a.iconst(1); //store at index 1
+        a.iconst(8); //store a 8
+        a.arraystore();
+
+        a.iconst(0); //store at index 0
+        a.iconst(2147483647); //store the highest int possible
+        a.arraystore();
+
+        //value stored, pointer to array on stack
+        a.iconst(1); //read from index 1
+
+        a.arrayread();
+        //value read is on stack (should be a 8)
+
+        //return value (supposed array length on stack)
+        a.call("Builtin","putdigit");
+
+        //clear return value and argument
+        a.pop();
+        a.pop();
+
+        a.iconst(0);
+        a.exit();
+
+        final List<String> vmcodes=a.getDracoVMCodeInstructions();
+
+        final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "arrayread_arraystore_testing2");
+
+        assertEquals(0,pr.exitValue());
+        assertEquals("8", IOUtils.toString(pr.getInputStream()));
+    }
+
+    @Test
     public void test_compile_arraystore_len()throws Exception{
 
         final DracoVMCodeWriter a=new DracoVMCodeWriter();
