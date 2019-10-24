@@ -24,6 +24,9 @@ public final class ArrayFocusedAssemblyCodeGenerator {
 
         a.inc(ebx,instr.toString()); //as our arrays are length-prefixed, the index must be offset by one
 
+        //multiply index by 4, as memory is addressed in bytes
+        a.lea(ebx,"[ebx*4]");
+
         a.pop(eax, instr.toString()); //array address in memory
         a.add(eax, ebx, instr.toString()); //address of the value we want
 
@@ -43,6 +46,9 @@ public final class ArrayFocusedAssemblyCodeGenerator {
         a.pop(ecx, instr.toString()); //index //-1
 
         a.inc(ecx,instr.toString()); //index must be offset by 1, as our arrays are length-prefixed
+
+        //multiply index by 4, as memory is addressed in bytes
+        a.lea(ecx,"[ecx*4]");
 
         a.pop(eax, instr.toString()); //array_address //-1
 

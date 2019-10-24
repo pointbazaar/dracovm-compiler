@@ -5,6 +5,8 @@ import java.util.*;
 
 public class AssemblyWriter {
 
+    //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
+
     private List<String> instrs=new ArrayList<>();
     private boolean indented=true;
 
@@ -286,4 +288,8 @@ public class AssemblyWriter {
     }
 
 
+    public void lea(Register register, String other) {
+        //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
+        any("lea "+register+","+other);
+    }
 }

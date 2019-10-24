@@ -77,9 +77,9 @@ public final class ArrayFocusedAssemblyCodeGeneratorTest {
         a.iconst(0);
         a.exit();
 
-        List<String> vmcodes=a.getDracoVMCodeInstructions();
+        final List<String> vmcodes=a.getDracoVMCodeInstructions();
 
-        Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "arrayread_arraystore_testing");
+        final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "arrayread_arraystore_testing");
 
         assertEquals(0,pr.exitValue());
         assertEquals("9", IOUtils.toString(pr.getInputStream()));
