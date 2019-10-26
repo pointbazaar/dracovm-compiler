@@ -11,7 +11,7 @@ import static org.vanautrui.languages.vmcompiler.model.Register.ebx;
 public final class StackFocusedAssemblyCodeGenerator {
 
 
-  public static void compile_dup(VMInstr instr, AssemblyWriter a) {
+  public static void compile_dup(final VMInstr instr, final AssemblyWriter a) {
     //duplicates top of stack
     a.mov(eax,"["+esp+"]",instr.toString());
     //a.pop(eax,instr.toString());
@@ -23,7 +23,7 @@ public final class StackFocusedAssemblyCodeGenerator {
    * swaps the 2 topmost items on the stack
    * @param a
    */
-  public static void compile_swap(String mycomment, AssemblyWriter a) {
+  public static void compile_swap(final String mycomment, final AssemblyWriter a) {
     String comment=" swap ";
 
     if(!mycomment.isEmpty()){
@@ -37,7 +37,7 @@ public final class StackFocusedAssemblyCodeGenerator {
     a.push(ebx,comment);
   }
 
-  public static void compile_push(String segment,int index, AssemblyWriter a) throws Exception {
+  public static void compile_push(final String segment,final int index, final AssemblyWriter a) throws Exception {
     String comment="";
 
     switch (segment){
@@ -95,15 +95,15 @@ public final class StackFocusedAssemblyCodeGenerator {
    * @param a the AssemblyWriter we are using
    * @throws Exception if we are pop - ing from a nonexisting segment
    */
-  public static void compile_pop(Optional<String> mysegment, Optional<Integer> myindex, AssemblyWriter a) throws Exception{
+  public static void compile_pop(final Optional<String> mysegment, final Optional<Integer> myindex, final AssemblyWriter a) throws Exception{
 
     if(!mysegment.isPresent()){
       a.pop(eax,"pop");
     }else {
 
-      String segment = mysegment.get();
+      final String segment = mysegment.get();
 
-      int index= myindex.get();
+      final int index= myindex.get();
       String comment="";
 
       switch (segment) {

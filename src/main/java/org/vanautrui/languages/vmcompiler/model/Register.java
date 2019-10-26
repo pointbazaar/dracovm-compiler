@@ -2,10 +2,10 @@ package org.vanautrui.languages.vmcompiler.model;
 
 public final class Register {
 
-    private String name;
+    private final String name;
 
     //private means no class besides this one can call it
-    private Register(String name){
+    private Register(final String name){
         this.name=name;
     }
 

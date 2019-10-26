@@ -8,7 +8,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 public final class VMCompilerPhaseUtils {
 
-    public static void printBeginPhase(String phaseName,boolean printLongForm) throws InterruptedException {
+    public static void printBeginPhase(final String phaseName,final boolean printLongForm) {
         //TerminalUtil.print(String.format("%-18s ",phaseName),Ansi.Color.GREEN);
         Ansi ansi = Ansi.ansi();
         if(!printLongForm) {
@@ -26,8 +26,8 @@ public final class VMCompilerPhaseUtils {
         //Thread.sleep(100);
     }
 
-    public static void printEndPhase(boolean success, boolean printLongForm) throws Exception{
-        Ansi ansi1=Ansi.ansi();
+    public static void printEndPhase(final boolean success, final boolean printLongForm) {
+        final Ansi ansi1=Ansi.ansi();
         if(!printLongForm) {
             ansi1.cursorToColumn(0);
         }

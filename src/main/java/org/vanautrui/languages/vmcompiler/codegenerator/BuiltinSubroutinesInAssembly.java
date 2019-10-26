@@ -24,7 +24,7 @@ public final class BuiltinSubroutinesInAssembly {
    * and do not forget a subroutine.
    * So a new subroutine can be added easily
    */
-  public static void compile_all_builtin_subroutines(AssemblyWriter a)throws Exception{
+  public static void compile_all_builtin_subroutines(final AssemblyWriter a)throws Exception{
     compile_readchar(a);
     compile_putchar(a);
     compile_putdigit(a);
@@ -38,7 +38,7 @@ public final class BuiltinSubroutinesInAssembly {
     compile_abs(a);
   }
 
-  private static void compile_abs(AssemblyWriter a) throws Exception {
+  private static void compile_abs(final AssemblyWriter a) throws Exception {
     //receives 1 integer as an argument (x)
     //returns the absolute value of an integer
 
@@ -77,7 +77,7 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_len(AssemblyWriter a) throws Exception{
+  private static void compile_len(final AssemblyWriter a) throws Exception{
     //returns the length of a length-prefixed memory segment
 
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_len",a);
@@ -105,7 +105,7 @@ public final class BuiltinSubroutinesInAssembly {
   /**
    * reads a single character from stdin
    */
-  private static void compile_readchar(AssemblyWriter a){
+  private static void compile_readchar(final AssemblyWriter a){
     final String name="readchar: ";
 
     //TODO: handle errors that could occur
@@ -140,12 +140,12 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_free(AssemblyWriter a){
+  private static void compile_free(final AssemblyWriter a){
     final String name = "Builtin_free";
     //TODO: not yet implemented
   }
 
-  private static void compile_new(AssemblyWriter a) throws Exception{
+  private static void compile_new(final AssemblyWriter a) throws Exception{
     //http://lxr.linux.no/#linux+v3.6/arch/x86/ia32/ia32entry.S#L372
     //http://man7.org/linux/man-pages/man2/mmap.2.html
 
@@ -207,7 +207,7 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_putchar(AssemblyWriter a)throws Exception{
+  private static void compile_putchar(final AssemblyWriter a)throws Exception{
     //prints top of stack as ascii char to stdout
 
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_putchar",a);
@@ -241,7 +241,7 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_putdigit(AssemblyWriter a) throws Exception{
+  private static void compile_putdigit(final AssemblyWriter a) throws Exception{
     //prints the Int on top of stack as char to stdout
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_putdigit",a);
     final String name="putdigit";
@@ -281,19 +281,19 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_float2int(VMInstr instr, AssemblyWriter a) throws Exception{
+  private static void compile_float2int(final VMInstr instr, final AssemblyWriter a) throws Exception{
     throw new Exception("unhandled");
   }
 
-  private static void compile_int2float(VMInstr instr, AssemblyWriter a) throws Exception{
+  private static void compile_int2float(final VMInstr instr, final AssemblyWriter a) throws Exception{
     throw new Exception("unhandled");
   }
 
-  private static void compile_int2char(VMInstr instr, AssemblyWriter a) throws Exception{
+  private static void compile_int2char(final VMInstr instr, final AssemblyWriter a) throws Exception{
     throw new Exception("unhandled");
   }
 
-  private static void compile_readint(VMInstr instr, AssemblyWriter a)throws Exception{
+  private static void compile_readint(final VMInstr instr, final AssemblyWriter a)throws Exception{
     throw new Exception("unhandled");
   }
 }

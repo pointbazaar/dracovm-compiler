@@ -8,7 +8,7 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
 
 public final class ArrayFocusedAssemblyCodeGenerator {
 
-    public static void compile_arrayread(VMInstr instr, AssemblyWriter a) {
+    public static void compile_arrayread(final VMInstr instr, final AssemblyWriter a) {
         /*
          arrayread
         //stack looks like:
@@ -19,8 +19,8 @@ public final class ArrayFocusedAssemblyCodeGenerator {
         //|undefined
         //|array[index] <-esp
         //meaning this vm command reads from an array, and places the value on the stack
-
          */
+
         a.pop(ebx, instr.toString()); //array index
 
         a.inc(ebx,instr.toString()); //as our arrays are length-prefixed, the index must be offset by one
@@ -40,7 +40,7 @@ public final class ArrayFocusedAssemblyCodeGenerator {
      * Documentation for the behavior, expected stack state before and after are to be found in
      * spec/dracovm-specification.txt
      */
-    public static void compile_arraystore(VMInstr instr, AssemblyWriter a) {
+    public static void compile_arraystore(final VMInstr instr, final AssemblyWriter a) {
 
         a.pop(ebx, instr.toString()); //value to store //-1
 

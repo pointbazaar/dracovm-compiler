@@ -8,8 +8,8 @@ import java.util.Optional;
  */
 public final class VMInstr{
 
-    public VMInstr(String s){
-        String[] parts=s.split(" ");
+    public VMInstr(final String s){
+        final String[] parts=s.split(" ");
         this.cmd=parts[0];
         if(parts.length>1){
             this.arg1=Optional.of(parts[1]);
@@ -23,7 +23,7 @@ public final class VMInstr{
         }
     }
 
-    public String cmd;
+    public final String cmd;
     public final Optional<String> arg1;
     public final Optional<String> arg2;
 

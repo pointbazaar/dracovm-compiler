@@ -7,7 +7,7 @@ public final class AssemblyWriter {
 
     //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
 
-    private List<String> instrs=new ArrayList<>();
+    private final List<String> instrs=new ArrayList<>();
     private boolean indented=true;
 
     public AssemblyWriter(){
@@ -18,11 +18,11 @@ public final class AssemblyWriter {
         return this.instrs;
     }
 
-    private void any(String cmd) {
+    private void any(final String cmd) {
         any(cmd,"");
     }
 
-    private void any(String cmd,String comment){
+    private void any(final String cmd,final String comment){
         final String spacer="        ";
         //base
         String prefix="";
@@ -38,112 +38,112 @@ public final class AssemblyWriter {
         );
     }
 
-    public void section(String name,String comment) {
+    public void section(final String name,final String comment) {
         indented=false;
         any("section "+name,comment);
         indented=true;
     }
-    public void section(String name) {
+    public void section(final String name) {
         section(name,"");
     }
 
-    public void global(String s,String comment) {
+    public void global(final String s,final String comment) {
         indented=false;
         any("global "+s,"");
         indented=true;
     }
-    public void global(String s) {
+    public void global(final String s) {
         global(s,"");
     }
 
-    public void mov(Register dest, int value, String comment) {
+    public void mov(final Register dest, final int value, final String comment) {
         any("mov "+dest+","+value,comment);
     }
-    public void mov(Register dest,float value) {
+    public void mov(final Register dest,final float value) {
         mov(dest,value,"");
     }
-    public void mov(Register register, float value, String comment) {
+    public void mov(final Register register, final float value, String comment) {
         any("mov "+register+","+value,comment);
     }
-    public void mov(Register dest,int value) {
+    public void mov(final Register dest,final int value) {
         any("mov "+dest+","+value);
     }
-    public void mov(Register dest, Register src, String comment) {
+    public void mov(final Register dest, final Register src, final String comment) {
         any("mov "+dest+","+src,comment);
     }
-    public void mov(Register dest,Register src) {
+    public void mov(final Register dest,final Register src) {
         mov(dest,src,"");
     }
-    public void mov(Register dest, String src, String comment) {
+    public void mov(final Register dest, final String src, final String comment) {
         any("mov "+dest+","+src,comment);
     }
 
-    public void push(Register register) {
+    public void push(final Register register) {
         push(register,"");
     }
-    public void push(Register register,String comment) {
+    public void push(final Register register,final String comment) {
         any("push "+register,comment);
     }
-    public void push(int value,String comment) {
+    public void push(final int value,final String comment) {
         any("push "+value,comment);
     }
-    public void push(float f, String comment) {
+    public void push(final float f, final String comment) {
         any("push "+f,comment);
     }
 
 
-    public void pop(Register register) {
+    public void pop(final Register register) {
         pop(register,"");
     }
-    public void pop(Register reg, String comment) {
+    public void pop(final Register reg, final String comment) {
         any("pop "+reg,comment);
     }
 
     /** enables to call a subroutine at an address contained in a register
      * @param register the register containing the destination address
      */
-    public void call(Register register,String comment) {
+    public void call(final Register register,final String comment) {
         any("call "+register,comment);
     }
-    public void call(String methodName,String comment) {
+    public void call(final String methodName,final String comment) {
         any("call "+methodName,comment);
     }
-    public void call(String methodName) {
+    public void call(final String methodName) {
         call(methodName,"");
     }
 
-    public void add(Register dest,int val) {
+    public void add(final Register dest,final int val) {
         add(dest,val,"");
     }
-    public void add(Register dest,int val,String comment) {
+    public void add(final Register dest,final int val,final String comment) {
         any("add "+dest+","+val,comment);
     }
-    public void add(Register dest,Register reg2) {
+    public void add(final Register dest,final Register reg2) {
         add(dest,reg2,"");
     }
-    public void add(Register dest, Register reg2, String comment) {
+    public void add(final Register dest, final Register reg2, final String comment) {
         any("add "+dest+","+reg2,comment);
     }
-    public void sub(Register dest,Register reg2) {
+    public void sub(final Register dest,final Register reg2) {
         sub(dest,reg2,"");
     }
-    public void sub(Register dest, Register reg2, String comment) {
+    public void sub(final Register dest, final Register reg2, final String comment) {
         any("sub "+dest+","+reg2,comment);
     }
 
-    public void label(String label,String comment) {
+    public void label(final String label,final String comment) {
         indented=false;
         any(label+":",comment);
         indented=true;
     }
-    public void label(String label) {
+    public void label(final String label) {
         label(label,"");
     }
 
-    public void jmp(String targetLabel,String comment) {
+    public void jmp(final String targetLabel,final String comment) {
         any("jmp "+targetLabel,comment);
     }
-    public void jmp(String targetLabel) {
+    public void jmp(final String targetLabel) {
         jmp(targetLabel,"");
     }
 
@@ -152,10 +152,10 @@ public final class AssemblyWriter {
      *  and computes eax=eax*other_register
      * @param other
      */
-    public void mul_eax_with(Register other) {
+    public void mul_eax_with(final Register other) {
         mul_eax_with(other,"");
     }
-    public void mul_eax_with(Register other, String comment) {
+    public void mul_eax_with(final Register other, final String comment) {
         any("mul "+other,comment);
     }
 
@@ -163,22 +163,22 @@ public final class AssemblyWriter {
         any("int 0x80","call kernel");
     }
 
-    public void cmp(Register reg1, Register reg2) {
+    public void cmp(final Register reg1, final Register reg2) {
         cmp(reg1,reg2,"");
     }
-    public void cmp(Register reg1, Register reg2,String comment) {
+    public void cmp(final Register reg1, final Register reg2,final String comment) {
         any("cmp "+reg1+","+reg2,comment);
     }
 
-    public void je(String label) {
+    public void je(final String label) {
         je(label,"");
     }
-    public void je(String label,String comment) {
+    public void je(final String label,final String comment) {
         any("je "+label,comment);
     }
 
 
-    public void xor(Register reg1, Register reg2, String comment) {
+    public void xor(final Register reg1, final Register reg2, final String comment) {
         any("xor "+reg1+","+reg2,comment);
     }
 
@@ -191,10 +191,10 @@ public final class AssemblyWriter {
      * Increments the value of a register
      * @param register register to increment
      */
-    public void inc(Register register,String comment) {
+    public void inc(final Register register,final String comment) {
         any("inc "+register,comment);
     }
-    public void inc(Register reg){
+    public void inc(final Register reg){
         inc(reg,"");
     }
 
@@ -202,37 +202,37 @@ public final class AssemblyWriter {
      * Decrements the value of a register
      * @param register register to decrement
      */
-    public void dec(Register register){
+    public void dec(final Register register){
         dec(register,"");
     }
-    public void dec(Register reg,String comment){
+    public void dec(final Register reg,final String comment){
         any("dec "+reg,comment);
     }
 
     //jump if comparison result was 'greater'
-    public void jg(String label) {
+    public void jg(final String label) {
         jg(label,"");
     }
-    public void jg(String label,String comment) {
+    public void jg(final String label,final String comment) {
         any("jg "+label,comment);
     }
 
 
-    public void jge(String label, String comment) {
+    public void jge(final String label, final String comment) {
         any("jge "+label,comment);
     }
 
 
     //jump if comparison result was 'lesser'
-    public void jl(String label) {
+    public void jl(final String label) {
         jl(label,"");
     }
-    public void jl(String label,String comment) {
+    public void jl(final String label,final String comment) {
         any("jl "+label,comment);
     }
 
 
-    public void jle(String label, String comment) {
+    public void jle(final String label, final String comment) {
         any("jle "+label,comment);
     }
 
@@ -241,27 +241,27 @@ public final class AssemblyWriter {
      * which means to set the value of the register to the value in memory which it points to
      * @param register the register to be dereferenced
      */
-    public void dereference(Register register) {
+    public void dereference(final Register register) {
         dereference(register,"");
     }
 
-    public void dereference(Register register, String comment) {
+    public void dereference(final Register register, final String comment) {
         any("mov "+register+","+"["+register+"]",comment+"// dereference "+register);
     }
 
-    public void store_second_into_memory_location_pointed_to_by_first(Register first, Register second) {
+    public void store_second_into_memory_location_pointed_to_by_first(final Register first, final Register second) {
         store_second_into_memory_location_pointed_to_by_first(first,second,"");
     }
 
 
-    public void store_second_into_memory_location_pointed_to_by_first(Register first, Register second, String comment) {
+    public void store_second_into_memory_location_pointed_to_by_first(final Register first, final Register second, final String comment) {
         any("mov ["+first+"],"+second,comment);
     }
 
-    public void div_eax_by(Register register) {
+    public void div_eax_by(final Register register) {
         div_eax_by(register,"");
     }
-    public void div_eax_by(Register register,String comment) {
+    public void div_eax_by(final Register register,final String comment) {
         any("div "+register,comment);
     }
 
@@ -273,31 +273,31 @@ public final class AssemblyWriter {
     /** this subroutine is intended to be able to push a label on the stack, to facilitate functional programming
      * @param labelName the label to be pushed
      */
-    public void push(String labelName, String comment) {
+    public void push(final String labelName, final String comment) {
         any("push "+labelName,comment);
     }
 
-    public void shl(Register register, Register lower_half_of_cx_probably,String comment) {
+    public void shl(final Register register, final Register lower_half_of_cx_probably,final String comment) {
         //usure if we only can shift by cl ?
         any("shl "+register+","+lower_half_of_cx_probably,comment);
     }
 
-    public void shr(Register register, Register lower_half_of_cx_probably,String comment) {
+    public void shr(final Register register, final Register lower_half_of_cx_probably,final String comment) {
         //usure if we only can shift by cl ?
         any("shr "+register+","+lower_half_of_cx_probably,comment);
     }
 
 
-    public void lea(Register register, String other) {
+    public void lea(final Register register, final String other) {
         //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
         any("lea "+register+","+other);
     }
 
-    public void and(Register reg1, Register reg2, String comment) {
+    public void and(final Register reg1, final Register reg2, final String comment) {
         any("and "+reg1+","+reg2,comment);
     }
 
-    public void or(Register reg1, Register reg2, String comment) {
+    public void or(final Register reg1, final Register reg2, final String comment) {
         any("or "+reg1+","+reg2,comment);
     }
 }

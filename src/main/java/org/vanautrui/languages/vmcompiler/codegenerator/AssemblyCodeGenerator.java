@@ -19,37 +19,36 @@ public final class AssemblyCodeGenerator {
 
     //https://en.wikipedia.org/wiki/X86_instruction_listings
 
-    public static List<String> compileVMCode(List<String> vmcode) throws Exception {
+    public static List<String> compileVMCode(final List<String> vmcode) throws Exception {
         //clean the vm code
-        List<String> clean_vm_codes = clean_vm_code(vmcode);
+        final List<String> clean_vm_codes = clean_vm_code(vmcode);
 
-        List<VMInstr> VMInstrs = parseVMInstrs(clean_vm_codes);
+        final List<VMInstr> VMInstrs = parseVMInstrs(clean_vm_codes);
 
         //generate assembly
-        List<String> assembly_codes = vm_codes_to_assembly(VMInstrs);
 
-        return assembly_codes;
+        return vm_codes_to_assembly(VMInstrs);
     }
 
-    private static List<VMInstr> parseVMInstrs(List<String> clean_vm_codes) {
+    private static List<VMInstr> parseVMInstrs(final List<String> clean_vm_codes) {
         return clean_vm_codes.stream().map(VMInstr::new).collect(Collectors.toList());
     }
 
-    private static void compile_iconst(VMInstr instr, AssemblyWriter a) {
-        int x = parseInt(instr.arg1.get());
+    private static void compile_iconst(final VMInstr instr, final AssemblyWriter a) {
+        final int x = parseInt(instr.arg1.get());
         //a.mov(eax,x,instr.toString());
         //a.push(eax,instr.toString());
         a.push(x, instr.toString());
     }
 
-    private static void compile_fconst(VMInstr instr, AssemblyWriter a) {
-        float f = Float.parseFloat(instr.arg1.get());
+    private static void compile_fconst(final VMInstr instr, final AssemblyWriter a) {
+        final float f = Float.parseFloat(instr.arg1.get());
         //a.mov(eax,f,instr.toString());
         //a.push(eax,instr.toString());
         a.push(f, instr.toString());
     }
 
-    private static void compile_vm_instr(VMInstr instr, AssemblyWriter a) throws Exception {
+    private static void compile_vm_instr(final VMInstr instr, final AssemblyWriter a) throws Exception {
 
         switch (instr.cmd) {
             //stack related commands
@@ -189,8 +188,8 @@ public final class AssemblyCodeGenerator {
         }
     }
 
-    private static void compile_and(VMInstr instr, AssemblyWriter a) {
-        final String comment = "and";
+    private static void compile_and(final VMInstr instr, final AssemblyWriter a) {
+        final String comment = instr.toString();
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -198,8 +197,8 @@ public final class AssemblyCodeGenerator {
         a.push(eax,comment);
     }
 
-    private static void compile_or(VMInstr instr, AssemblyWriter a) {
-        final String comment = "or";
+    private static void compile_or(final VMInstr instr, final AssemblyWriter a) {
+        final String comment = instr.toString();
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -207,12 +206,12 @@ public final class AssemblyCodeGenerator {
         a.push(eax,comment);
     }
 
-    private static void compile_leq(VMInstr instr, AssemblyWriter a) {
+    private static void compile_leq(final VMInstr instr, final AssemblyWriter a) {
 
         final String comment = "leq";
 
-        String labeltrue = ".leq_push1";
-        String labelend = ".leq_end";
+        final String labeltrue = ".leq_push1";
+        final String labelend = ".leq_end";
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -230,10 +229,10 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static void compile_geq(VMInstr instr, AssemblyWriter a) {
+    private static void compile_geq(final VMInstr instr, final AssemblyWriter a) {
         final String comment = "geq";
-        String labeltrue = ".geq_push1";
-        String labelend = ".geq_end";
+        final String labeltrue = ".geq_push1";
+        final String labelend = ".geq_end";
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -251,7 +250,7 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static void compile_lshiftr(VMInstr instr, AssemblyWriter a) {
+    private static void compile_lshiftr(final VMInstr instr, final AssemblyWriter a) {
         final String cmt = instr.toString();
         a.pop(ecx, cmt);
         a.pop(eax, cmt);
@@ -259,7 +258,7 @@ public final class AssemblyCodeGenerator {
         a.push(eax, cmt);
     }
 
-    private static void compile_lshiftl(VMInstr instr, AssemblyWriter a) {
+    private static void compile_lshiftl(final VMInstr instr, final AssemblyWriter a) {
         final String cmt = instr.toString();
         a.pop(ecx, cmt);
         a.pop(eax, cmt);
@@ -268,7 +267,7 @@ public final class AssemblyCodeGenerator {
     }
 
 
-    private static void compile_pushsubroutine(VMInstr instr, AssemblyWriter a) {
+    private static void compile_pushsubroutine(final VMInstr instr, final AssemblyWriter a) {
         final String subrName = instr.arg1.get();
         a.push(subrName, instr.toString());
     }
@@ -276,7 +275,7 @@ public final class AssemblyCodeGenerator {
     /**
      * compiles the 'mod' dracovm instruction to assembly code
      */
-    private static void compile_mod(VMInstr instr, AssemblyWriter a) {
+    private static void compile_mod(final VMInstr instr, final AssemblyWriter a) {
         //https://stackoverflow.com/questions/8021772/assembly-language-how-to-do-modulo
         final String comment = instr.toString();
         a.pop(ebx, comment);
@@ -285,7 +284,7 @@ public final class AssemblyCodeGenerator {
         a.push(eax, comment);
     }
 
-    private static void compile_not(VMInstr instr, AssemblyWriter a) {
+    private static void compile_not(final VMInstr instr, final AssemblyWriter a) {
         //logical not
         //if there is a 1 (true) on the stack, after this vm command, there must be a 0 (false) on the stack
         //if there is a 0 (false) on the stack, after this vm command, there must be a 1 (true) on the stack
@@ -300,14 +299,14 @@ public final class AssemblyCodeGenerator {
         a.push(eax, comment);
     }
 
-    private static void compile_div(VMInstr instr, AssemblyWriter a) {
+    private static void compile_div(final VMInstr instr, final AssemblyWriter a) {
         a.pop(ecx);
         a.pop(eax);
         a.div_eax_by(ecx);
         a.push(eax);
     }
 
-    private static void compile_mul(VMInstr instr, AssemblyWriter a) {
+    private static void compile_mul(final VMInstr instr, final AssemblyWriter a) {
 
         a.pop(ebx, instr.toString());
         a.pop(eax, instr.toString());
@@ -317,13 +316,13 @@ public final class AssemblyCodeGenerator {
     }
 
 
-    private static void compile_dec(AssemblyWriter a) {
+    private static void compile_dec(final AssemblyWriter a) {
         a.pop(eax, "dec");
         a.dec(eax, "dec");
         a.push(eax, "dec");
     }
 
-    private static void compile_inc(AssemblyWriter a) {
+    private static void compile_inc(final AssemblyWriter a) {
         final String comment = "inc";
         a.pop(eax, comment);
         a.inc(eax, comment);
@@ -331,12 +330,12 @@ public final class AssemblyCodeGenerator {
     }
 
 
-    private static void compile_lt(VMInstr instr, AssemblyWriter a) {
+    private static void compile_lt(final VMInstr instr, final AssemblyWriter a) {
 
-        final String comment = "lt";
+        final String comment = instr.toString();
 
-        String labeltrue = ".lt_push1";
-        String labelend = ".lt_end";
+        final String labeltrue = ".lt_push1";
+        final String labelend = ".lt_end";
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -354,10 +353,10 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static void compile_gt(VMInstr instr, AssemblyWriter a) {
+    private static void compile_gt(final VMInstr instr, final AssemblyWriter a) {
         final String comment = "gt";
-        String labeltrue = ".gt_push1";
-        String labelend = ".gt_end";
+        final String labeltrue = ".gt_push1";
+        final String labelend = ".gt_end";
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -375,10 +374,10 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static List<String> vm_codes_to_assembly(List<VMInstr> vmcodes) throws Exception {
+    private static List<String> vm_codes_to_assembly(final List<VMInstr> vmcodes) throws Exception {
         //receives only clean VM Codes
 
-        AssemblyWriter a = new AssemblyWriter();
+        final AssemblyWriter a = new AssemblyWriter();
 
         a.section(".text", "must be declared for linker (ld)");
         a.global("_start", "");
@@ -389,7 +388,7 @@ public final class AssemblyCodeGenerator {
         //at the start of the code, jump to main
         a.jmp("Main_main");
 
-        for (VMInstr instr : vmcodes) {
+        for (final VMInstr instr : vmcodes) {
             compile_vm_instr(instr, a);
         }
 
@@ -409,19 +408,19 @@ public final class AssemblyCodeGenerator {
         return a.getAssemblyProgram();
     }
 
-    private static void compile_exit(VMInstr instr, AssemblyWriter a) {
+    private static void compile_exit(final VMInstr instr, final AssemblyWriter a) {
         a.mov(eax, 1, "exit: sytem call number (sys_exit)");
         a.pop(ebx, "exit: pop exit status code from stack");
         a.call_kernel();
     }
 
-    private static void compile_cconst(VMInstr instr, AssemblyWriter a) {
-        char c = instr.arg1.get().charAt(0);
+    private static void compile_cconst(final VMInstr instr, final AssemblyWriter a) {
+        final char c = instr.arg1.get().charAt(0);
         a.push((int) c, instr.toString());
     }
 
 
-    private static void compile_if_goto(VMInstr instr, AssemblyWriter a) {
+    private static void compile_if_goto(final VMInstr instr, final AssemblyWriter a) {
 
         final String comment = "if-goto";
 
@@ -431,11 +430,11 @@ public final class AssemblyCodeGenerator {
         a.je(instr.arg1.get(), comment); //jumps, if eax==ebx
     }
 
-    private static void compile_eq(VMInstr instr, AssemblyWriter a) {
+    private static void compile_eq(final VMInstr instr, final AssemblyWriter a) {
         final String comment = "eq";
 
-        String labeltrue = ".eq_push1";
-        String labelend = ".eq_end";
+        final String labeltrue = ".eq_push1";
+        final String labelend = ".eq_end";
 
         a.pop(eax, comment);
         a.pop(ebx, comment);
@@ -453,21 +452,21 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static void compile_neg(VMInstr instr, AssemblyWriter a) {
+    private static void compile_neg(final VMInstr instr, final AssemblyWriter a) {
         a.pop(eax, instr.toString());
         a.mov(ebx, -1, instr.toString());
         a.mul_eax_with(ebx, instr.toString());
         a.push(eax, instr.toString());
     }
 
-    private static void compile_sub(VMInstr instr, AssemblyWriter a) {
+    private static void compile_sub(final VMInstr instr, final AssemblyWriter a) {
         a.pop(ebx, instr.toString());
         a.pop(eax, instr.toString());
         a.sub(eax, ebx, instr.toString());
         a.push(eax, instr.toString());
     }
 
-    private static void compile_add(VMInstr instr, AssemblyWriter a) {
+    private static void compile_add(final VMInstr instr, final AssemblyWriter a) {
         a.pop(eax, instr.toString());
         a.pop(ebx, instr.toString());
         a.add(eax, ebx, instr.toString());
@@ -475,21 +474,22 @@ public final class AssemblyCodeGenerator {
     }
 
 
-    private static List<String> clean_vm_code(List<String> vmcodes) {
+    private static List<String> clean_vm_code(final List<String> vmcodes) {
         //remove comments and empty lines
         //and remove indentation
 
-        List<String> result = new ArrayList<>();
+        final List<String> result = new ArrayList<>();
 
-        for (String instr : vmcodes) {
-            String s = new String(instr);
+        for (final String instr : vmcodes) {
+
+            String instr_to_be_cleaned_of_comments = new String(instr);
             if (instr.contains("//")) {
-                s = s.substring(0, instr.indexOf("//"));
+                instr_to_be_cleaned_of_comments = instr_to_be_cleaned_of_comments.substring(0, instr.indexOf("//"));
             }
-            s = s.trim();
+            instr_to_be_cleaned_of_comments = instr_to_be_cleaned_of_comments.trim();
 
-            if (!s.isEmpty()) {
-                result.add(s);
+            if (!instr_to_be_cleaned_of_comments.isEmpty()) {
+                result.add(instr_to_be_cleaned_of_comments);
             }
         }
 

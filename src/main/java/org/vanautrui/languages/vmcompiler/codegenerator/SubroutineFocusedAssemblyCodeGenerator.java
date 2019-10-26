@@ -18,8 +18,8 @@ public final class SubroutineFocusedAssemblyCodeGenerator {
         //this method offers a description which can be included in higher level vm code
         return "pushes return address of current subroutine on the stack,jumps to subroutine,swaps returned value (on stack) with ebp, pops ebp";
     }
-    public static void compile_call(VMInstr instr, AssemblyWriter a){
-        String subroutineName = instr.arg1.get();
+    public static void compile_call(final VMInstr instr, final AssemblyWriter a){
+        final String subroutineName = instr.arg1.get();
 
         a.call(subroutineName,instr.toString()); //puts the return address on the stack and jumps to label
 
@@ -29,7 +29,7 @@ public final class SubroutineFocusedAssemblyCodeGenerator {
         a.pop(ebp,"get our ebp back "+instr.toString());
     }
 
-    public static void compile_callfromstack(VMInstr instr, AssemblyWriter a) {
+    public static void compile_callfromstack(final VMInstr instr, final AssemblyWriter a) {
         //this subroutine should be closely related to the compile_call subroutine
 
         a.pop(eax,instr.toString()); //pop our destination from stack
@@ -45,7 +45,7 @@ public final class SubroutineFocusedAssemblyCodeGenerator {
     public static String compile_subroutine_description() {
         return "pushes ebp, swaps that with the return address already on stack";
     }
-    public static void compile_subroutine(String subroutine_name, AssemblyWriter a) {
+    public static void compile_subroutine(final String subroutine_name, final AssemblyWriter a) {
         final String comment = "subroutine "+subroutine_name;
 
         a.label(subroutine_name,comment);
@@ -71,7 +71,7 @@ public final class SubroutineFocusedAssemblyCodeGenerator {
         a.mov(ebp,esp,comment+" anchor our ebp, with local variables below and saved ebp and args above");
     }
 
-    public static void compile_return(AssemblyWriter a) {
+    public static void compile_return(final AssemblyWriter a) {
         //
         a.ret();
     }

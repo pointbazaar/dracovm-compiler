@@ -43,7 +43,7 @@ public final class VMCompilerPhases {
     private final boolean timed;
     private final boolean printLong;
 
-    public VMCompilerPhases(CommandLine cmd){
+    public VMCompilerPhases(final CommandLine cmd){
         this.debug=cmd.hasOption(FLAG_DEBUG);
         this.timed=cmd.hasOption(FLAG_TIMED);
         this.printLong=debug||timed;
@@ -61,7 +61,7 @@ public final class VMCompilerPhases {
      *
      * @throws Exception an exception is thrown if nasm or ld exit nonzero
      */
-    public Path phase_generate_executable(List<String> asm_codes,String filename_without_extension) throws Exception{
+    public Path phase_generate_executable(final List<String> asm_codes,final String filename_without_extension) throws Exception{
 
         final String asm_file_name = filename_without_extension+".asm";
         final Path asm_path = Paths.get(asm_file_name);
@@ -93,7 +93,7 @@ public final class VMCompilerPhases {
         return Paths.get(filename_without_extension);
     }
 
-    public List<String> phase_vm_code_compilation(List<String> draco_vm_codes,boolean debug) throws Exception{
+    public final List<String> phase_vm_code_compilation(final List<String> draco_vm_codes,final boolean debug) throws Exception{
         printBeginPhase("VM CODE COMPILATION",printLong);
         final List<String> assembly_codes = AssemblyCodeGenerator.compileVMCode(draco_vm_codes);
         if(debug){
