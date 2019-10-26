@@ -10,6 +10,11 @@ public class Register {
     }
 
     //general purpose registers
+    //offset
+    public static final int byte_offset_32bit=4;
+    //as memory is addressed in bytes, we need an offset according to
+    //the size of elements being stored
+
     public static final Register eax=new Register("eax");
     public static final Register ebx=new Register("ebx");
     public static final Register ecx=new Register("ecx");

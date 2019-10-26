@@ -168,7 +168,7 @@ public class BuiltinSubroutinesInAssembly {
     //increment by 1, as our array should be length-prefixed, and we need a place to store the length
     a.inc(ecx);
 
-    a.mov(eax,4);
+    a.mov(eax,byte_offset_32bit);
     a.mul_eax_with(ecx);
     a.mov(ecx,eax);
 

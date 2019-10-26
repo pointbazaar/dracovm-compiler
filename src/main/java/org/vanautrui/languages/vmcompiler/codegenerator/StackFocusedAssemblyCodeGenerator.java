@@ -13,7 +13,7 @@ public class StackFocusedAssemblyCodeGenerator {
 
   public static void compile_dup(VMInstr instr, AssemblyWriter a) {
     //duplicates top of stack
-    a.mov(eax,"[esp]",instr.toString());
+    a.mov(eax,"["+esp+"]",instr.toString());
     //a.pop(eax,instr.toString());
     //a.push(eax,instr.toString());
     a.push(eax,instr.toString());
@@ -49,9 +49,9 @@ public class StackFocusedAssemblyCodeGenerator {
         //eax = ebp + index + 2 * (4 (byte))
         //the + 2 * (4 (byte)) is because there is the saved ebp on stack also,
         //and the variables are indexed starting with 0
-        a.mov(eax,2*4,comment); //4 bytes make up a 32 bit item on stack
+        a.mov(eax,2*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
         a.add(eax,ebp,comment);
-        a.add(eax,index*4,comment); //4 bytes make up a 32 bit item on stack
+        a.add(eax,index*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
 
         // a.dereference(eax) -> mov eax,[eax]
         a.dereference(eax,comment);
@@ -70,7 +70,7 @@ public class StackFocusedAssemblyCodeGenerator {
         a.mov(eax,ebp,comment);
 
         //eax -= 1
-        a.mov(ebx,1*4,comment); //4 bytes make up a 32 bit item on stack
+        a.mov(ebx,1*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
         a.sub(eax,ebx,comment);
 
         //eax -= index
@@ -115,9 +115,9 @@ public class StackFocusedAssemblyCodeGenerator {
 
           //eax = ebp + index + 2 //the +2 is because there is the saved ebp on stack also,
           //and the variables are indexed starting with 0
-          a.mov(eax,2*4,comment); //4 bytes make up a 32 bit item on stack
+          a.mov(eax,2*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
           a.add(eax,ebp,comment);
-          a.add(eax,index*4,comment);//4 bytes make up a 32 bit item on stack
+          a.add(eax,index*byte_offset_32bit,comment);//4 bytes make up a 32 bit item on stack
 
           //get the value we want to pop
           a.pop(ebx,comment);
@@ -137,11 +137,11 @@ public class StackFocusedAssemblyCodeGenerator {
           a.mov(eax,ebp,comment);
 
           //eax -= 1
-          a.mov(ebx,1 * 4,comment); //4 bytes make up a 32 bit item on stack
+          a.mov(ebx,1 * byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
           a.sub(eax,ebx,comment);
 
           //eax -= index
-          a.mov(ebx,index*4,comment); //4 bytes make up a 32 bit item on stack
+          a.mov(ebx,index*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
           a.sub(eax,ebx,comment);
 
           //get the value we want to pop
