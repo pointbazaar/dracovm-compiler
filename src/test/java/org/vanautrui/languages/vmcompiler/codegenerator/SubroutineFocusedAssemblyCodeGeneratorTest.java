@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SubroutineFocusedAssemblyCodeGeneratorTest {
+public final class SubroutineFocusedAssemblyCodeGeneratorTest {
 
   //Dennis Lloyd, Lana Del Rey, GEazy
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class AssemblyCodeGeneratorTest {
+public final class AssemblyCodeGeneratorTest {
 
   @Test
   public void test_correct_return_code_is_generated()throws Exception{

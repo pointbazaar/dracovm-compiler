@@ -3,7 +3,7 @@ package org.vanautrui.languages.vmcompiler;
 import org.vanautrui.languages.vmcompiler.model.Register;
 import java.util.*;
 
-public class AssemblyWriter {
+public final class AssemblyWriter {
 
     //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
 

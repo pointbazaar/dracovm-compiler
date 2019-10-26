@@ -6,7 +6,8 @@ import static org.fusesource.jansi.Ansi.Color.GREEN;
 import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
 
-public class VMCompilerPhaseUtils {
+public final class VMCompilerPhaseUtils {
+
     public static void printBeginPhase(String phaseName,boolean printLongForm) throws InterruptedException {
         //TerminalUtil.print(String.format("%-18s ",phaseName),Ansi.Color.GREEN);
         Ansi ansi = Ansi.ansi();

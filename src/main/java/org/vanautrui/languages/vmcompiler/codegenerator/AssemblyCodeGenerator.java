@@ -15,7 +15,7 @@ import static org.vanautrui.languages.vmcompiler.codegenerator.StackFocusedAssem
 import static org.vanautrui.languages.vmcompiler.codegenerator.SubroutineFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
 
-public class AssemblyCodeGenerator {
+public final class AssemblyCodeGenerator {
 
     //https://en.wikipedia.org/wiki/X86_instruction_listings
 

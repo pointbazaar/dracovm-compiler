@@ -12,7 +12,7 @@ import java.util.List;
  * IntelliJ's autocomplete.
  * It provides subroutines for almost? every dracovm instruction
  */
-public class DracoVMCodeWriter {
+public final class DracoVMCodeWriter {
 
   private List<String> instrs=new ArrayList<>();
   public List<String> getDracoVMCodeInstructions(){

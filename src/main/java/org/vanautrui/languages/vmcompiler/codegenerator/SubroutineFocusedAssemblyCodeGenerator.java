@@ -10,7 +10,7 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
  * this class should both contain the Assembly code generation for calling a subroutine, and for the subroutine itself.
  * this makes it easier to see what is happening, as both must work together
  */
-public class SubroutineFocusedAssemblyCodeGenerator {
+public final class SubroutineFocusedAssemblyCodeGenerator {
 
     //https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
 

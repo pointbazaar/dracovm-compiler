@@ -1,6 +1,6 @@
 package org.vanautrui.languages.vmcompiler.model;
 
-public class Register {
+public final class Register {
 
     private String name;
 

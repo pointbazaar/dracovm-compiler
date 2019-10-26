@@ -8,7 +8,7 @@ import java.util.Optional;
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
 import static org.vanautrui.languages.vmcompiler.model.Register.ebx;
 
-public class StackFocusedAssemblyCodeGenerator {
+public final class StackFocusedAssemblyCodeGenerator {
 
 
   public static void compile_dup(VMInstr instr, AssemblyWriter a) {

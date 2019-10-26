@@ -6,7 +6,7 @@ import java.util.Optional;
  * DAO for a single VM Instruction.
  * It stores the command and its arguments.
  */
-public class VMInstr{
+public final class VMInstr{
 
     public VMInstr(String s){
         String[] parts=s.split(" ");

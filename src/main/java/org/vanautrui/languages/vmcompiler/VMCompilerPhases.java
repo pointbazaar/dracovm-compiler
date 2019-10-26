@@ -17,7 +17,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 import static org.vanautrui.languages.vmcompiler.VMCompilerPhaseUtils.printBeginPhase;
 import static org.vanautrui.languages.vmcompiler.VMCompilerPhaseUtils.printEndPhase;
 
-public class VMCompilerPhases {
+public final class VMCompilerPhases {
 
     //Assembly debugging:
     //(they are missing a stack display, but it be ok)

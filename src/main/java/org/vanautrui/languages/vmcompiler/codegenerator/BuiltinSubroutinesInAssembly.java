@@ -16,7 +16,7 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
  * These subroutines must behave like any other subroutine when called.
  */
 
-public class BuiltinSubroutinesInAssembly {
+public final class BuiltinSubroutinesInAssembly {
 
   /**
    * Compiles all builtin subroutines.
