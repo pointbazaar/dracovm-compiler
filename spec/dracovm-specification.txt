@@ -48,11 +48,10 @@ VIRTUAL MEMORY SEGMENTS
 	the DracoVM manipulates various virtual memory segments
 	these memory segments have pointers which have a constant address in virtual memory
 	and can be used to access these segments
-	ARG and LOCAL are on the stack, STATIC is in the .bss or .data segment probably
+	ARG and LOCAL are on the stack
 
 	ARG	arguments to the subroutine
 	LOCAL	local variables for the subroutine
-	STATIC	static variables which have a constant virtual memory address
 
 
 ACCESSING MEMORY SEGMENTS:

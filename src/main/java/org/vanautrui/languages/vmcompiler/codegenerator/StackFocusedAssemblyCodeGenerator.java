@@ -88,8 +88,6 @@ public final class StackFocusedAssemblyCodeGenerator {
       case "LOCAL":
         compile_push_local(index,a);
         break;
-      case "STATIC":
-        throw new Exception("not yet implemented");
       default:
         throw new Exception("fatal");
     }
@@ -157,8 +155,6 @@ public final class StackFocusedAssemblyCodeGenerator {
         case "LOCAL":
           compile_pop_local(myindex.get(),a);
           break;
-        case "STATIC":
-          throw new Exception("not yet implemented");
         default:
           throw new Exception("fatal");
       }

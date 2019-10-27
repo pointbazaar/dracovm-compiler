@@ -34,7 +34,6 @@ public final class VMCompilerPhases {
 
     public static final String SEGMENT_ARG = "ARG";
     public static final String SEGMENT_LOCAL = "LOCAL";
-    public static final String SEGMENT_STATIC = "STATIC";
 
     private static final String FLAG_DEBUG="debug";
     private static final String FLAG_TIMED="timed";
