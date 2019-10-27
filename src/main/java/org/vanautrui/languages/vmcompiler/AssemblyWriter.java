@@ -258,11 +258,13 @@ public final class AssemblyWriter {
         any("mov ["+first+"],"+second,comment);
     }
 
-    public void div_eax_by(final Register register) {
-        div_eax_by(register,"");
+    public void idiv_eax_by(final Register register) {
+        idiv_eax_by(register,"");
     }
-    public void div_eax_by(final Register register,final String comment) {
-        any("div "+register,comment);
+    public void idiv_eax_by(final Register register, final String comment) {
+        //using idiv instead of div, because idiv should also work for signed values
+
+        any("idiv "+register,comment);
     }
 
     public void ret() {

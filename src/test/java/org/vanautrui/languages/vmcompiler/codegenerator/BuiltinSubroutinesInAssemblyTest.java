@@ -76,6 +76,12 @@ public final class BuiltinSubroutinesInAssemblyTest {
         final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "time_testing");
 
         assertEquals(0,pr.exitValue());
+
+        //running this shows that the value seems to be increasing,
+        //as we get successive alphabetic characters when we are in the ascii range
+        System.out.println(IOUtils.toString(pr.getInputStream()));
+
+
         //toodo: we should really test it, but for that we probably have to have a builtin
         //subroutine in assembly to print an integer to stdout
     }

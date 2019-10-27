@@ -36,15 +36,13 @@ public final class AssemblyCodeGenerator {
 
     private static void compile_iconst(final VMInstr instr, final AssemblyWriter a) {
         final int x = parseInt(instr.arg1.get());
-        //a.mov(eax,x,instr.toString());
-        //a.push(eax,instr.toString());
+
         a.push(x, instr.toString());
     }
 
     private static void compile_fconst(final VMInstr instr, final AssemblyWriter a) {
         final float f = Float.parseFloat(instr.arg1.get());
-        //a.mov(eax,f,instr.toString());
-        //a.push(eax,instr.toString());
+
         a.push(f, instr.toString());
     }
 
@@ -280,8 +278,10 @@ public final class AssemblyCodeGenerator {
         final String comment = instr.toString();
         a.pop(ebx, comment);
         a.pop(eax, comment);
-        a.div_eax_by(ebx, comment);
-        a.push(eax, comment);
+        a.xor(edx,edx,comment); //dividend high half = 0
+
+        a.idiv_eax_by(ebx, comment);
+        a.push(edx, comment);
     }
 
     private static void compile_not(final VMInstr instr, final AssemblyWriter a) {
@@ -300,10 +300,13 @@ public final class AssemblyCodeGenerator {
     }
 
     private static void compile_div(final VMInstr instr, final AssemblyWriter a) {
-        a.pop(ecx);
-        a.pop(eax);
-        a.div_eax_by(ecx);
-        a.push(eax);
+        a.pop(ecx,instr.toString()); //pop the divisor
+        a.pop(eax,instr.toString()); //pop the dividend
+
+        a.xor(edx,edx,instr.toString()); //dividend high half=0
+        a.idiv_eax_by(ecx,instr.toString());
+
+        a.push(eax,instr.toString()); //push the quotient
     }
 
     private static void compile_mul(final VMInstr instr, final AssemblyWriter a) {
