@@ -14,8 +14,6 @@ public final class StackFocusedAssemblyCodeGenerator {
   public static void compile_dup(final VMInstr instr, final AssemblyWriter a) {
     //duplicates top of stack
     a.mov(eax,"["+esp+"]",instr.toString());
-    //a.pop(eax,instr.toString());
-    //a.push(eax,instr.toString());
     a.push(eax,instr.toString());
   }
 
