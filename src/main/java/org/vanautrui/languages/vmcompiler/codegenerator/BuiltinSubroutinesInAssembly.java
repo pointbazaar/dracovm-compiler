@@ -36,6 +36,36 @@ public final class BuiltinSubroutinesInAssembly {
 
     //we need abs (Math.abs(x), the absolute value of an Integer ) as a builtin subroutine.
     compile_abs(a);
+
+    //to get the system time
+    compile_time(a);
+  }
+
+  private static void compile_time(AssemblyWriter a) {
+    //time in seconds since the epoch
+    //https://fresh.flatassembler.net/lscr/
+
+    //takes 0 arguments
+    //returns a PInt
+
+    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_time",a);
+
+    a.mov(eax,13,"time: sys_time");
+    a.mov(ebx,0,"time: return time only in eax");
+    a.xor(ecx,ecx,"");
+    a.xor(edx,edx,"");
+    a.call_kernel();
+
+
+    //push return value
+    a.push(eax,"time: push return value");
+
+    //we must swap return value with the return address in order to return
+    //(i am so dumb. took me so long to find this.)
+    compile_swap("swap return address with return value to return",a);
+
+    //return from subroutine
+    SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
   private static void compile_abs(final AssemblyWriter a) throws Exception {
