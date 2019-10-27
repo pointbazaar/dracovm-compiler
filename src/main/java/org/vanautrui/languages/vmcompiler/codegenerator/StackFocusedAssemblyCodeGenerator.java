@@ -1,10 +1,13 @@
 package org.vanautrui.languages.vmcompiler.codegenerator;
 
 import org.vanautrui.languages.vmcompiler.AssemblyWriter;
+import org.vanautrui.languages.vmcompiler.VMCompilerPhases;
 import org.vanautrui.languages.vmcompiler.instructions.VMInstr;
 
 import java.util.Optional;
 
+import static org.vanautrui.languages.vmcompiler.VMCompilerPhases.SEGMENT_ARG;
+import static org.vanautrui.languages.vmcompiler.VMCompilerPhases.SEGMENT_LOCAL;
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
 import static org.vanautrui.languages.vmcompiler.model.Register.ebx;
 
@@ -82,10 +85,10 @@ public final class StackFocusedAssemblyCodeGenerator {
   public static void compile_push(final String segment,final int index, final AssemblyWriter a) throws Exception {
 
     switch (segment){
-      case "ARG":
+      case SEGMENT_ARG:
         compile_push_arg(index,a);
         break;
-      case "LOCAL":
+      case SEGMENT_LOCAL:
         compile_push_local(index,a);
         break;
       default:
@@ -149,10 +152,10 @@ public final class StackFocusedAssemblyCodeGenerator {
     }else {
 
       switch (mysegment.get()) {
-        case "ARG":
+        case SEGMENT_ARG:
           compile_pop_arg(myindex.get(),a);
           break;
-        case "LOCAL":
+        case SEGMENT_LOCAL:
           compile_pop_local(myindex.get(),a);
           break;
         default:

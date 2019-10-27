@@ -53,8 +53,11 @@ public final class VMCompilerPhases {
     }
 
     public Path compile_vm_codes_and_generate_executable(final List<String> draco_vm_codes,String filename_without_extension, final boolean debug)throws Exception{
-        final List<String> assembly_codes = phase_vm_code_compilation(draco_vm_codes, debug);
-        return phase_generate_executable(assembly_codes,filename_without_extension);
+        printBeginPhase("VM CODE COMPILATION",debug);
+
+        printBeginPhase("CALL NASM",debug);
+
+        return phase_generate_executable(AssemblyCodeGenerator.compileVMCode(draco_vm_codes),filename_without_extension);
     }
 
     /**
@@ -75,8 +78,6 @@ public final class VMCompilerPhases {
         p.waitFor();
 
         if(p.exitValue()!=0){
-            final String output = IOUtils.toString(p.getInputStream());
-            System.err.println(output);
             throw new Exception("nasm exit with nonzero exit code");
         }
 
@@ -93,18 +94,6 @@ public final class VMCompilerPhases {
         Files.delete(Paths.get(filename_without_extension+".o"));
 
         return Paths.get(filename_without_extension);
-    }
-
-    private final List<String> phase_vm_code_compilation(final List<String> draco_vm_codes,final boolean debug) throws Exception{
-        printBeginPhase("VM CODE COMPILATION",debug);
-        final List<String> assembly_codes = AssemblyCodeGenerator.compileVMCode(draco_vm_codes);
-
-        if(debug){
-            assembly_codes.stream().forEach(System.out::println);
-        }
-
-        printEndPhase(true,debug);
-        return assembly_codes;
     }
 
 }
