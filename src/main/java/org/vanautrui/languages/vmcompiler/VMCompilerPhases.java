@@ -29,6 +29,9 @@ public final class VMCompilerPhases {
 
     //https://www.youtube.com/watch?v=ubXXmQzzNGo
 
+    //$ nasm -f elf hello.asm  # this will produce hello.o ELF object file
+    //$ ld -s -o hello hello.o # this will produce hello executable
+
     public static final String SEGMENT_ARG = "ARG";
     public static final String SEGMENT_LOCAL = "LOCAL";
     public static final String SEGMENT_STATIC = "STATIC";
@@ -38,19 +41,21 @@ public final class VMCompilerPhases {
 
     private final boolean debug;
     private final boolean timed;
-    private final boolean printLong;
 
     public VMCompilerPhases(final CommandLine cmd){
         this.debug=cmd.hasOption(FLAG_DEBUG);
         this.timed=cmd.hasOption(FLAG_TIMED);
-        this.printLong=debug||timed;
     }
 
     public VMCompilerPhases() {
         //for testing of compiler phases
         this.debug=false;
         this.timed=false;
-        this.printLong=false;
+    }
+
+    public Path compile_vm_codes_and_generate_executable(final List<String> draco_vm_codes,String filename_without_extension, final boolean debug)throws Exception{
+        final List<String> assembly_codes = phase_vm_code_compilation(draco_vm_codes, debug);
+        return phase_generate_executable(assembly_codes,filename_without_extension);
     }
 
     /**
@@ -58,7 +63,7 @@ public final class VMCompilerPhases {
      *
      * @throws Exception an exception is thrown if nasm or ld exit nonzero
      */
-    public Path phase_generate_executable(final List<String> asm_codes,final String filename_without_extension) throws Exception{
+    private Path phase_generate_executable(final List<String> asm_codes,final String filename_without_extension) throws Exception{
 
         final String asm_file_name = filename_without_extension+".asm";
         final Path asm_path = Paths.get(asm_file_name);
@@ -80,6 +85,7 @@ public final class VMCompilerPhases {
                 Runtime
                         .getRuntime()
                         .exec("ld -melf_i386 -s -o "+filename_without_extension+" "+filename_without_extension+".o");
+
         p2.waitFor();
         if(p2.exitValue() != 0){
             throw new Exception("ld exit with nonzero exit code");
@@ -90,21 +96,16 @@ public final class VMCompilerPhases {
         return Paths.get(filename_without_extension);
     }
 
-    public final List<String> phase_vm_code_compilation(final List<String> draco_vm_codes,final boolean debug) throws Exception{
+    private final List<String> phase_vm_code_compilation(final List<String> draco_vm_codes,final boolean debug) throws Exception{
         printBeginPhase("VM CODE COMPILATION",debug);
         final List<String> assembly_codes = AssemblyCodeGenerator.compileVMCode(draco_vm_codes);
+
         if(debug){
             assembly_codes.stream().forEach(System.out::println);
         }
-        //$ nasm -f elf hello.asm  # this will produce hello.o ELF object file
-        //$ ld -s -o hello hello.o # this will produce hello executable
 
-        if(debug){
-            out.println("call nasm");
-        }
         printEndPhase(true,debug);
         return assembly_codes;
     }
 
-    private static final String phase_clean_cache_dir=System.getProperty("user.home")+"/.dragoncache/clean/";
 }

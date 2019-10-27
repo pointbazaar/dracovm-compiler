@@ -10,18 +10,14 @@ import java.util.List;
 public final class CodeGeneratorTestUtils {
 
     public static Path  generateFromVMCodeAndWriteExecutable(List<String> vmcodes,String filename)throws Exception{
-        final VMCompilerPhases phases = new VMCompilerPhases();
-        final List<String> asm_codes = phases.phase_vm_code_compilation(vmcodes,false);
-        final Path path = phases.phase_generate_executable(asm_codes,filename);
 
-        return path;
+        return (new VMCompilerPhases()).compile_vm_codes_and_generate_executable(vmcodes,filename,false);
     }
 
 
     public static Process compile_and_run_vmcodes_but_not_waitFor(List<String> vmcodes,String filename_without_extension) throws Exception{
         generateFromVMCodeAndWriteExecutable(vmcodes,filename_without_extension);
-        final Process pr = Runtime.getRuntime().exec("./"+filename_without_extension);
-        return pr;
+        return Runtime.getRuntime().exec("./"+filename_without_extension);
     }
 
     public static Process compile_and_run_vm_codes_for_testing(List<String> vmcodes,String filename_without_extension) throws Exception{
