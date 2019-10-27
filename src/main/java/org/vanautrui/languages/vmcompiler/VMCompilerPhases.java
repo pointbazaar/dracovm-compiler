@@ -2,10 +2,8 @@ package org.vanautrui.languages.vmcompiler;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.io.IOUtils;
-import org.fusesource.jansi.Ansi;
 import org.vanautrui.languages.vmcompiler.codegenerator.AssemblyCodeGenerator;
 
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.System.out;
-import static org.fusesource.jansi.Ansi.ansi;
 import static org.vanautrui.languages.vmcompiler.VMCompilerPhaseUtils.printBeginPhase;
 import static org.vanautrui.languages.vmcompiler.VMCompilerPhaseUtils.printEndPhase;
 
@@ -94,7 +91,7 @@ public final class VMCompilerPhases {
     }
 
     public final List<String> phase_vm_code_compilation(final List<String> draco_vm_codes,final boolean debug) throws Exception{
-        printBeginPhase("VM CODE COMPILATION",printLong);
+        printBeginPhase("VM CODE COMPILATION",debug);
         final List<String> assembly_codes = AssemblyCodeGenerator.compileVMCode(draco_vm_codes);
         if(debug){
             assembly_codes.stream().forEach(System.out::println);
@@ -105,7 +102,7 @@ public final class VMCompilerPhases {
         if(debug){
             out.println("call nasm");
         }
-        printEndPhase(true,printLong);
+        printEndPhase(true,debug);
         return assembly_codes;
     }
 
