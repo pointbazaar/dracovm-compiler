@@ -35,57 +35,108 @@ public final class StackFocusedAssemblyCodeGenerator {
     a.push(ebx,comment);
   }
 
+  private static void compile_push_arg(final int index, final AssemblyWriter a){
+    final String comment="push ARG "+index;
+    //arguments are on stack in reverse order
+    //ebp is on the caller's return address, with the arguments above
+
+    //eax = ebp + index + 2 * (4 (byte))
+    //the + 2 * (4 (byte)) is because there is the saved ebp on stack also,
+    //and the variables are indexed starting with 0
+    a.mov(eax,2*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
+    a.add(eax,ebp,comment);
+    a.add(eax,index*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
+
+    // a.dereference(eax) -> mov eax,[eax]
+    a.dereference(eax,comment);
+
+    //push eax
+    a.push(eax,comment);
+  }
+
+  private static void compile_push_local(final int index, final AssemblyWriter a){
+    final String comment="push LOCAL "+index;
+    //locals are on stack in order
+    //ebp is on the caller's return address, with the local variables below
+
+    //eax = ebp - index - 1 //the +1 is because there is the saved ebp on stack also
+
+    //eax=ebp
+    a.mov(eax,ebp,comment);
+
+    //eax -= 1
+    a.mov(ebx,1*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
+    a.sub(eax,ebx,comment);
+
+    //eax -= index
+    a.mov(ebx,index*4,comment); //4 bytes make up a 32 bit item on stack
+    a.sub(eax,ebx,comment);
+
+    // a.dereference(eax) -> mov eax,[eax]
+    a.dereference(eax,comment);
+
+    //push eax
+    a.push(eax,comment);
+  }
+
   public static void compile_push(final String segment,final int index, final AssemblyWriter a) throws Exception {
-    String comment="";
 
     switch (segment){
       case "ARG":
-        comment="push ARG "+index;
-        //arguments are on stack in reverse order
-        //ebp is on the caller's return address, with the arguments above
-
-        //eax = ebp + index + 2 * (4 (byte))
-        //the + 2 * (4 (byte)) is because there is the saved ebp on stack also,
-        //and the variables are indexed starting with 0
-        a.mov(eax,2*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
-        a.add(eax,ebp,comment);
-        a.add(eax,index*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
-
-        // a.dereference(eax) -> mov eax,[eax]
-        a.dereference(eax,comment);
-
-        //push eax
-        a.push(eax,comment);
+        compile_push_arg(index,a);
         break;
       case "LOCAL":
-        comment="push LOCAL "+index;
-        //locals are on stack in order
-        //ebp is on the caller's return address, with the local variables below
-
-        //eax = ebp - index - 1 //the +1 is because there is the saved ebp on stack also
-
-        //eax=ebp
-        a.mov(eax,ebp,comment);
-
-        //eax -= 1
-        a.mov(ebx,1*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
-        a.sub(eax,ebx,comment);
-
-        //eax -= index
-        a.mov(ebx,index*4,comment); //4 bytes make up a 32 bit item on stack
-        a.sub(eax,ebx,comment);
-
-        // a.dereference(eax) -> mov eax,[eax]
-        a.dereference(eax,comment);
-
-        //push eax
-        a.push(eax,comment);
+        compile_push_local(index,a);
         break;
       case "STATIC":
         throw new Exception("not yet implemented");
       default:
         throw new Exception("fatal");
     }
+  }
+
+  private static void compile_pop_arg(final int index, final AssemblyWriter a){
+    final String comment = "pop ARG "+index;
+
+    //arguments are on stack in reverse order
+    //ebp is on the caller's return address, with the arguments above
+
+    //eax = ebp + index + 2 //the +2 is because there is the saved ebp on stack also,
+    //and the variables are indexed starting with 0
+    a.mov(eax,2*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
+    a.add(eax,ebp,comment);
+    a.add(eax,index*byte_offset_32bit,comment);//4 bytes make up a 32 bit item on stack
+
+    //get the value we want to pop
+    a.pop(ebx,comment);
+
+    //get that value into the address pointed to by eax
+    a.store_second_into_memory_location_pointed_to_by_first(eax,ebx,comment);
+  }
+
+  private static void compile_pop_local(final int index, final AssemblyWriter a){
+    final String comment = "pop LOCAL "+index;
+
+    //locals are on stack in order
+    //ebp is on the caller's return address, with the local variables below
+
+    //eax = ebp - index - 1 //the +1 is because there is the saved ebp on stack also
+
+    //eax=ebp
+    a.mov(eax,ebp,comment);
+
+    //eax -= 1
+    a.mov(ebx,1 * byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
+    a.sub(eax,ebx,comment);
+
+    //eax -= index
+    a.mov(ebx,index*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
+    a.sub(eax,ebx,comment);
+
+    //get the value we want to pop
+    a.pop(ebx,comment);
+
+    a.store_second_into_memory_location_pointed_to_by_first(eax,ebx,comment);
   }
 
   /**
@@ -99,53 +150,12 @@ public final class StackFocusedAssemblyCodeGenerator {
       a.pop(eax,"pop");
     }else {
 
-      final String segment = mysegment.get();
-
-      final int index= myindex.get();
-      String comment="";
-
-      switch (segment) {
+      switch (mysegment.get()) {
         case "ARG":
-          comment = "pop ARG "+index;
-
-          //arguments are on stack in reverse order
-          //ebp is on the caller's return address, with the arguments above
-
-          //eax = ebp + index + 2 //the +2 is because there is the saved ebp on stack also,
-          //and the variables are indexed starting with 0
-          a.mov(eax,2*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
-          a.add(eax,ebp,comment);
-          a.add(eax,index*byte_offset_32bit,comment);//4 bytes make up a 32 bit item on stack
-
-          //get the value we want to pop
-          a.pop(ebx,comment);
-
-          //get that value into the address pointed to by eax
-          a.store_second_into_memory_location_pointed_to_by_first(eax,ebx,comment);
+          compile_pop_arg(myindex.get(),a);
           break;
         case "LOCAL":
-          comment = "pop LOCAL "+index;
-
-          //locals are on stack in order
-          //ebp is on the caller's return address, with the local variables below
-
-          //eax = ebp - index - 1 //the +1 is because there is the saved ebp on stack also
-
-          //eax=ebp
-          a.mov(eax,ebp,comment);
-
-          //eax -= 1
-          a.mov(ebx,1 * byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
-          a.sub(eax,ebx,comment);
-
-          //eax -= index
-          a.mov(ebx,index*byte_offset_32bit,comment); //4 bytes make up a 32 bit item on stack
-          a.sub(eax,ebx,comment);
-
-          //get the value we want to pop
-          a.pop(ebx,comment);
-
-          a.store_second_into_memory_location_pointed_to_by_first(eax,ebx,comment);
+          compile_pop_local(myindex.get(),a);
           break;
         case "STATIC":
           throw new Exception("not yet implemented");
