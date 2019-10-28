@@ -302,4 +302,8 @@ public final class AssemblyWriter {
     public void or(final Register reg1, final Register reg2, final String comment) {
         any("or "+reg1+","+reg2,comment);
     }
+
+    public void cdq(String comment) {
+        any("cdq",comment);
+    }
 }

@@ -278,7 +278,12 @@ public final class AssemblyCodeGenerator {
         final String comment = instr.toString();
         a.pop(ebx, comment);
         a.pop(eax, comment);
+
+
         a.xor(edx,edx,comment); //dividend high half = 0
+        //sign-extend eax in edx, in case eax is negative
+        //https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
+        a.cdq(instr.toString());
 
         a.idiv_eax_by(ebx, comment);
         a.push(edx, comment);
@@ -304,6 +309,10 @@ public final class AssemblyCodeGenerator {
         a.pop(eax,instr.toString()); //pop the dividend
 
         a.xor(edx,edx,instr.toString()); //dividend high half=0
+        //sign-extend eax in edx, in case eax is negative
+        //https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
+        a.cdq(instr.toString());
+
         a.idiv_eax_by(ecx,instr.toString());
 
         a.push(eax,instr.toString()); //push the quotient
