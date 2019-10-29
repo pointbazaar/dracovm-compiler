@@ -427,8 +427,9 @@ public final class AssemblyCodeGenerator {
     }
 
     private static void compile_cconst(final VMInstr instr, final AssemblyWriter a) {
+
         final char c = instr.arg1.get().charAt(0);
-        a.push((int) c, instr.toString());
+        a.push(c, instr.toString());
     }
 
 

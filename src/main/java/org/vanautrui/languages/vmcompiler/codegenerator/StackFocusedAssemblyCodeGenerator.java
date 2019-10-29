@@ -82,7 +82,7 @@ public final class StackFocusedAssemblyCodeGenerator {
     a.push(eax,comment);
   }
 
-  public static void compile_push(final String segment,final int index, final AssemblyWriter a) throws Exception {
+  public static void compile_push(final String segment,final int index, final AssemblyWriter a) {
 
     switch (segment){
       case SEGMENT_ARG:
@@ -92,7 +92,7 @@ public final class StackFocusedAssemblyCodeGenerator {
         compile_push_local(index,a);
         break;
       default:
-        throw new Exception("fatal");
+        throw new RuntimeException("fatal");
     }
   }
 

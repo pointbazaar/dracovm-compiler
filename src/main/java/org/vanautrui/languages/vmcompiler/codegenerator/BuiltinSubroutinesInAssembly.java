@@ -18,13 +18,28 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
 
 public final class BuiltinSubroutinesInAssembly {
 
+  //https://www.informatik.htw-dresden.de/~beck/ASM/syscall_list.html
+
+  //eax values (syscall numbers):
+  private static final int SYS_EXIT   = 1;
+  private static final int SYS_FORK   = 2;
+  private static final int SYS_READ   = 3;
+  private static final int SYS_WRITE  = 4;
+  private static final int SYS_OPEN   = 5;
+  private static final int SYS_CLOSE  = 6;
+  private static final int SYS_WAITPID= 7;
+  private static final int SYS_CREAT  = 8;
+  //..
+  private static final int SYS_TIME   = 13;
+  //..
+
   /**
    * Compiles all builtin subroutines.
    * This is so that we can call this subroutine in assembly code generation,
    * and do not forget a subroutine.
    * So a new subroutine can be added easily
    */
-  public static void compile_all_builtin_subroutines(final AssemblyWriter a)throws Exception{
+  public static void compile_all_builtin_subroutines(final AssemblyWriter a) {
     compile_readchar(a);
     compile_putchar(a);
     compile_putdigit(a);
@@ -39,6 +54,95 @@ public final class BuiltinSubroutinesInAssembly {
 
     //to get the system time
     compile_time(a);
+
+    compile_fopen(a);
+    compile_fputs(a);
+  }
+
+  private static void compile_fputs(final AssemblyWriter a){
+    //https://www.tutorialspoint.com/c_standard_library/c_function_fputs.htm
+
+    //([Char] str, Pint filedescriptor)~>PInt
+    //arg 0: string to write
+    //arg 1: filedescriptor of the file to write to
+    //returns: 0
+
+    //prints a string to a file
+
+    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_fputs",a);
+
+    //access our argument , ARG 0, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
+
+    //access our argument , ARG 1, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,1,a);
+
+    a.mov(eax,SYS_WRITE,"fputs: sys_write");
+
+    a.pop(ebx,"fputs: pop our filedescriptor argument");
+
+    //print the char on stack
+    a.pop(ecx,"fputs: pop our string to write argument");
+
+    a.mov(edx,ecx,"fputs: how many bytes to write");
+    a.dereference(edx,"fputs: how many bytes to write");
+
+    a.add(ecx, byte_offset_32bit,"fputs: offset the pointer to start of string.");
+
+    a.call_kernel();
+
+    //push return value
+    a.push(0,"fputs: push return value");
+
+    //we must swap return value with the return address in order to return
+    //(i am so dumb. took me so long to find this.)
+    compile_swap("swap return address with return value to return",a);
+
+    //return from subroutine
+    SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
+  }
+
+  private static void compile_fopen(final AssemblyWriter a) {
+    // ([Char] filename ,PInt accessmode)~>PInt fopen
+    //takes 2 arguments: the file name ([Char]), and the access mode (PInt)
+    //returns a file descriptor (PInt) which can then be used with fputs to write to a file
+
+    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_fopen",a);
+
+    //access our argument , ARG 1, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,1,a);
+
+    //access our argument , ARG 0, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
+
+    //stack:
+    //accessmode
+    //filename <- esp
+
+    a.mov(eax,SYS_OPEN,"fopen: sys_open");
+    a.pop(ebx,"fopen: get the filename [Char] pointer");
+
+    //tood : we should get the syntactic sugar with the strings in dragon
+    //to insert a nullbyte at the end. or use a specially prepared string with this syscall
+    //because it is a c-style syscall, it expects a '\0' at the end of the filename probably
+    //https://stackoverflow.com/questions/8312290/how-to-open-a-file-in-assembler-and-modify-it
+
+    a.add(ebx, byte_offset_32bit,"offset to the start, as arrays are length-prefixed in dragon");
+    //ebx now contains the filename argument
+    a.pop(ecx,"fopen: access mode");
+
+
+    a.call_kernel();
+
+    //push return value
+    a.push(eax,"fopen: push return value (file descriptor in eax)");
+
+    //we must swap return value with the return address in order to return
+    //(i am so dumb. took me so long to find this.)
+    compile_swap("swap return address with return value to return",a);
+
+    //return from subroutine
+    SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
   private static void compile_time(AssemblyWriter a) {
@@ -50,7 +154,7 @@ public final class BuiltinSubroutinesInAssembly {
 
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_time",a);
 
-    a.mov(eax,13,"time: sys_time");
+    a.mov(eax,SYS_TIME,"time: sys_time");
     a.mov(ebx,0,"time: return time only in eax");
     a.xor(ecx,ecx,"");
     a.xor(edx,edx,"");
@@ -68,7 +172,7 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_abs(final AssemblyWriter a) throws Exception {
+  private static void compile_abs(final AssemblyWriter a) {
     //receives 1 integer as an argument (x)
     //returns the absolute value of an integer
 
@@ -107,7 +211,7 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_len(final AssemblyWriter a) throws Exception{
+  private static void compile_len(final AssemblyWriter a) {
     //returns the length of a length-prefixed memory segment
 
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_len",a);
@@ -147,14 +251,14 @@ public final class BuiltinSubroutinesInAssembly {
     a.push(eax);
 
     //SYSCALL START
-    a.mov(eax,3,name+"sys_read");
+    a.mov(eax,SYS_READ,name+"sys_read");
     a.mov(ebx,0,name+"stdin");
 
     //print the char on stack
     a.mov(ecx, esp,name+"read into the placeholder DWORD we pushed onto the stack");
 
     //val length
-    a.mov(Register.edx,1,name+"value length");
+    a.mov(edx,1,name+"value length");
     a.call_kernel();
     //SYSCALL END
 
@@ -175,7 +279,7 @@ public final class BuiltinSubroutinesInAssembly {
     //TODO: not yet implemented
   }
 
-  private static void compile_new(final AssemblyWriter a) throws Exception{
+  private static void compile_new(final AssemblyWriter a) {
     //http://lxr.linux.no/#linux+v3.6/arch/x86/ia32/ia32entry.S#L372
     //http://man7.org/linux/man-pages/man2/mmap.2.html
 
@@ -237,7 +341,7 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_putchar(final AssemblyWriter a)throws Exception{
+  private static void compile_putchar(final AssemblyWriter a) {
     //prints top of stack as ascii char to stdout
 
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_putchar",a);
@@ -245,7 +349,7 @@ public final class BuiltinSubroutinesInAssembly {
     //access our argument , ARG 0, by pushing it onto the stack
     compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
 
-    a.mov(eax,4,"putchar: sys_write");
+    a.mov(eax,SYS_WRITE,"putchar: sys_write");
     a.mov(ebx,1,"putchar: std_out");
 
     //print the char on stack
@@ -253,15 +357,15 @@ public final class BuiltinSubroutinesInAssembly {
 
 
     //val length
-    a.mov(Register.edx,1,"putchar: value length");
+    a.mov(edx,1,"putchar: value length");
     a.call_kernel();
 
     //remove our argument which we had pushed
     a.pop(eax,"putchar: remove the ARG 0 which we had pushed");
 
     //push return value
-    a.mov(Register.edx,0,"putchar: push return value");
-    a.push(Register.edx,"putchar: push return value");
+    a.mov(edx,0,"putchar: push return value");
+    a.push(edx,"putchar: push return value");
 
     //we must swap return value with the return address in order to return
     //(i am so dumb. took me so long to find this.)
@@ -271,7 +375,7 @@ public final class BuiltinSubroutinesInAssembly {
     SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
   }
 
-  private static void compile_putdigit(final AssemblyWriter a) throws Exception{
+  private static void compile_putdigit(final AssemblyWriter a) {
     //prints the Int on top of stack as char to stdout
     SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_putdigit",a);
     final String name="putdigit";
@@ -279,7 +383,7 @@ public final class BuiltinSubroutinesInAssembly {
     //access our argument , ARG 0, by pushing it onto the stack
     compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
 
-    a.mov(eax,4,name+" sys_write");
+    a.mov(eax,SYS_WRITE,name+" sys_write");
     a.mov(ebx,1,name+" std_out");
 
     //duplicate the value on stack, add offset to make it a char
@@ -291,7 +395,7 @@ public final class BuiltinSubroutinesInAssembly {
     a.mov(ecx, esp,name+" print the Int on the stack");
 
     //val length
-    a.mov(Register.edx,1,name+" value length");
+    a.mov(edx,1,name+" value length");
     a.call_kernel();
 
     //pop that value which we pushed
@@ -301,8 +405,8 @@ public final class BuiltinSubroutinesInAssembly {
     a.pop(ecx);
 
     //push return value
-    a.mov(Register.edx,0,name+" push return value");
-    a.push(Register.edx,name+" push return value");
+    a.mov(edx,0,name+" push return value");
+    a.push(edx,name+" push return value");
 
     //we must swap return value with the return address in order to return
     //(i am so dumb. took me so long to find this.)
