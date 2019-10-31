@@ -10,15 +10,15 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
  * this class should both contain the Assembly code generation for calling a subroutine, and for the subroutine itself.
  * this makes it easier to see what is happening, as both must work together
  */
-public final class SubroutineFocusedAssemblyCodeGenerator {
+final class SubroutineFocusedAssemblyCodeGenerator {
 
   //https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
 
-  public static String compile_call_description() {
+  static String compile_call_description() {
     //this method offers a description which can be included in higher level vm code
     return "pushes return address of current subroutine on the stack,jumps to subroutine,swaps returned value (on stack) with ebp, pops ebp";
   }
-    
+
   static void compile_call(final VMInstr instr, final AssemblyWriter a) {
     final String subroutineName = instr.arg1.get();
 
@@ -43,7 +43,7 @@ public final class SubroutineFocusedAssemblyCodeGenerator {
     a.pop(ebp, "get our ebp back " + instr.toString());
   }
 
-  public static String compile_subroutine_description() {
+  static String compile_subroutine_description() {
     return "pushes ebp, swaps that with the return address already on stack";
   }
 
@@ -78,7 +78,7 @@ public final class SubroutineFocusedAssemblyCodeGenerator {
     a.ret();
   }
 
-  public static String compile_return_description() {
+  static String compile_return_description() {
     return "pops the return address in the caller subroutine off the stack, and continues there.";
   }
 
