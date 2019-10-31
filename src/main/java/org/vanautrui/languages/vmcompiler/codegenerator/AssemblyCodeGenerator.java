@@ -4,11 +4,14 @@ import org.vanautrui.languages.vmcompiler.AssemblyWriter;
 import org.vanautrui.languages.vmcompiler.instructions.VMInstr;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
+import static java.util.stream.Collectors.groupingBy;
 import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arrayread;
 import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arraystore;
 import static org.vanautrui.languages.vmcompiler.codegenerator.StackFocusedAssemblyCodeGenerator.*;
@@ -31,7 +34,26 @@ public final class AssemblyCodeGenerator {
     }
 
     private static List<VMInstr> parseVMInstrs(final List<String> clean_vm_codes) {
-        return clean_vm_codes.stream().map(VMInstr::new).collect(Collectors.toList());
+        //maybe it is not beneficial for performance to start a new thread
+        //to construct each VMInstr. as staring a thread has its own overhead.
+        //maybe this solution for chunking could help:
+        //https://stackoverflow.com/questions/27583623/is-there-an-elegant-way-to-process-a-stream-in-chunks
+
+        AtomicInteger counter = new AtomicInteger();
+        final int chunkSize = 1000;
+
+        final List<VMInstr> vmInstrs = Collections.synchronizedList(new ArrayList<>());
+
+        clean_vm_codes.stream()
+                .collect(groupingBy(x->counter.getAndIncrement()/chunkSize))
+                .values()
+                .parallelStream().map(list->
+                    list.stream().map(VMInstr::new).collect(Collectors.toList())
+                ).forEach(vmInstrs::addAll);
+
+        //return clean_vm_codes.parallelStream().map(VMInstr::new).collect(Collectors.toList());
+
+        return vmInstrs;
     }
 
     private static void compile_iconst(final VMInstr instr, final AssemblyWriter a) {
@@ -399,6 +421,7 @@ public final class AssemblyCodeGenerator {
 
         //at the start of the code, jump to main
         a.jmp("Main_main");
+
 
         for (final VMInstr instr : vmcodes) {
             compile_vm_instr(instr, a);

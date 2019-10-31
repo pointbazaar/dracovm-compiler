@@ -8,8 +8,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.vanautrui.languages.vmcompiler.VMCompilerPhaseUtils.printBeginPhase;
-
 public final class VMCompilerPhases {
 
     //Assembly debugging:
@@ -33,11 +31,12 @@ public final class VMCompilerPhases {
 
     public VMCompilerPhases() { }
 
-    public synchronized Path compile_vm_codes_and_generate_executable(final List<String> draco_vm_codes,String filename_without_extension, final boolean debug)throws Exception{
-        printBeginPhase("VM CODE COMPILATION",debug);
-        List<String> asm_codes = AssemblyCodeGenerator.compileVMCode(draco_vm_codes);
+    public synchronized Path compile_vm_codes_and_generate_executable(final List<String> draco_vm_codes, final String filename_without_extension) throws Exception{
 
-        printBeginPhase("CALL NASM",debug);
+        System.out.println("VM CODE COMPILATION");
+        final List<String> asm_codes = AssemblyCodeGenerator.compileVMCode(draco_vm_codes);
+
+        System.out.println("CALL NASM");
         return phase_generate_executable(asm_codes,filename_without_extension);
     }
 
@@ -55,17 +54,25 @@ public final class VMCompilerPhases {
                 asm_path,asm_codes_string.getBytes()
         );
 
-        final Process p = Runtime.getRuntime().exec("nasm -f elf -g -F stabs " + asm_file_name);
+        //so that the nasm call can be easily adapted with different flags
+        final String nasm_command = "nasm -f elf -g -F stabs " + asm_file_name;
+        System.out.println(nasm_command);
+
+        final Process p = Runtime.getRuntime().exec(nasm_command);
         p.waitFor();
 
         if(p.exitValue()!=0){
             throw new Exception("nasm exit with nonzero exit code");
         }
 
+        //so the ld call can be done seperately if someone wants to use different flags.
+        final String ld_command = "ld -melf_i386 -s -o "+filename_without_extension+" "+filename_without_extension+".o";
+        System.out.println(ld_command);
+
         final Process p2 =
                 Runtime
                         .getRuntime()
-                        .exec("ld -melf_i386 -s -o "+filename_without_extension+" "+filename_without_extension+".o");
+                        .exec(ld_command);
 
         p2.waitFor();
         if(p2.exitValue() != 0){
