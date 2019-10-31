@@ -26,10 +26,6 @@ public final class DracoVMCodeWriter {
 
   private int indent=default_indent;
 
-  public static final String SEGMENT_ARG = "ARG";
-  public static final String SEGMENT_LOCAL = "LOCAL";
-  public static final String SEGMENT_STATIC = "STATIC";
-
   public DracoVMCodeWriter(){}
 
   /**

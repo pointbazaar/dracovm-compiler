@@ -4,7 +4,7 @@
     <groupId>org.vanautrui.languages</groupId>
     <artifactId>dracovm-compiler</artifactId>
     <packaging>jar</packaging>
-    <version>0.10011</version>
+    <version>0.10012</version>
     <name>dracovm-compiler</name>
     <url>http://maven.apache.org</url>
 

@@ -11,6 +11,40 @@ import static org.junit.Assert.assertEquals;
 public final class ArithmeticFocusedAssemblyCodeGeneratorTest {
 
   @Test
+  public void test_add()throws Exception{
+    final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    a.subroutine("Main","main",0,0);
+    a.iconst(3);
+    a.iconst(2);
+
+    a.add();
+    a.exit();
+
+    final List<String> vmcodes = a.getDracoVMCodeInstructions();
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testadd");
+
+    assertEquals(5,pr.exitValue());
+  }
+
+  @Test
+  public void test_sub()throws Exception{
+    final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    a.subroutine("Main","main",0,0);
+    a.iconst(3);
+    a.iconst(2);
+
+    a.sub();
+    a.exit();
+
+    final List<String> vmcodes = a.getDracoVMCodeInstructions();
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testsub");
+
+    assertEquals(1,pr.exitValue());
+  }
+
+  @Test
   public void test_mod()throws Exception{
     DracoVMCodeWriter a=new DracoVMCodeWriter();
 
