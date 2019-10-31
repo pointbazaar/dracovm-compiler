@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,11 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
 public final class AssemblyCodeGenerator {
 
     //https://en.wikipedia.org/wiki/X86_instruction_listings
+
+    private static long unique(){
+        //returns 0 <= x <= Long.MAX_VALUE
+        return ThreadLocalRandom.current().nextLong(0,Long.MAX_VALUE);
+    }
 
     public static List<String> compileVMCode(final List<String> vmcode) throws Exception {
         //clean the vm code
@@ -110,7 +116,7 @@ public final class AssemblyCodeGenerator {
                 compile_return(a);
                 break;
             case "exit":
-                compile_exit(instr, a);
+                compile_exit(a);
                 break;
 
             //function programming related
@@ -143,28 +149,28 @@ public final class AssemblyCodeGenerator {
 
             //logic commands
             case "eq":
-                compile_eq(instr, a);
+                compile_eq(a);
                 break;
             case "gt":
-                compile_gt(instr, a);
+                compile_gt(a);
                 break;
             case "geq":
-                compile_geq(instr,a);
+                compile_geq(a);
                 break;
             case "lt":
-                compile_lt(instr, a);
+                compile_lt(a);
                 break;
             case "leq":
-                compile_leq(instr,a);
+                compile_leq(a);
                 break;
             case "not":
                 compile_not(instr, a);
                 break;
             case "and":
-                compile_and(instr,a);
+                compile_and(a);
                 break;
             case "or":
-                compile_or(instr,a);
+                compile_or(a);
                 break;
 
             //inc,dec
@@ -208,8 +214,8 @@ public final class AssemblyCodeGenerator {
         }
     }
 
-    private static void compile_and(final VMInstr instr, final AssemblyWriter a) {
-        final String comment = instr.toString();
+    private static void compile_and(final AssemblyWriter a) {
+        final String comment = "and";
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -217,8 +223,8 @@ public final class AssemblyCodeGenerator {
         a.push(eax,comment);
     }
 
-    private static void compile_or(final VMInstr instr, final AssemblyWriter a) {
-        final String comment = instr.toString();
+    private static void compile_or(final AssemblyWriter a) {
+        final String comment = "or";
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -226,12 +232,13 @@ public final class AssemblyCodeGenerator {
         a.push(eax,comment);
     }
 
-    private static void compile_leq(final VMInstr instr, final AssemblyWriter a) {
+    private static void compile_leq(final AssemblyWriter a) {
 
         final String comment = "leq";
 
-        final String labeltrue = ".leq_push1";
-        final String labelend = ".leq_end";
+        final long unique = unique();
+        final String labeltrue = ".leq_push"+unique;
+        final String labelend = ".leq_end"+unique;
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -249,10 +256,13 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static void compile_geq(final VMInstr instr, final AssemblyWriter a) {
+    private static void compile_geq(final AssemblyWriter a) {
+
         final String comment = "geq";
-        final String labeltrue = ".geq_push1";
-        final String labelend = ".geq_end";
+
+        final long unique = unique();
+        final String labeltrue = ".geq_push"+unique;
+        final String labelend = ".geq_end"+unique;
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -271,6 +281,7 @@ public final class AssemblyCodeGenerator {
     }
 
     private static void compile_lshiftr(final VMInstr instr, final AssemblyWriter a) {
+
         final String cmt = instr.toString();
         a.pop(ecx, cmt);
         a.pop(eax, cmt);
@@ -279,6 +290,7 @@ public final class AssemblyCodeGenerator {
     }
 
     private static void compile_lshiftl(final VMInstr instr, final AssemblyWriter a) {
+
         final String cmt = instr.toString();
         a.pop(ecx, cmt);
         a.pop(eax, cmt);
@@ -364,12 +376,13 @@ public final class AssemblyCodeGenerator {
     }
 
 
-    private static void compile_lt(final VMInstr instr, final AssemblyWriter a) {
+    private static void compile_lt(final AssemblyWriter a) {
 
-        final String comment = instr.toString();
+        final String comment = "lt";
 
-        final String labeltrue = ".lt_push1";
-        final String labelend = ".lt_end";
+        final long unique = unique();
+        final String labeltrue = ".lt_push"+unique;
+        final String labelend = ".lt_end"+unique;
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -387,10 +400,13 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static void compile_gt(final VMInstr instr, final AssemblyWriter a) {
+    private static void compile_gt(final AssemblyWriter a) {
+
         final String comment = "gt";
-        final String labeltrue = ".gt_push1";
-        final String labelend = ".gt_end";
+
+        final long unique = unique();
+        final String labeltrue = ".gt_push"+unique;
+        final String labelend = ".gt_end"+unique;
 
         a.pop(ebx, comment);
         a.pop(eax, comment);
@@ -443,7 +459,7 @@ public final class AssemblyCodeGenerator {
         return a.getAssemblyProgram();
     }
 
-    private static void compile_exit(final VMInstr instr, final AssemblyWriter a) {
+    private static void compile_exit(final AssemblyWriter a) {
         a.mov(eax, 1, "exit: sytem call number (sys_exit)");
         a.pop(ebx, "exit: pop exit status code from stack");
         a.call_kernel();
@@ -466,11 +482,12 @@ public final class AssemblyCodeGenerator {
         a.je(instr.arg1.get(), comment); //jumps, if eax==ebx
     }
 
-    private static void compile_eq(final VMInstr instr, final AssemblyWriter a) {
+    private static void compile_eq(final AssemblyWriter a) {
         final String comment = "eq";
 
-        final String labeltrue = ".eq_push1";
-        final String labelend = ".eq_end";
+        final long unique = unique();
+        final String labeltrue = ".eq_push"+unique;
+        final String labelend = ".eq_end"+unique;
 
         a.pop(eax, comment);
         a.pop(ebx, comment);
@@ -514,20 +531,6 @@ public final class AssemblyCodeGenerator {
         //remove comments and empty lines
         //and remove indentation
 
-        final List<String> result = new ArrayList<>();
-
-        for (final String instr : vmcodes) {
-
-            String instr_to_be_cleaned_of_comments = new String(instr);
-            if (instr.contains("//")) {
-                instr_to_be_cleaned_of_comments = instr_to_be_cleaned_of_comments.substring(0, instr.indexOf("//"));
-            }
-            instr_to_be_cleaned_of_comments = instr_to_be_cleaned_of_comments.trim();
-
-            if (!instr_to_be_cleaned_of_comments.isEmpty()) {
-                result.add(instr_to_be_cleaned_of_comments);
-            }
-        }
 
         AtomicInteger counter = new AtomicInteger();
         final int chunkSize = 1000;
