@@ -1,6 +1,6 @@
 #!/bin/bash
 
 #package because there we create the fatJar
-mvn package -T 1C
+mvn install -T 1C -DgeneratePom=true
 
 
