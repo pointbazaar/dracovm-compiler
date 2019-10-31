@@ -529,6 +529,42 @@ public final class AssemblyCodeGenerator {
             }
         }
 
-        return result;
+        AtomicInteger counter = new AtomicInteger();
+        final int chunkSize = 1000;
+
+        final List<String> clean_vm_codes = Collections.synchronizedList(new ArrayList<>());
+
+        vmcodes.stream()
+                .collect(groupingBy(x->counter.getAndIncrement()/chunkSize))
+                .values()
+                .parallelStream()
+                .map(list->
+                    list
+                        .stream()
+                        .filter(instr->!instr.trim().isEmpty()) //filter out empty instructions
+                        .map(instr->{
+                            //map to instruction without comments
+
+                            if(instr.contains("//")){
+                                return instr.substring(0,instr.indexOf("//"));
+                            }
+                            return instr;
+                        })
+                        .map(String::trim)
+                        .collect(Collectors.toList())
+        ).forEach(clean_vm_codes::addAll);
+
+        return clean_vm_codes;
+        /*
+        //return result;
+        return vmcodes.parallelStream().map(instr->{
+            if(instr.contains("//")){
+                return instr.substring(0,instr.indexOf("//"));
+            }else{
+                return instr.trim();
+            }
+        }).collect(Collectors.toList());
+
+         */
     }
 }
