@@ -155,6 +155,9 @@ final class LogicFocusedAssemblyCodeGenerator {
     //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
     final String comment = "f_lt";
+    final String BITMASK_LESS = "0000000100000000B";
+    final String label_less = ".less"+unique();
+    final String label_end = ".end"+unique();
 
     a.finit(comment);
 
@@ -174,38 +177,26 @@ final class LogicFocusedAssemblyCodeGenerator {
     final String st1="st1";
 
     a.fcom(st0,st1,comment);
-
-    a.fstp(comment);
-
-    a.push(esi,comment); //push value of comparison?
-    a.pop(eax,comment); //get value back
+    a.fstsw(ax,comment); //ax is fpu status register
 
     a.and(eax,BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS,"take only the condition code flags");
-
-    final String bitmask_less = "0000000100000000B";
-
-    a.cmp(eax,bitmask_less,comment);
-
-    final String label_less = ".less"+unique();
-    final String label_end = ".end"+unique();
-
+    a.cmp(eax,BITMASK_LESS,comment);
     a.je(label_less,comment); //if it is less, jump to less
 
-    a.mov(eax,0,comment); //false
+    a.push(0,comment); //false
     a.jmp(label_end,comment);
 
-
     a.label(label_less,comment);
-    a.mov(eax,1,comment); //true
+    a.push(1,comment); //true
 
     a.label(label_end,comment);
-    a.push(eax,comment); //push result on stack
   }
 
   static void compile_f_gt(final AssemblyWriter a){
     //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
     final String comment = "f_gt";
+    final String BITMASK_FLOAT_GREATER = "0000000000000000B";
 
     a.finit(comment);
 
@@ -225,28 +216,66 @@ final class LogicFocusedAssemblyCodeGenerator {
 
     a.fcom(st0,st1,comment);
 
-    a.fstp(comment);
-
-    a.push(esi,comment); //push value of comparison?
-    a.pop(eax,comment); //get value back
+    a.fcom(st0,st1,comment);
+    a.fstsw(ax,comment); //ax is fpu status register
 
     a.and(eax,BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS,"take only the condition code flags");
-    final String BITMASK_FLOAT_GREATER = "0000000000000000B";
-
     a.cmp(eax,BITMASK_FLOAT_GREATER,comment);
 
     final String label_greater = ".greater"+unique();
     final String label_end = ".end"+unique();
 
     a.je(label_greater,comment);
-    a.mov(eax,0,comment); //false
+
+    a.push(0,comment); //false
     a.jmp(label_end,comment);
 
-
     a.label(label_greater,comment);
-    a.mov(eax,1,comment); //true
+    a.push(1,comment); //true
 
     a.label(label_end,comment);
-    a.push(eax,comment); //push result on stack
+  }
+
+  static void compile_f_eq(final AssemblyWriter a){
+
+    final String BITMASK_FLOAT_EQ = "0100000000000000B";
+
+    //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
+
+    final String comment = "f_eq";
+
+    a.finit(comment);
+
+    //our stack
+    //st0
+    //st1
+
+    //we want to know if st0 == st1
+
+    a.fld("dword "+"["+esp+"]",comment);
+    a.pop(eax,comment);
+    a.fld("dword "+"["+esp+"]",comment);
+    a.pop(eax,comment);
+
+    final String st0="st0";
+    final String st1="st1";
+
+    a.fcom(st0,st1,comment);
+    a.fstsw(ax,comment); //ax is fpu status register
+
+    a.and(eax,BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS,"take only the condition code flags");
+    a.cmp(eax,BITMASK_FLOAT_EQ,comment);
+
+    final String label_eq = ".eq"+unique();
+    final String label_end = ".end"+unique();
+
+    a.je(label_eq,comment);
+    a.push(0,comment); //false
+    a.jmp(label_end,comment);
+
+    a.label(label_eq,comment);
+    a.push(1,comment); //true
+
+    a.label(label_end,comment);
   }
 }

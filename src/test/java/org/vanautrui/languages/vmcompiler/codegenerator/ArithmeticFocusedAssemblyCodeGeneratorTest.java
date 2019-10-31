@@ -31,8 +31,6 @@ public final class ArithmeticFocusedAssemblyCodeGeneratorTest {
             "exit"
     );
 
-    //it should exit with 0
-
     final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testfadd1");
 
     assertEquals(0,pr.exitValue());
@@ -56,8 +54,6 @@ public final class ArithmeticFocusedAssemblyCodeGeneratorTest {
             "iconst 0",
             "exit"
     );
-
-    //it should exit with 0
 
     final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testfadd2");
 
@@ -92,7 +88,6 @@ public final class ArithmeticFocusedAssemblyCodeGeneratorTest {
 
   @Test
   public void test_fsub2()throws Exception{
-    //final DracoVMCodeWriter a=new DracoVMCodeWriter();
 
     final List<String> vmcodes = Arrays.asList(
             "subroutine Main_main 0 args 0 locals",

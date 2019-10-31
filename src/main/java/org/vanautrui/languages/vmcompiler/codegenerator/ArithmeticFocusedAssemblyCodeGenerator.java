@@ -42,8 +42,9 @@ final class ArithmeticFocusedAssemblyCodeGenerator {
     a.pop(eax,comment);
 
     a.fmul(comment);
-    a.fstp(comment);
-    a.push(eax,comment);
+
+    a.push(0,comment); //push unknown value
+    a.fstp("dword ["+esp+"]",comment); //fill that value
   }
 
 
@@ -56,6 +57,8 @@ final class ArithmeticFocusedAssemblyCodeGenerator {
 
   static void compile_fsub(final AssemblyWriter a){
     //https://stackoverflow.com/questions/11853133/adding-floating-point-double-numbers-in-assembly
+    //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
+
     final String comment = "fsub";
 
     a.finit(comment);
@@ -67,8 +70,10 @@ final class ArithmeticFocusedAssemblyCodeGenerator {
     a.pop(eax,comment);
 
     a.fsub(comment);
-    a.fstp(comment);
-    a.push(eax,comment);
+
+    a.push(0,comment); //push unknown value
+    a.fstp("dword ["+esp+"]",comment); //fill that value
+
   }
 
   static void compile_add(final VMInstr instr, final AssemblyWriter a) {
@@ -80,6 +85,7 @@ final class ArithmeticFocusedAssemblyCodeGenerator {
 
   static void compile_fadd(final AssemblyWriter a){
     //https://stackoverflow.com/questions/11853133/adding-floating-point-double-numbers-in-assembly
+    //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
     final String comment = "fadd";
 
     a.finit(comment);
@@ -91,8 +97,9 @@ final class ArithmeticFocusedAssemblyCodeGenerator {
     a.pop(ebx,comment);
 
     a.fadd(comment);
-    a.fstp(comment);
-    a.push(eax,comment);
+
+    a.push(0,comment); //push unknown value
+    a.fstp("dword ["+esp+"]",comment); //fill that value
   }
 
 

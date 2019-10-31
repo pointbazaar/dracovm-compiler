@@ -169,6 +169,9 @@ public final class AssemblyCodeGenerator {
             case "eq":
                 compile_eq(a);
                 break;
+            case "f_eq":
+                compile_f_eq(a);
+                break;
             case "gt":
                 compile_gt(a);
                 break;

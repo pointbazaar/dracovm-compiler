@@ -330,12 +330,10 @@ public final class AssemblyWriter {
         any("faddp",comment);
     }
 
-    public void fstp(String comment) {
+    public void fstp(final String content,final String comment) {
         //store floating point value and pop from fpu stack
-        //TODO: remove the bloat here
-        push(esi,comment);
-        any("fstp dword ["+esp+"]",comment);
-        pop(esi,comment);
+
+        any("fstp "+content,comment);
     }
 
     public void fadd(final String comment) {
@@ -359,5 +357,11 @@ public final class AssemblyWriter {
         //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
         //resets fpu stacks to default
         any("finit ",comment);
+    }
+
+    public void fstsw(Register register, String comment) {
+        //float store single word.
+        //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
+        any("fstsw "+register,comment);
     }
 }
