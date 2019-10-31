@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.groupingBy;
+import static org.vanautrui.languages.vmcompiler.codegenerator.ArithmeticFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arrayread;
 import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arraystore;
 import static org.vanautrui.languages.vmcompiler.codegenerator.StackFocusedAssemblyCodeGenerator.*;
@@ -65,7 +66,7 @@ public final class AssemblyCodeGenerator {
     private static void compile_iconst(final VMInstr instr, final AssemblyWriter a) {
         final int x = parseInt(instr.arg1.get());
 
-        a.push(x, instr.toString());
+        a.push(x, "iconst");
     }
 
     private static void compile_fconst(final VMInstr instr, final AssemblyWriter a) {
@@ -164,7 +165,7 @@ public final class AssemblyCodeGenerator {
                 compile_leq(a);
                 break;
             case "not":
-                compile_not(instr, a);
+                compile_not(a);
                 break;
             case "and":
                 compile_and(a);
@@ -304,61 +305,21 @@ public final class AssemblyCodeGenerator {
         a.push(subrName, instr.toString());
     }
 
-    /**
-     * compiles the 'mod' dracovm instruction to assembly code
-     */
-    private static void compile_mod(final VMInstr instr, final AssemblyWriter a) {
-        //https://stackoverflow.com/questions/8021772/assembly-language-how-to-do-modulo
-        final String comment = instr.toString();
-        a.pop(ebx, comment);
-        a.pop(eax, comment);
 
 
-        a.xor(edx,edx,comment); //dividend high half = 0
-        //sign-extend eax in edx, in case eax is negative
-        //https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
-        a.cdq(instr.toString());
-
-        a.idiv_eax_by(ebx, comment);
-        a.push(edx, comment);
-    }
-
-    private static void compile_not(final VMInstr instr, final AssemblyWriter a) {
+    private static void compile_not(final AssemblyWriter a) {
         //logical not
         //if there is a 1 (true) on the stack, after this vm command, there must be a 0 (false) on the stack
         //if there is a 0 (false) on the stack, after this vm command, there must be a 1 (true) on the stack
 
         //https://www.tutorialspoint.com/assembly_programming/assembly_logical_instructions.htm
 
-        final String comment = instr.toString();
+        final String comment = "not";
 
         a.mov(ebx, 1, comment);
         a.pop(eax, comment);
         a.xor(eax, ebx, comment);
         a.push(eax, comment);
-    }
-
-    private static void compile_div(final VMInstr instr, final AssemblyWriter a) {
-        a.pop(ecx,instr.toString()); //pop the divisor
-        a.pop(eax,instr.toString()); //pop the dividend
-
-        a.xor(edx,edx,instr.toString()); //dividend high half=0
-        //sign-extend eax in edx, in case eax is negative
-        //https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
-        a.cdq(instr.toString());
-
-        a.idiv_eax_by(ecx,instr.toString());
-
-        a.push(eax,instr.toString()); //push the quotient
-    }
-
-    private static void compile_mul(final VMInstr instr, final AssemblyWriter a) {
-
-        a.pop(ebx, instr.toString());
-        a.pop(eax, instr.toString());
-
-        a.mul_eax_with(ebx, instr.toString());
-        a.push(eax, instr.toString());
     }
 
 
@@ -505,34 +466,14 @@ public final class AssemblyCodeGenerator {
         a.label(labelend, comment);
     }
 
-    private static void compile_neg(final VMInstr instr, final AssemblyWriter a) {
-        a.pop(eax, instr.toString());
-        a.mov(ebx, -1, instr.toString());
-        a.mul_eax_with(ebx, instr.toString());
-        a.push(eax, instr.toString());
-    }
 
-    private static void compile_sub(final VMInstr instr, final AssemblyWriter a) {
-        a.pop(ebx, instr.toString());
-        a.pop(eax, instr.toString());
-        a.sub(eax, ebx, instr.toString());
-        a.push(eax, instr.toString());
-    }
-
-    private static void compile_add(final VMInstr instr, final AssemblyWriter a) {
-        a.pop(eax, instr.toString());
-        a.pop(ebx, instr.toString());
-        a.add(eax, ebx, instr.toString());
-        a.push(eax, instr.toString());
-    }
 
 
     private static List<String> clean_vm_code(final List<String> vmcodes) {
         //remove comments and empty lines
         //and remove indentation
 
-
-        AtomicInteger counter = new AtomicInteger();
+        final AtomicInteger counter = new AtomicInteger();
         final int chunkSize = 1000;
 
         final List<String> clean_vm_codes = Collections.synchronizedList(new ArrayList<>());
@@ -558,16 +499,5 @@ public final class AssemblyCodeGenerator {
         ).forEach(clean_vm_codes::addAll);
 
         return clean_vm_codes;
-        /*
-        //return result;
-        return vmcodes.parallelStream().map(instr->{
-            if(instr.contains("//")){
-                return instr.substring(0,instr.indexOf("//"));
-            }else{
-                return instr.trim();
-            }
-        }).collect(Collectors.toList());
-
-         */
     }
 }
