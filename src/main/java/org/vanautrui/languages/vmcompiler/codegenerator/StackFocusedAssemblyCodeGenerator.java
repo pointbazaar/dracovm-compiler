@@ -11,10 +11,10 @@ import static org.vanautrui.languages.vmcompiler.VMCompilerPhases.SEGMENT_LOCAL;
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
 import static org.vanautrui.languages.vmcompiler.model.Register.ebx;
 
-public final class StackFocusedAssemblyCodeGenerator {
+final class StackFocusedAssemblyCodeGenerator {
 
 
-  public static void compile_dup(final VMInstr instr, final AssemblyWriter a) {
+  static void compile_dup(final VMInstr instr, final AssemblyWriter a) {
     //duplicates top of stack
     a.mov(eax,"["+esp+"]",instr.toString());
     a.push(eax,instr.toString());
@@ -24,7 +24,7 @@ public final class StackFocusedAssemblyCodeGenerator {
    * swaps the 2 topmost items on the stack
    * @param a
    */
-  public static void compile_swap(final String mycomment, final AssemblyWriter a) {
+  static void compile_swap(final String mycomment, final AssemblyWriter a) {
     String comment=" swap ";
 
     if(!mycomment.isEmpty()){
@@ -82,7 +82,7 @@ public final class StackFocusedAssemblyCodeGenerator {
     a.push(eax,comment);
   }
 
-  public static void compile_push(final String segment,final int index, final AssemblyWriter a) {
+  static void compile_push(final String segment, final int index, final AssemblyWriter a) {
 
     switch (segment){
       case SEGMENT_ARG:
@@ -145,7 +145,7 @@ public final class StackFocusedAssemblyCodeGenerator {
    * @param a the AssemblyWriter we are using
    * @throws Exception if we are pop - ing from a nonexisting segment
    */
-  public static void compile_pop(final Optional<String> mysegment, final Optional<Integer> myindex, final AssemblyWriter a) throws Exception{
+  static void compile_pop(final Optional<String> mysegment, final Optional<Integer> myindex, final AssemblyWriter a) throws Exception{
 
     if(!mysegment.isPresent()){
       a.pop(eax,"pop");

@@ -16,7 +16,7 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
  * These subroutines must behave like any other subroutine when called.
  */
 
-public final class BuiltinSubroutinesInAssembly {
+final class BuiltinSubroutinesInAssembly {
 
   //https://www.informatik.htw-dresden.de/~beck/ASM/syscall_list.html
 
@@ -39,7 +39,7 @@ public final class BuiltinSubroutinesInAssembly {
    * and do not forget a subroutine.
    * So a new subroutine can be added easily
    */
-  public static void compile_all_builtin_subroutines(final AssemblyWriter a) {
+  static void compile_all_builtin_subroutines(final AssemblyWriter a) {
     compile_readchar(a);
     compile_putchar(a);
     compile_putdigit(a);

@@ -6,9 +6,9 @@ import org.vanautrui.languages.vmcompiler.model.Register;
 
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
 
-public final class ArrayFocusedAssemblyCodeGenerator {
+final class ArrayFocusedAssemblyCodeGenerator {
 
-    public static void compile_arrayread(final VMInstr instr, final AssemblyWriter a) {
+    static void compile_arrayread(final VMInstr instr, final AssemblyWriter a) {
         /*
          arrayread
         //stack looks like:
@@ -40,7 +40,7 @@ public final class ArrayFocusedAssemblyCodeGenerator {
      * Documentation for the behavior, expected stack state before and after are to be found in
      * spec/dracovm-specification.txt
      */
-    public static void compile_arraystore(final VMInstr instr, final AssemblyWriter a) {
+    static void compile_arraystore(final VMInstr instr, final AssemblyWriter a) {
 
         a.pop(ebx, instr.toString()); //value to store //-1
 

@@ -6,7 +6,7 @@ import org.vanautrui.languages.vmcompiler.instructions.VMInstr;
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
 import static org.vanautrui.languages.vmcompiler.model.Register.eax;
 
-public final class ArithmeticFocusedAssemblyCodeGenerator {
+final class ArithmeticFocusedAssemblyCodeGenerator {
 
   static void compile_div(final VMInstr instr, final AssemblyWriter a) {
     a.pop(ecx,instr.toString()); //pop the divisor
