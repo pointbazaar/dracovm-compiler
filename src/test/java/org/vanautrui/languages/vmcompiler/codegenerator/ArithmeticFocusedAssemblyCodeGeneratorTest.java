@@ -4,11 +4,117 @@ import org.junit.Test;
 import org.vanautrui.languages.CodeGeneratorTestUtils;
 import org.vanautrui.languages.DracoVMCodeWriter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public final class ArithmeticFocusedAssemblyCodeGeneratorTest {
+
+  @Test
+  public void test_fadd1()throws Exception{
+    //final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    final List<String> vmcodes = Arrays.asList(
+            "subroutine Main_main 0 args 0 locals",
+            "fconst 3.0",
+            "fconst 2.0",
+            "fadd",
+            "fconst 7.0",
+            "f_lt",
+            "if-goto exit0",
+            "iconst 1",
+            "exit",
+            "label exit0",
+            "iconst 0",
+            "exit"
+    );
+
+    //it should exit with 0
+
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testfadd1");
+
+    assertEquals(0,pr.exitValue());
+  }
+
+  @Test
+  public void test_fadd2()throws Exception{
+    //final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    final List<String> vmcodes = Arrays.asList(
+            "subroutine Main_main 0 args 0 locals",
+            "fconst 3.0",
+            "fconst 6.0",
+            "fadd",
+            "fconst 7.0",
+            "f_lt",
+            "if-goto exit0",
+            "iconst 1",
+            "exit",
+            "label exit0",
+            "iconst 0",
+            "exit"
+    );
+
+    //it should exit with 0
+
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testfadd2");
+
+    assertEquals(1,pr.exitValue());
+  }
+
+  @Test
+  public void test_fsub()throws Exception{
+    //final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    final List<String> vmcodes = Arrays.asList(
+            "subroutine Main_main 0 args 0 locals",
+            "fconst 3.0",
+            "fconst 2.0",
+            "fsub",
+            "fconst 7.0",
+            "f_lt",
+            "if-goto exit0",
+            "iconst 1",
+            "exit",
+            "label exit0",
+            "iconst 0",
+            "exit"
+    );
+
+    //it should exit with 0
+
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testfsub");
+
+    assertEquals(0,pr.exitValue());
+  }
+
+  @Test
+  public void test_fsub2()throws Exception{
+    //final DracoVMCodeWriter a=new DracoVMCodeWriter();
+
+    final List<String> vmcodes = Arrays.asList(
+            "subroutine Main_main 0 args 0 locals",
+            "fconst 30.0",
+            "fconst 2.0",
+            "fsub",
+            "fconst 7.0",
+            "f_lt",
+            "if-goto exit0",
+            "iconst 1",
+            "exit",
+            "label exit0",
+            "iconst 0",
+            "exit"
+    );
+
+    //it should exit with 0
+
+    final Process pr = CodeGeneratorTestUtils.compile_and_run_vm_codes_for_testing(vmcodes, "testfsub2");
+
+    assertEquals(1,pr.exitValue());
+  }
 
   @Test
   public void test_add()throws Exception{

@@ -3,6 +3,8 @@ package org.vanautrui.languages.vmcompiler;
 import org.vanautrui.languages.vmcompiler.model.Register;
 import java.util.*;
 
+import static org.vanautrui.languages.vmcompiler.model.Register.*;
+
 public final class AssemblyWriter {
 
     //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
@@ -22,7 +24,7 @@ public final class AssemblyWriter {
         any(cmd,"");
     }
 
-    private void any(final String cmd,final String comment){
+    public void any(final String cmd, final String comment){
         final String spacer="        ";
         //base
         String prefix="";
@@ -169,6 +171,9 @@ public final class AssemblyWriter {
     public void cmp(final Register reg1, final Register reg2,final String comment) {
         any("cmp "+reg1+","+reg2,comment);
     }
+    public void cmp(final Register reg1, final String rightside, final String comment){
+        any("cmp "+reg1+","+rightside,comment);
+    }
 
     public void je(final String label) {
         je(label,"");
@@ -298,6 +303,9 @@ public final class AssemblyWriter {
     public void and(final Register reg1, final Register reg2, final String comment) {
         any("and "+reg1+","+reg2,comment);
     }
+    public void and(final Register reg1, final String rightside, final String comment) {
+        any("and "+reg1+","+rightside,comment);
+    }
 
     public void or(final Register reg1, final Register reg2, final String comment) {
         any("or "+reg1+","+reg2,comment);
@@ -305,5 +313,51 @@ public final class AssemblyWriter {
 
     public void cdq(String comment) {
         any("cdq",comment);
+    }
+
+    public void fld(final String leftside, final String comment) {
+
+        //https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+        //<3 data sheets
+
+        //https://stackoverflow.com/questions/37775144/how-to-load-the-value-stored-in-extended-registereax-into-st0-of-floating-poin
+
+        any("fld "+leftside,comment);
+    }
+
+    public void faddp(String comment) {
+        //add 2 floating point values on the stack and pop
+        any("faddp",comment);
+    }
+
+    public void fstp(String comment) {
+        //store floating point value and pop from fpu stack
+        //TODO: remove the bloat here
+        push(esi,comment);
+        any("fstp dword ["+esp+"]",comment);
+        pop(esi,comment);
+    }
+
+    public void fadd(final String comment) {
+        any("fadd",comment);
+    }
+
+    public void fsub(final String comment){
+        any("fsub",comment);
+    }
+
+    public void fmul(final String comment) {
+        any("fmul",comment);
+    }
+
+    public void fcom(String float_register_left, String float_register_right, String comment) {
+        //compare floating point numbers
+        any("fcom "+float_register_left+","+float_register_right,comment);
+    }
+
+    public void finit(final String comment) {
+        //https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
+        //resets fpu stacks to default
+        any("finit ",comment);
     }
 }

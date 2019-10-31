@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static org.vanautrui.languages.vmcompiler.codegenerator.ArithmeticFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arrayread;
 import static org.vanautrui.languages.vmcompiler.codegenerator.ArrayFocusedAssemblyCodeGenerator.compile_arraystore;
+import static org.vanautrui.languages.vmcompiler.codegenerator.LogicFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.codegenerator.StackFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.codegenerator.SubroutineFocusedAssemblyCodeGenerator.*;
 import static org.vanautrui.languages.vmcompiler.model.Register.*;
@@ -24,7 +25,7 @@ public final class AssemblyCodeGenerator {
 
     //https://en.wikipedia.org/wiki/X86_instruction_listings
 
-    private static long unique(){
+    static long unique(){
         //returns 0 <= x <= Long.MAX_VALUE
         return ThreadLocalRandom.current().nextLong(0,Long.MAX_VALUE);
     }
@@ -70,25 +71,31 @@ public final class AssemblyCodeGenerator {
     }
 
     private static void compile_fconst(final VMInstr instr, final AssemblyWriter a) {
-        final float f = Float.parseFloat(instr.arg1.get());
 
-        a.push(f, instr.toString());
+        final float f = Float.parseFloat(instr.arg1.get());
+        final String comment = "fconst";
+
+        a.any("mov "+eax+", __float32__("+f+")",comment);
+        a.push(eax, comment);
     }
 
     private static void compile_vm_instr(final VMInstr instr, final AssemblyWriter a) throws Exception {
 
         switch (instr.cmd) {
             //stack related commands
+
+            //constants
             case "iconst":
                 compile_iconst(instr, a);
                 break;
-
             case "fconst":
                 compile_fconst(instr, a);
                 break;
             case "cconst":
                 compile_cconst(instr, a);
                 break;
+
+
             case "pop":
                 Optional<Integer> index = Optional.empty();
                 if (instr.arg2.isPresent()) {
@@ -128,7 +135,16 @@ public final class AssemblyCodeGenerator {
                 compile_callfromstack(instr, a);
                 break;
 
-            //arithmetic commands
+            //floating point arithmetic commands
+            case "fadd":
+                compile_fadd(a);
+                break;
+            case "fsub":
+                compile_fsub(a);
+                break;
+
+            //TODO: prefix with 'i', so everyone knows it is about integers
+            //integer arithmetic commands
             case "add":
                 compile_add(instr, a);
                 break;
@@ -148,6 +164,7 @@ public final class AssemblyCodeGenerator {
                 compile_neg(instr, a);
                 break;
 
+            //TODO: prefix lt, gt, ... with 'i_' so we know that it is for integers
             //logic commands
             case "eq":
                 compile_eq(a);
@@ -155,11 +172,17 @@ public final class AssemblyCodeGenerator {
             case "gt":
                 compile_gt(a);
                 break;
+            case "f_gt":
+                compile_f_gt(a);
+                break;
             case "geq":
                 compile_geq(a);
                 break;
             case "lt":
                 compile_lt(a);
+                break;
+            case "f_lt":
+                compile_f_lt(a);
                 break;
             case "leq":
                 compile_leq(a);
@@ -215,71 +238,6 @@ public final class AssemblyCodeGenerator {
         }
     }
 
-    private static void compile_and(final AssemblyWriter a) {
-        final String comment = "and";
-
-        a.pop(ebx, comment);
-        a.pop(eax, comment);
-        a.and(eax,ebx,comment);
-        a.push(eax,comment);
-    }
-
-    private static void compile_or(final AssemblyWriter a) {
-        final String comment = "or";
-
-        a.pop(ebx, comment);
-        a.pop(eax, comment);
-        a.or(eax,ebx,comment);
-        a.push(eax,comment);
-    }
-
-    private static void compile_leq(final AssemblyWriter a) {
-
-        final String comment = "leq";
-
-        final long unique = unique();
-        final String labeltrue = ".leq_push"+unique;
-        final String labelend = ".leq_end"+unique;
-
-        a.pop(ebx, comment);
-        a.pop(eax, comment);
-        a.cmp(eax, ebx, comment);
-        a.jle(labeltrue, comment);
-
-        //push 0 (false)
-        a.push(0, comment);
-        a.jmp(labelend, comment);
-
-        a.label(labeltrue, comment);
-        //push 1 (true)
-        a.push(1, comment);
-
-        a.label(labelend, comment);
-    }
-
-    private static void compile_geq(final AssemblyWriter a) {
-
-        final String comment = "geq";
-
-        final long unique = unique();
-        final String labeltrue = ".geq_push"+unique;
-        final String labelend = ".geq_end"+unique;
-
-        a.pop(ebx, comment);
-        a.pop(eax, comment);
-        a.cmp(eax, ebx, comment);
-        a.jge(labeltrue, comment);
-
-        //push 0 (false)
-        a.push(0, comment);
-        a.jmp(labelend, comment);
-
-        a.label(labeltrue, comment);
-        //push 1 (true)
-        a.push(1, comment);
-
-        a.label(labelend, comment);
-    }
 
     private static void compile_lshiftr(final VMInstr instr, final AssemblyWriter a) {
 
@@ -337,53 +295,6 @@ public final class AssemblyCodeGenerator {
     }
 
 
-    private static void compile_lt(final AssemblyWriter a) {
-
-        final String comment = "lt";
-
-        final long unique = unique();
-        final String labeltrue = ".lt_push"+unique;
-        final String labelend = ".lt_end"+unique;
-
-        a.pop(ebx, comment);
-        a.pop(eax, comment);
-        a.cmp(eax, ebx, comment);
-        a.jl(labeltrue, comment);
-
-        //push 0 (false)
-        a.push(0, comment);
-        a.jmp(labelend, comment);
-
-        a.label(labeltrue, comment);
-        //push 1 (true)
-        a.push(1, comment);
-
-        a.label(labelend, comment);
-    }
-
-    private static void compile_gt(final AssemblyWriter a) {
-
-        final String comment = "gt";
-
-        final long unique = unique();
-        final String labeltrue = ".gt_push"+unique;
-        final String labelend = ".gt_end"+unique;
-
-        a.pop(ebx, comment);
-        a.pop(eax, comment);
-        a.cmp(eax, ebx, comment);
-        a.jg(labeltrue, comment);
-
-        //push 0 (false)
-        a.push(0, comment);
-        a.jmp(labelend, comment);
-
-        a.label(labeltrue, comment);
-        //push 1 (true)
-        a.push(1, comment);
-
-        a.label(labelend, comment);
-    }
 
     private static List<String> vm_codes_to_assembly(final List<VMInstr> vmcodes) throws Exception {
         //receives only clean VM Codes
@@ -443,28 +354,6 @@ public final class AssemblyCodeGenerator {
         a.je(instr.arg1.get(), comment); //jumps, if eax==ebx
     }
 
-    private static void compile_eq(final AssemblyWriter a) {
-        final String comment = "eq";
-
-        final long unique = unique();
-        final String labeltrue = ".eq_push"+unique;
-        final String labelend = ".eq_end"+unique;
-
-        a.pop(eax, comment);
-        a.pop(ebx, comment);
-        a.cmp(eax, ebx, comment);
-        a.je(labeltrue, comment);
-
-        //push 0 (false)
-        a.push(0, comment);
-        a.jmp(labelend, comment);
-
-        a.label(labeltrue, comment);
-        //push 1 (true)
-        a.push(1, comment);
-
-        a.label(labelend, comment);
-    }
 
 
 
