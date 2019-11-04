@@ -1,0 +1,4 @@
+the goal with this rewrite is to get better performance.
+compilers are traditionally implemented in compiled languages for the speed advantage.
+Another benefit is, that java is not needed to use this vm compiler.
+
