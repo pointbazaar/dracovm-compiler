@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
 	//extension. and the files should all exist. 
 	//so we should check that.
 	
-	cout << "printing arguments: " << endl;
+	cout << "VM Code Files to compile: " << endl << endl;
 	for(int i=1;i<argc;i++){
 		char* filename = argv[i];
 		
@@ -24,6 +24,8 @@ int main(int argc, char* argv[]){
 			cerr << "error with " << filename << endl;
 		}
 	}
+
+	cout << endl;
 
 	cout << "successfully compiled " << nSubroutines << " subroutines" << endl;
 	
