@@ -5,8 +5,6 @@ using namespace std;
 int main(int argc, char* argv[]){
 
 	cout << "DRACOVM Compiler" << endl;
-	cout << "USAGE: dracovm -(help)? (FILE.subroutine.dracovm)*" << endl;
-
 	const unsigned int nSubroutines = argc-1;
 
 	//parse files given as arguments:
@@ -14,16 +12,28 @@ int main(int argc, char* argv[]){
 	//extension. and the files should all exist. 
 	//so we should check that.
 	
-	string help_option="-help";
-	
-	for(int i=1;i<argc;i++){
-		//compare to see if -help 
-		string arg = argv[i];
-		if(help_option.compare(arg)==0){
-			//TODO: print help
-		}
+	if(argc==1){
+		cerr << " no options or files supplied. exiting " << endl;
+		exit(1);
 	}
 	
+	string help_option="-help";
+	
+	//compare to see if -help 
+	if(help_option.compare(argv[1])==0){
+		// print help and general info
+	cout << "USAGE: dracovm (FILE.subroutine.dracovm)*" << endl;
+	cout << "USAGE: dracovm -help " << endl;
+	cout << "AUTHOR: alex23667@gmail.com" << endl;
+	cout << "REPO: https://github.com/pointbazaar/dracovm-compiler" << endl;
+		exit(0);
+	}
+
+	if(nSubroutines==0){
+		cerr << "no .subroutine.dracovm files supplied. exiting." << endl;
+		exit(1);
+	}
+
 	cout << "VM Code Files to compile: " << endl << endl;
 	
 	for(int i=1;i<argc;i++){
