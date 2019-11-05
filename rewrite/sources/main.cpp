@@ -34,15 +34,20 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
+	//TODO: open our dracovm.info file, which should tell us all about
+	//what we actually need to compile, also,
+	// the subroutine files and their hashes.
+
 	cout << "VM Code Files to compile: " << endl << endl;
 	
 	for(int i=1;i<argc;i++){
 	
-		char* filename = argv[i];
+		string filename = argv[i];
 		
 		cout << " - " << filename << endl;
 		
 		try{
+			//TODO: open these files
 
 		}catch(const string msg){
 		
