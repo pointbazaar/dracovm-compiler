@@ -14,10 +14,13 @@ int main(int argc, char* argv[]){
 	//extension. and the files should all exist. 
 	//so we should check that.
 	
+	string help_option="-help";
+	
 	for(int i=1;i<argc;i++){
-		//TODO: compare to see if -help 
-		if(){
-
+		//compare to see if -help 
+		string arg = argv[i];
+		if(help_option.compare(arg)==0){
+			//TODO: print help
 		}
 	}
 	
