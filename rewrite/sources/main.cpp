@@ -5,6 +5,7 @@ using namespace std;
 int main(int argc, char* argv[]){
 
 	cout << "DRACOVM Compiler" << endl;
+	cout << "USAGE: dracovm -(help)? (FILE.subroutine.dracovm)*" << endl;
 
 	const unsigned int nSubroutines = argc-1;
 
@@ -13,14 +14,25 @@ int main(int argc, char* argv[]){
 	//extension. and the files should all exist. 
 	//so we should check that.
 	
-	cout << "VM Code Files to compile: " << endl << endl;
 	for(int i=1;i<argc;i++){
+		//TODO: compare to see if -help 
+		if(){
+
+		}
+	}
+	
+	cout << "VM Code Files to compile: " << endl << endl;
+	
+	for(int i=1;i<argc;i++){
+	
 		char* filename = argv[i];
 		
 		cout << " - " << filename << endl;
+		
 		try{
-			
+
 		}catch(const string msg){
+		
 			cerr << "error with " << filename << endl;
 		}
 	}
