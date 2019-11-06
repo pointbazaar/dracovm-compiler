@@ -56,13 +56,15 @@ int main(int argc, char* argv[]){
 
 	cout << "VM Code Files to compile: " << endl << endl;
 	
+	vector <string> filenames;
+
 	for(int i=1;i<argc;i++){
 		string filename = argv[i];
+		filenames.push_back(filename);
 		cout << " - " << filename << endl;
 	}
 
 	cout << endl;
-	vector <string> filenames;
 
 	bool success = compile_main(filenames);
 
