@@ -83,4 +83,15 @@ there are different cases aspects to this:
 	(if the were mentioned in the commandline arguments.)
 
 
+Making sure that the subroutines call each other with
+the right number and types of arguments is the responsibility
+of the dragon compiler, which should also support
+incremental compilation in the future.
+
+checking that all calls are valid (at the dracovm level)
+is just an added safeguard/convenience.
+Also it should be implemented, as dragon and dracovm
+are conceptually different, and actually different programs
+which should be correct and check for errors on their own,
+without relying on the next or previous program to do it.
 */
