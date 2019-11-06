@@ -1,4 +1,9 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+#include "dracovmcompiler.hpp"
 
 using namespace std;
 
@@ -21,7 +26,7 @@ int main(int argc, char* argv[]){
 	
 	//compare to see if -help 
 	if(help_option.compare(argv[1])==0){
-		// print help and general info
+		// print help and genereal info
 	cout << "USAGE: dracovm (FILE.subroutine.dracovm)*" << endl;
 	cout << "USAGE: dracovm -help " << endl;
 	cout << "AUTHOR: alex23667@gmail.com" << endl;
@@ -37,6 +42,17 @@ int main(int argc, char* argv[]){
 	//TODO: open our dracovm.info file, which should tell us all about
 	//what we actually need to compile, also,
 	// the subroutine files and their hashes.
+
+	ifstream info_file ("dracovm.info", ios::out | ios::app | ios::binary);
+	//this call also creates the file if it does not exist
+
+	if(info_file.good()){
+		cout << "dracovm.info exists" << endl;
+		//TODO: read the information about the subroutines
+	}else{
+		cout << "dracovm.info does not exist. exiting" << endl;
+		exit(1);
+	}
 
 	cout << "VM Code Files to compile: " << endl << endl;
 	
@@ -56,6 +72,9 @@ int main(int argc, char* argv[]){
 	}
 
 	cout << endl;
+	vector <string> filenames;
+
+	compile_main(filenames);
 
 	cout << "successfully compiled " << nSubroutines << " subroutines" << endl;
 	
