@@ -1,0 +1,23 @@
+//this is an example of how a '.dracovm.info' file could look.
+//each line starts with the name of a subroutine file.
+//the files are usually prefixed with a '.' so they are
+//not shown be default
+
+//the parts of a line (the description of a subroutine to the dracovm compiler)
+//are seperated by a ';'
+
+//Part 1: FILENAME
+//Part 2: ',' - seperated list of dependencies (in their representation as a filename) 
+//	  (which other subroutines it calls)
+//	  This is neccessary to check if all these dependencies exist in the directory
+//	  and were specified as arguments to the dracovm compiler
+//	  meaning if the '.asm' outputs of the compiler exist, 
+//	  therefore their '.o' object file equivalents should exist,
+//	  so everything can be linked together by 'ld' at the end.
+//Part 3: name of the generated '.asm' file
+
+// FILENAME;DEPENDENCY1,DEPENDENCY2, ... ;ASSEMBLY_FILENAME;HASH OF FILE
+
+.Builtin_putchar.subroutine.dracovm;;.Builtin_putchar.asm;04cahuharc3h
+.Main_main.subroutine.dracovm;.Builtin_putchar.subroutine.dracovm;.Main_main.asm;u48du83d
+
