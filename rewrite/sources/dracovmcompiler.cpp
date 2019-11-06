@@ -62,6 +62,9 @@ there are different cases aspects to this:
 	look in the file metadata if the file has changed
 	since an earlier compilation, if so,
 	that could be from usage of git,
+	
+	https://git.wiki.kernel.org/index.php/Git_FAQ#Why_isn.27t_Git_preserving_modification_time_on_files.3F
+
 	or any other reason, which might not have
 	actually changed the file.
 	so a fast hash (idk, maybe md5) is computed and
