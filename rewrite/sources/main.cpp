@@ -57,26 +57,20 @@ int main(int argc, char* argv[]){
 	cout << "VM Code Files to compile: " << endl << endl;
 	
 	for(int i=1;i<argc;i++){
-	
 		string filename = argv[i];
-		
 		cout << " - " << filename << endl;
-		
-		try{
-			//TODO: open these files
-
-		}catch(const string msg){
-		
-			cerr << "error with " << filename << endl;
-		}
 	}
 
 	cout << endl;
 	vector <string> filenames;
 
-	compile_main(filenames);
+	bool success = compile_main(filenames);
 
-	cout << "successfully compiled " << nSubroutines << " subroutines" << endl;
-	
+	if(success){
+		cout << "BUILD SUCCESSFUL" << endl;
+	}else{
+		cout << "BUILD FAILED" << endl;
+	}
+
 	return 0;
 }
