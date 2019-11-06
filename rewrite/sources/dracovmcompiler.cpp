@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -20,7 +21,19 @@ bool compile_main(vector<string> filenames){
 				filename
 				.substr(filename.size()-correct_ending.size(),filename.size());
 			if(ending.compare(correct_ending)==0){
-				continue;
+				//filename has correct ending
+
+				ifstream file(filename, ios::in);
+				if(file.is_open()){
+					//file exists and could be opened
+					file.close();
+					continue;
+				}else{
+					file.close();
+					cerr << filename
+						 << " does not exist or could not be opened."
+						 << endl;
+				}
 			}
 		}
 		cerr << filename 
@@ -39,3 +52,35 @@ bool compile_main(vector<string> filenames){
 
 	return false;
 }
+
+/*
+About incremental compilation in dragon:
+
+there are different cases aspects to this:
+
+1:  1 or more.subroutine.dracovm file, no dependencies amongst each other:
+	look in the file metadata if the file has changed
+	since an earlier compilation, if so,
+	that could be from usage of git,
+	or any other reason, which might not have
+	actually changed the file.
+	so a fast hash (idk, maybe md5) is computed and
+	compared with the info in 'dracovm.info' file.
+	recompilation is started if the hashes differ.
+
+2:	2 or more .subroutine.dracovm files, where one or more 
+	.subroutine.dracovm files depend on other .subroutine.dracovm files.
+
+	DracoVM doesn't know about the number of arguments
+	that have been put on the stack before a subroutine call,
+	it only knows about the subroutine name 
+	(which is also part of the filename)
+	So, for any file which needs to be recompiled, it is checked
+	if the subroutines that it calls 
+	(represented by the files, 
+	which filenames this program receives as arguments)
+	were specified to be compiled alongside it
+	(if the were mentioned in the commandline arguments.)
+
+
+*/
