@@ -1,6 +1,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <istream>
+#include <sstream>
+#include <iterator>
 #include "VMInstr.hpp"
 
 using namespace std;
@@ -28,17 +31,18 @@ VMInstr::VMInstr(const string str){
 	if(res.size()>1){
 		this->arg1=res.at(1);
 	}else{
-		this->arg1=null;
+		this->arg1="";
 	}
 	if(res.size()>2){
 		this->arg2=res.at(2);
 	}else{
-		this->arg2=null;
+		this->arg2="";
 	}
 }
 
-VMInstr::toString(){
-	string a1 = (this->arg1==null)?"":this->arg1;
-	string a2 = (this->arg2==null)?"":this->arg2;
+string VMInstr::toString(){
+
+	string a1 = (this->arg1=="")?"":this->arg1;
+	string a2 = (this->arg2=="")?"":this->arg2;
 	return this->cmd+" "+a1+" "+a2;
 }

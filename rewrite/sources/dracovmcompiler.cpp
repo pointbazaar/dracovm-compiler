@@ -8,11 +8,11 @@ using namespace std;
 bool compile_main(vector<string> filenames){
 	cout << "compile_main" << endl;
 
-	//TODO: from these filenames, check if each has 
-	//correct '.subroutine.dracovm' extension
+	// from these filenames, check if each has 
+	// correct '.subroutine.dracovm' extension
 	// (marking them as a .dracovm file which only has 1 subroutine,
 	// and where the name of the subroutine is encoded in the filename) 
-	//and exists. 
+	// and exists. 
 	string correct_ending = ".subroutine.dracovm";
 
 	for(auto const& filename : filenames){
@@ -33,6 +33,7 @@ bool compile_main(vector<string> filenames){
 					cerr << filename
 						 << " does not exist or could not be opened."
 						 << endl;
+					 return false;
 				}
 			}
 		}
