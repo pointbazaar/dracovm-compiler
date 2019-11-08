@@ -5,6 +5,7 @@
 #include <map>
 
 #include "dracovmcompiler.hpp"
+#include "AssemblyCodeGen.hpp"
 
 using namespace std;
 
@@ -76,8 +77,13 @@ bool compile_main(vector<string> filenames){
 }
 
 bool compile_main2(map<string,vector<string>> vm_sources){
-	//TODO
-	return false;
+	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
+
+	//TODO: print these asm codes
+
+	//TODO: call nasm, ld
+
+	return true;
 }
 
 /*

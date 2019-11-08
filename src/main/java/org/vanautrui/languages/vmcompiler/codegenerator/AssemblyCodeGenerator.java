@@ -23,7 +23,7 @@ import static org.vanautrui.languages.vmcompiler.model.Register.*;
 
 public final class AssemblyCodeGenerator {
 
-    //https://en.wikipedia.org/wiki/X86_instruction_listings
+    
 
     static long unique(){
         //returns 0 <= x <= Long.MAX_VALUE
