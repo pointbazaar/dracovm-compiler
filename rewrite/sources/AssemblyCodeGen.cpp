@@ -1,7 +1,8 @@
 #include <map>
+#include <iostream>
 #include <vector>
 
-#include "VMInstr.hpp"
+#include "AssemblyCodeGen.hpp"
 
 using namespace std;
 
@@ -11,7 +12,8 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 	
 	//parse vm instructions
 
-	map<string,vector<VMInstr>> instrs;
+	//map<string,vector<VMInstr>> instrs;
+	map<string,vector<string>> results;
 
 	for(auto const& entry : vm_sources){
 		string filename = entry.first;
@@ -29,18 +31,49 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		//delete the subroutine declaration
 		vmcodes.erase(vmcodes.begin());
 
-		vector<VMInstr> parsed;
+		//vector<VMInstr> parsed;
 
+		vector<string> asm_cmds;	
 		for(auto const& vmcmd : vmcodes){
 
-			parsed.push_back(VMInstr(vmcmd));
+			VMInstr instr(vmcmd);
+			//compile
+			vector<string> asms = compile_vm_instr(instr);
+			asm_cmds.insert(asm_cmds.end(),asms.begin(),asms.end());
 		}
 
-		instrs[subr_name]=parsed;
+		//instrs[subr_name]=parsed;
+		results[subr_name]=asm_cmds;
 	}
 
 
-	map<string,vector<string>> results;
-	//TODO: compile 
 	return results;
+}
+
+vector<string> compile_vm_instr(VMInstr instr){
+	//returns the assembly codes generated for a given
+	//vm instruction.
+
+	//string result;
+	//switch(instr.cmd){
+		/*
+		//constants
+		case "iconst":
+			return iconst(instr);
+		case "fconst":
+			return fconst(instr);
+		case "cconst":
+			return cconst(instr);
+
+		//stack related
+		case "pop":
+			return pop(instr);
+		*/
+
+	//}
+	//return result;
+	vector<string> err;
+	cerr << "fatal error" << endl;
+	exit(1);
+	return err;
 }

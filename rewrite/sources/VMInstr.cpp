@@ -4,6 +4,7 @@
 #include <istream>
 #include <sstream>
 #include <iterator>
+
 #include "VMInstr.hpp"
 
 using namespace std;
