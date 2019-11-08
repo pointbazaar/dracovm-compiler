@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <map>
 
 using namespace std;
 
@@ -15,6 +16,10 @@ bool compile_main(vector<string> filenames){
 	// and exists. 
 	string correct_ending = ".subroutine.dracovm";
 
+	//https://stackoverflow.com/questions/3578083/what-is-the-best-way-to-use-a-hashmap-in-c
+	//contains the lines of the file
+	map<string,vector<string>> vm_sources;
+
 	for(auto const& filename : filenames){
 		if(filename.size()>=correct_ending.size()){
 			string ending = 
@@ -26,7 +31,19 @@ bool compile_main(vector<string> filenames){
 				ifstream file(filename, ios::in);
 				if(file.is_open()){
 					//file exists and could be opened
+
+
+					//put the contents
+					//of the file in a hashmap
+					vector<string> lines;
+					string line;
+					while(getline(file,line)){
+						//pass
+						lines.push_back(line);
+					}
+
 					file.close();
+					vm_sources[filename]=lines;
 					continue;
 				}else{
 					file.close();
@@ -45,11 +62,13 @@ bool compile_main(vector<string> filenames){
 		return false;
 	}
 
+	//TODO:
 	//then make hashes, compare those to those
 	//found in 'dracovm.info' , and if they differ,
 	//add them to the list of files to be recompiled.
 
-	//TODO
+	//for now, to complete the rewrite quickly, just compile,
+	//without incremental compilation
 
 	return false;
 }
