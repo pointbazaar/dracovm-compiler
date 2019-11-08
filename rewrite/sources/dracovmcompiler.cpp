@@ -4,6 +4,8 @@
 #include <fstream>
 #include <map>
 
+#include "dracovmcompiler.hpp"
+
 using namespace std;
 
 bool compile_main(vector<string> filenames){
@@ -70,6 +72,11 @@ bool compile_main(vector<string> filenames){
 	//for now, to complete the rewrite quickly, just compile,
 	//without incremental compilation
 
+	return compile_main2(vm_sources);
+}
+
+bool compile_main2(map<string,vector<string>> vm_sources){
+	//TODO
 	return false;
 }
 
@@ -118,3 +125,19 @@ are conceptually different, and actually different programs
 which should be correct and check for errors on their own,
 without relying on the next or previous program to do it.
 */
+
+//Assembly debugging:
+//(they are missing a stack display, but it be ok)
+//https://carlosrafaelgn.com.br/Asm86/
+
+//general having fun and trying different programming languages:
+//https://tio.run/#
+//https://www.tutorialspoint.com/codingground.htm
+
+//https://asmtutor.com/
+//https://asmtutor.com/#lesson1
+
+//https://www.youtube.com/watch?v=ubXXmQzzNGo
+
+//$ nasm -f elf hello.asm  # this will produce hello.o ELF object file
+//$ ld -s -o hello hello.o # this will produce hello executable

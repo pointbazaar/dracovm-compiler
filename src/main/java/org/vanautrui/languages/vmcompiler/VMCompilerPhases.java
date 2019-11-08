@@ -10,21 +10,7 @@ import java.util.stream.Collectors;
 
 public final class VMCompilerPhases {
 
-    //Assembly debugging:
-    //(they are missing a stack display, but it be ok)
-    //https://carlosrafaelgn.com.br/Asm86/
-
-    //general having fun and trying different programming languages:
-    //https://tio.run/#
-    //https://www.tutorialspoint.com/codingground.htm
-
-    //https://asmtutor.com/
-    //https://asmtutor.com/#lesson1
-
-    //https://www.youtube.com/watch?v=ubXXmQzzNGo
-
-    //$ nasm -f elf hello.asm  # this will produce hello.o ELF object file
-    //$ ld -s -o hello hello.o # this will produce hello executable
+    
 
     public static final String SEGMENT_ARG = "ARG";
     public static final String SEGMENT_LOCAL = "LOCAL";
@@ -40,11 +26,6 @@ public final class VMCompilerPhases {
         return phase_generate_executable(asm_codes,filename_without_extension);
     }
 
-    /**
-     * @param asm_codes the assembly codes to be assembled and linked
-     *
-     * @throws Exception an exception is thrown if nasm or ld exit nonzero
-     */
     private synchronized Path phase_generate_executable(final List<String> asm_codes,final String filename_without_extension) throws Exception{
 
         final String asm_file_name = filename_without_extension+".asm";
