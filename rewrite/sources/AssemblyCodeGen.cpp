@@ -90,11 +90,12 @@ vector<string> iconst(VMInstr instr){
 }
 
 vector<string> fconst(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	//parse arg
+	const float f = stof(instr.arg1);
+	return {
+		"mov eax, __float32__("+to_string(f)+")		;fconst",
+		"push eax					;fconst"
+	};
 }
 
 vector<string> cconst(VMInstr instr){
