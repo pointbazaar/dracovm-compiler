@@ -275,11 +275,13 @@ vector<string> imod(VMInstr instr){
 }
 
 vector<string> ineg(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	return {
+		";----- ineg -----",
+		"pop eax",
+		"mov ebx,-1",
+		"imul eax,ebx",
+		"push eax"
+	};
 }
 
 vector<string> _and(VMInstr instr){
