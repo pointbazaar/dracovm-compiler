@@ -291,10 +291,13 @@ vector<string> _and(VMInstr instr){
 }
 
 vector<string> _not(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
+	const string comment = "	;not";
+	const vector<string> res{
+		"mov ebx,1"+comment,
+		"pop eax"+comment,
+		"xor eax ebx"+comment,
+		"push eax"+comment
+	};
 	return res;
 }
 
