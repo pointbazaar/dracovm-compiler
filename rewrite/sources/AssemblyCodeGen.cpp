@@ -247,11 +247,15 @@ vector<string> fneg(VMInstr instr){
 }
 
 vector<string> iadd(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	//https://c9x.me/x86/html/file_module_x86_id_5.html
 
-	vector<string> res;
-	return res;
+	return {
+		";  iadd : "
+		"pop eax",
+		"pop ebx",
+		"add eax,ebx",
+		"push eax"
+	};
 }
 
 vector<string> isub(VMInstr instr){
