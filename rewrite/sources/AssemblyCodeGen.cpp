@@ -170,11 +170,11 @@ vector<string> exit(VMInstr instr){
 }
 
 vector<string> pushsubroutine(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const string name = instr.arg1;
 
-	vector<string> res;
-	return res;
+	return {
+		"push "+name+"	;pushsubroutine"
+	};
 }
 
 vector<string> callfromstack(VMInstr instr){
