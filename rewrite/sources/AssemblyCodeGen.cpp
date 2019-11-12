@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+#include "VMInstr.hpp"
 #include "AssemblyCodeGen.hpp"
 
 using namespace std;
@@ -77,3 +78,403 @@ vector<string> compile_vm_instr(VMInstr instr){
 	exit(1);
 	return err;
 }
+
+//			VMInstr Compilation subroutines:
+
+vector<string> iconst(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fconst(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> cconst(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> pop(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> push(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> dup(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> swap(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> subroutine(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> call(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> _return(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> exit(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> pushsubroutine(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> callfromstack(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+
+vector<string> fadd(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fsub(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fmul(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fdiv(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fmod(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fneg(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> iadd(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> isub(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> imul(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> idiv(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> imod(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> ineg(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> _and(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> _not(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> _or(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> ieq(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> feq(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+
+vector<string> igt(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fgt(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> igeq(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fgeq(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+
+vector<string> ilt(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> flt(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> ileq(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> fleq(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> inc(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> dec(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> _goto(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> if_goto(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> label(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> arraystore(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> arrayread(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> lshiftl(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> lshiftr(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> ror(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+vector<string> rol(VMInstr instr){
+	cerr << "NOT IMPLEMENTED" << endl;
+	exit(1);
+
+	vector<string> res;
+	return res;
+}
+
+
+

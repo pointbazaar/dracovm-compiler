@@ -1,13 +1,16 @@
-#include <string>
+#ifndef VMINSTR_HPP
+#define VMINSTR_HPP
 
 using namespace std;
 
 class VMInstr{
 
 	public:
-		string cmd;
-		string arg1; //may be ""
-		string arg2; //may be ""
-		VMInstr(string str);
-		string toString();
+		std::string cmd;
+		std::string arg1; //may be ""
+		std::string arg2; //may be ""
+		VMInstr(std::string str);
+		std::string toString();
 };
+
+#endif

@@ -1,6 +1,6 @@
-#include <map>
-#include <string>
-#include <vector>
+#ifndef ASSEMBLYCODEGEN_HPP
+#define ASSEMBLYCOGENGEN_HPP
+
 
 class VMInstr;
 
@@ -39,7 +39,7 @@ std::vector<std::string> fsub(VMInstr instr);
 std::vector<std::string> fmul(VMInstr instr);
 std::vector<std::string> fdiv(VMInstr instr);
 std::vector<std::string> fmod(VMInstr instr);
-std::vector<std::string> fneg(VMInstr instr); //*(-1)
+std::vector<std::string> fneg(VMInstr instr); // multiply with (-1)
 
 
 //integer arithmetic commands
@@ -51,9 +51,9 @@ std::vector<std::string> imod(VMInstr instr);
 std::vector<std::string> ineg(VMInstr instr);
 
 //logic commands
-std::vector<std::string> and(VMInstr instr);
-std::vector<std::string> not(VMInstr instr);
-std::vector<std::string> or(VMInstr instr);
+std::vector<std::string> _and(VMInstr instr);
+std::vector<std::string> _not(VMInstr instr);
+std::vector<std::string> _or(VMInstr instr);
 
 //	logic commands, implemented for integers and floating point values
 
@@ -98,4 +98,4 @@ std::vector<std::string> lshiftr(VMInstr instr);
 std::vector<std::string> ror(VMInstr instr);
 std::vector<std::string> rol(VMInstr instr);
 
-
+#endif
