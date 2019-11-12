@@ -271,11 +271,13 @@ vector<string> iadd(VMInstr instr){
 }
 
 vector<string> isub(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	return {
+		";	isub: "
+		"pop ebx",
+		"pop eax",
+		"sub eax,ebx",
+		"push eax"
+	};
 }
 
 vector<string> imul(VMInstr instr){
