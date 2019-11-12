@@ -82,11 +82,10 @@ vector<string> compile_vm_instr(VMInstr instr){
 //			VMInstr Compilation subroutines:
 
 vector<string> iconst(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	const int i = stoi(instr.arg1);
+	return {
+		"push "+to_string(i)+"	; iconst"
+	};
 }
 
 vector<string> fconst(VMInstr instr){
