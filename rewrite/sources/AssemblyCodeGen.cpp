@@ -445,18 +445,24 @@ vector<string> arrayread(VMInstr instr){
 }
 
 vector<string> lshiftl(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
+	const string comment = "	;lshiftl";
+	const vector<string> res{
+		"pop ecx"+comment,
+		"pop eax"+comment,
+		"shl eax cl"+comment,
+		"push eax"+comment
+	};
 	return res;
 }
 
 vector<string> lshiftr(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
+	const string comment = "	;lshiftl";
+	const vector<string> res{
+		"pop ecx"+comment,
+		"pop eax"+comment,
+		"shr eax cl"+comment,
+		"push eax"+comment
+	};
 	return res;
 }
 
