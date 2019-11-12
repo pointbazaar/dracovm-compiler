@@ -187,11 +187,23 @@ vector<string> callfromstack(VMInstr instr){
 
 
 vector<string> fadd(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	//https://stackoverflow.com/questions/11853133/adding-floating-point-double-numbers-in-assembly
+	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
-	vector<string> res;
-	return res;
+	return {
+		"; START fadd"
+		//init floating point unit
+		"finit",
+		//load from stack
+		"fld dword [esp]",
+		"pop eax",
+		"fld dword [esp]",
+		"pop ebx",
+		"fadd",
+		"push 0",			//push unknown value
+		"fstp dword [esp]" //fill that value
+		"; END 	 fadd"
+	};
 }
 
 vector<string> fsub(VMInstr instr){
