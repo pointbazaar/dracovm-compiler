@@ -400,28 +400,24 @@ vector<string> fleq(VMInstr instr){
 	return res;
 }
 
-vector<string> inc(VMInstr instr){
+vector<string> inc(const VMInstr instr){
 	//increments the value on top of stack
-	const string comment = "	;inc";
 	
 	//maybe this can work. maybe it can be done
 	//in a single instruction
-	const vector<string> res{
-		"inc [esp]"+comment
+	return {
+		"inc [esp] ;	inc"
 	};
-	return res;
 }
 
 vector<string> dec(VMInstr instr){
 	//decrements the value on top of stack
-	const string comment = "	;dec";
 
 	//maybe this can work. maybe it can be done
 	//in a single instruction
-	const vector<string> res{
-		"dec [esp]"+comment
+	return {
+		"dec [esp]	;dec"
 	};
-	return res;
 }
 
 vector<string> _goto(VMInstr instr){
