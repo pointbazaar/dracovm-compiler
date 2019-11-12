@@ -267,11 +267,20 @@ vector<string> idiv(VMInstr instr){
 }
 
 vector<string> imod(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	//https://stackoverflow.com/questions/8021772/assembly-language-how-to-do-modulo
+	
+	return {
+		"; -- START imod  -- "
+		"pop ebx",
+		"pop eax",
+		"xor edx,edx",
+		//sign-extend eax in edx, in case eax is negative
+		//https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
+		"cdq",
+		"idiv ebx",
+		"push edx",
+		"; -- END 	imod --"
+	};
 }
 
 vector<string> ineg(VMInstr instr){
