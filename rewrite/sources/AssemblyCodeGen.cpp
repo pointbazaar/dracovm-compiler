@@ -291,6 +291,15 @@ vector<string> _and(VMInstr instr){
 }
 
 vector<string> _not(VMInstr instr){
+
+	//logical not
+    //if there is a 1 (true) on the stack,
+    // after this vm command, there must be a 0 (false) on the stack
+    //if there is a 0 (false) on the stack, 
+    //after this vm command, there must be a 1 (true) on the stack
+
+    //https://www.tutorialspoint.com/assembly_programming/assembly_logical_instructions.htm
+
 	const string comment = "	;not";
 	const vector<string> res{
 		"mov ebx,1"+comment,
@@ -392,18 +401,26 @@ vector<string> fleq(VMInstr instr){
 }
 
 vector<string> inc(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
+	//increments the value on top of stack
+	const string comment = "	;inc";
+	
+	//maybe this can work. maybe it can be done
+	//in a single instruction
+	const vector<string> res{
+		"inc [esp]"+comment
+	};
 	return res;
 }
 
 vector<string> dec(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	//decrements the value on top of stack
+	const string comment = "	;dec";
 
-	vector<string> res;
+	//maybe this can work. maybe it can be done
+	//in a single instruction
+	const vector<string> res{
+		"dec [esp]"+comment
+	};
 	return res;
 }
 
