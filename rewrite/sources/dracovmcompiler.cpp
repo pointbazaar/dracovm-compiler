@@ -83,22 +83,28 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 
 	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
 
-	//TODO: write these asm codes to their respective files
+	//write these asm codes to their respective files
 	for(auto const& entry : asm_codes){
 		string filename = entry.first;
 		vector<string> myasm = entry.second;
 
 		ofstream file;
-		file.open(filename);
+		file.open(filename+".asm");
 
 		for(string line : myasm){
 			file << line << endl;
 		}
 
 		file.close();
-	}
 
-	//TODO: call nasm, ld
+		//call nasm
+		const string call1 = "nasm -f elf "+filename+".asm";
+		system(call1.c_str());
+
+		//call ld
+		const string call2 = "ld -melf_i386 -s -o "+filename+" "+filename+".o";
+		system(call2.c_str());
+	}
 
 	return true;
 }

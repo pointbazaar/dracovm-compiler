@@ -40,6 +40,11 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 
 		vector<string> asm_cmds;	
 
+		//add startup codes
+		asm_cmds.push_back("section .text");
+		asm_cmds.push_back("global _start");
+		asm_cmds.push_back("_start:");
+
 
 		for(auto const& vmcmd : vmcodes){
 
@@ -83,7 +88,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["if-goto"]=if_goto;
 	func_map["exit"]=exit;
 	func_map["label"]=label;
-	
+
 	
 	if(func_map.count(cmd)==1){
 		return func_map[cmd](instr);
@@ -534,7 +539,7 @@ vector<string> feq(VMInstr instr){
 		"fcomp",
 
 		//store status of comparison
-		"fstsw eax",
+		"fstsw ax",
 
 		"je "+label_true,
 		"push 0",
@@ -586,7 +591,7 @@ vector<string> fgt(VMInstr instr){
 		"fcomp",
 
 		//store status of comparison
-		"fstsw eax",
+		"fstsw ax",
 
 		"jg "+label_true,
 		"push 0",
@@ -637,7 +642,7 @@ vector<string> fgeq(VMInstr instr){
 		"fcomp",
 
 		//store status of comparison
-		"fstsw eax",
+		"fstsw ax",
 
 		"jge "+label_true,
 		"push 0",
@@ -690,7 +695,7 @@ vector<string> flt(VMInstr instr){
 		"fcomp",
 
 		//store status of comparison
-		"fstsw eax",
+		"fstsw ax",
 
 		"jl "+label_true,
 		"push 0",
@@ -741,7 +746,7 @@ vector<string> fleq(VMInstr instr){
 		"fcomp",
 
 		//store status of comparison
-		"fstsw eax",
+		"fstsw ax",
 
 		"jle "+label_true,
 		"push 0",

@@ -33,7 +33,7 @@ int main(int argc, char* argv[]){
 bool test_fadd1(){
 
 	const vector<string> vmcodes = {
-		"subroutine Main_main 0 args 0 locals",
+		"subroutine FADD1_main 0 args 0 locals",
 		"fconst 3.0",
 		"fconst 2.0",
 		"fadd",
@@ -47,13 +47,15 @@ bool test_fadd1(){
 	};
 
 	map<string,vector<string>> mymap;
-	mymap["test_fadd1"]=vmcodes;
+	mymap["FADD1_main"]=vmcodes;
 
 	compile_main2(mymap);
 
 	//start a process, and examine its exit value
 	int status=1;
-	status = system("./test_fadd1");
+	status = system("./FADD1_main");
+
+	system("rm FADD1_main FADD1_main.o FADD1_main.asm");
 
 	return status==0;
 }
