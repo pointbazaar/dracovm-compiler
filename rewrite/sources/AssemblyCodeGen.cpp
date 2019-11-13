@@ -98,27 +98,105 @@ vector<string> fconst(VMInstr instr){
 }
 
 vector<string> cconst(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	
+	return {
+		"push '"+instr.arg1+"'	; cconst"		
+	};
 }
 
 vector<string> pop(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	const int byte_offset_32_bit=4;
+
+	const string segment = instr.arg1;
+	const int index      = stoi(instr.arg2);
+
+	if(segment.compare("LOCAL")==0){
+		//ebp is on the caller's retun address, with the local variable below
+
+		return {
+			"; pop LOCAL "+to_string(index),
+			
+			"mov eax,ebp",
+
+			//eax-=1
+			"mov ebx,"+to_string(byte_offset_32_bit),
+			"sub eax,ebx",
+
+			//eax-=index
+			"mov ebx,"+to_string(index*byte_offset_32_bit),
+			"sub eax,ebx",
+
+			"pop ebx",
+			"mov [eax],ebx"
+		};
+	}else if(segment.compare("ARG")==0){
+		//ebp is on the caller's return address, with the arguments above
+		
+		return {
+			"; pop ARG "+to_string(index),
+			
+			"mov eax,"+to_string(2*byte_offset_32_bit),
+
+			"add eax,ebp",
+			"add eax,"+to_string(index*byte_offset_32_bit),
+
+			"pop ebx",
+
+			"mov [eax],ebx"
+		};
+	}else{
+		cerr << "FATAL" << endl;
+		exit(1);
+	}
 }
 
 vector<string> push(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const string segment = instr.arg1;
+	const int index = stoi(instr.arg2);
+	const int byte_offset_32_bit=4;
 
-	vector<string> res;
-	return res;
+	if(segment.compare("LOCAL")==0){
+		//locals are on the stack in order
+		//ebp is on the caller's return address, with the local variables below
+
+		//eax=ebp-index-1
+		return {
+			";	push LOCAL "+to_string(index),
+			
+			"mov eax,ebp",
+			
+			"mov ebx,"+to_string(byte_offset_32_bit),
+			"sub eax,ebx",
+
+			"mov ebx,"+to_string(index*byte_offset_32_bit),
+			"sub eax,ebx"
+			
+			"mov eax,[eax]",
+			"push eax"
+		};
+		
+	}else if(segment.compare("ARG")==0){
+		//arguments are on the stack in reverse order
+		//ebp is on the caller's return address, with the arguments above
+		
+		//eax=ebp+index+2*(4 byte)
+
+		return {
+			"; push ARG "+to_string(index),
+
+			"mov eax,"+to_string(2*byte_offset_32_bit),
+			"add eax,ebp",
+			"add eax,"+to_string(index*byte_offset_32_bit),
+
+			"mov eax,[eax]",
+			
+			"push eax"
+		};
+	}else{
+		cerr << "FATAL" << endl;
+		exit(1);
+	}
 }
 
 vector<string> dup(VMInstr instr){
@@ -148,27 +226,34 @@ vector<string> subroutine(VMInstr instr){
 }
 
 vector<string> call(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	string subr_name = instr.arg1;
+	return {
+		"call "+subr_name,
 
-	vector<string> res;
-	return res;
+		//swap return value with saved ebp
+		"pop eax",
+		"pop ebx",
+		"push eax",
+		"push ebx"
+
+		//get our ebp back
+		"pop ebp"
+	};
 }
 
 vector<string> _return(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	return {
+		"ret"
+	};
 }
 
 vector<string> exit(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	return {
+		"mov eax,1",	//system call number: (sys_exit)	
+		"pop ebx",		//pop exit code from stack
+		"int 0x80"		//interrupt
+	};
 }
 
 vector<string> pushsubroutine(VMInstr instr){
@@ -180,11 +265,21 @@ vector<string> pushsubroutine(VMInstr instr){
 }
 
 vector<string> callfromstack(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	return {
+		"; callfromstack :",
+		"pop eax",
+		"call eax",
+
+		//swap return value with saved ebp	
+		"pop ebx",
+		"pop eax",
+		"push ebx",
+		"push eax",
+
+		//get our ebp back
+		"pop ebp"	
+	};
 }
 
 
@@ -290,19 +385,31 @@ vector<string> isub(VMInstr instr){
 }
 
 vector<string> imul(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	return {
+		"; imul:"
+		"pop ebx",
+		"pop eax",
+		"imul eax,ebx",
+		"push eax"		
+	};
 }
 
 vector<string> idiv(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	return {
+		"pop ecx",	//pop the divisor
+		"pop eax",	//pop the dividend
+
+		"xor edx,edx",	//dividend high half := 0
+
+		//sign-extend eax in edx, in case eax is negative
+		//https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
+		"cdq",
+
+		"idiv ecx",
+		"push eax"
+	};
 }
 
 vector<string> imod(VMInstr instr){
@@ -333,11 +440,14 @@ vector<string> ineg(VMInstr instr){
 }
 
 vector<string> _and(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	return {
+		"; and:",
+		"pop ebx",
+		"pop eax",
+		"and eax,ebx",
+		"push eax"	
+	};
 }
 
 vector<string> _not(VMInstr instr){
@@ -361,19 +471,37 @@ vector<string> _not(VMInstr instr){
 }
 
 vector<string> _or(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	return {
+		"; or: "
+		"pop eax",
+		"pop ebx",
+		"or eax,ebx",
+		"push eax"		
+	};
 }
 
 vector<string> ieq(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
 
-	vector<string> res;
-	return res;
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+
+	return {
+		//pop operands
+		"pop eax",
+		"pop ebx",
+		
+		"cmp eax,ebx",
+		
+		"je "+label_true,
+		"push 0", //push false
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1", //push true
+
+		label_end+":"		
+	};
 }
 
 vector<string> feq(VMInstr instr){
@@ -479,11 +607,17 @@ vector<string> _goto(VMInstr instr){
 }
 
 vector<string> if_goto(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	const string subr_name = instr.arg1;
+	return {
+		//pop condition
+		"pop eax",
+		//ebx=true
+		"mov ebx, 1",
+		//is the condition true?
+		"cmp eax,ebx",
+		"je "+subr_name
+	};
 }
 
 vector<string> label(VMInstr instr){
@@ -495,19 +629,56 @@ vector<string> label(VMInstr instr){
 }
 
 vector<string> arraystore(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	const int byte_offset_32_bit = 4;
+	return {
+		
+		"pop ebx", //value to store
+		"pop ecx", //index
+
+		//increment the index, as our arrays are length-prefixed 
+		//in dragon
+		"inc ecx",
+		"lea ecx, [ecx*"+to_string(byte_offset_32_bit)+"]",
+		"pop eax", //array address
+
+		//address to store at = array_address + index
+		"add eax, ecx",
+		"mov [eax], ebx"
+	};
 }
 
 vector<string> arrayread(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	/*
+	arrayread, stack looks like:
+	|undefined
+	|array address
+	|array index <- esp
+
+	after execution of this command, stack looks like:
+	|undefined
+	|array[index] <- esp
+
+	meaning this vm command reads from the array at the specified index,
+	and places the value on top of the stack
+	*/
+	const int byte_offset_32_bit = 4;
+	return {
+		";arrayread:",
+		"pop ebx",
+		//increment the address, as our arrays are length-prefixed in dragon
+		"inc ebx",
+
+		
+		"lea ebx, [ebx*"+to_string(byte_offset_32_bit)+"]",
+		"pop eax",
+		"add eax,ebx",
+
+		//dereference eax
+		"mov eax,[eax]",
+		"push eax"
+	};
 }
 
 vector<string> lshiftl(VMInstr instr){
@@ -533,19 +704,27 @@ vector<string> lshiftr(VMInstr instr){
 }
 
 vector<string> ror(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	//example: ror 3
+	//rotates the bits of the element on top of stack to the right by the specified amount of bits
+	string n = instr.arg1;
 
-	vector<string> res;
-	return res;
+	return {
+		"pop eax",
+		"ror eax, "+n,
+		"push eax"
+	};
 }
 
 vector<string> rol(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	//example: rol 3
+	//rotates the bits of the element on top of stack to the left by the specified amount of bits
+	string n = instr.arg1;
+	
+	return {
+		"pop eax",
+		"rol eax, "+n,
+		"push eax"
+	};
 }
 
 
