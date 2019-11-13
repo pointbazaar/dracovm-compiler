@@ -122,19 +122,21 @@ vector<string> push(VMInstr instr){
 }
 
 vector<string> dup(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	return {
+		"mov eax, [esp]  ;dup",
+		"push eax        ;dup"
+	};
 }
 
 vector<string> swap(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	//swaps the 2 values on top of stack
+	return {
+		"; swap:"
+		"pop eax",
+		"pop ebx",
+		"push eax",
+		"push ebx"
+	};
 }
 
 vector<string> subroutine(VMInstr instr){
