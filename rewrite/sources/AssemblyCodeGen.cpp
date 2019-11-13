@@ -54,29 +54,41 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 vector<string> compile_vm_instr(VMInstr instr){
 	//returns the assembly codes generated for a given
 	//vm instruction.
+	const string c=instr.cmd; //short for command
+	const int ch=hash<string>()(c); //hash of our command
 
-	//string result;
-	//switch(instr.cmd){
-		/*
+	hash<string> h;
+
+	//hash our commands, compiler should make these as constexpr for us
+	//(not sure if compiler will do so)
+	const int hiconst = h("iconst");
+	const int hfconst = h("fconst");
+	const int hcconst = h("cconst");
+
+	const int hpop = h("pop");
+	const int hpush = h("push");
+		
 		//constants
-		case "iconst":
+		if(ch==hiconst)
 			return iconst(instr);
-		case "fconst":
+			
+		if(ch==hfconst)
 			return fconst(instr);
-		case "cconst":
+			
+		if(ch==hcconst)
 			return cconst(instr);
 
 		//stack related
-		case "pop":
+		if(ch==hpop)
 			return pop(instr);
-		*/
-
-	//}
-	//return result;
-	vector<string> err;
-	cerr << "fatal error" << endl;
+			
+		if(ch==hpush)
+			return push(instr);
+		
+	
+	cerr << "FATAL" << endl;
 	exit(1);
-	return err;
+	return {};
 }
 
 //			VMInstr Compilation subroutines:
