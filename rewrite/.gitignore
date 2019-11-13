@@ -1,4 +1,5 @@
 main
+dracovmtest
 *.subroutine.dracvm
 *.info
 dracovm
