@@ -4,6 +4,7 @@
 #include <string>
 
 #include "headers/dracovmcompiler.hpp"
+#include "headers/AssemblyCodeGen.hpp"
 
 using namespace std;
 
@@ -44,6 +45,11 @@ bool test_fadd1(){
 		"iconst 0",
 		"exit"
 	};
+
+	map<string,vector<string>> mymap;
+	mymap["test_fadd1"]=vmcodes;
+
+	compile_main2(mymap);
 
 	//start a process, and examine its exit value
 	int status=1;

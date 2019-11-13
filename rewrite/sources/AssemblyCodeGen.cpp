@@ -54,41 +54,34 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 vector<string> compile_vm_instr(VMInstr instr){
 	//returns the assembly codes generated for a given
 	//vm instruction.
-	const string c=instr.cmd; //short for command
-	const int ch=hash<string>()(c); //hash of our command
+	const string cmd=instr.cmd; //short for command
 
-	hash<string> h;
 
-	//hash our commands, compiler should make these as constexpr for us
-	//(not sure if compiler will do so)
-	const int hiconst = h("iconst");
-	const int hfconst = h("fconst");
-	const int hcconst = h("cconst");
+	//create a map of function pointers
+	map<string,vector<string> (*)(VMInstr)> func_map;
 
-	const int hpop = h("pop");
-	const int hpush = h("push");
+	//store our subroutines there:
+
+	//constants
+	func_map["iconst"]=iconst;
+	func_map["fconst"]=fconst;
+	func_map["cconst"]=cconst;
+
 		
-		//constants
-		if(ch==hiconst)
-			return iconst(instr);
-			
-		if(ch==hfconst)
-			return fconst(instr);
-			
-		if(ch==hcconst)
-			return cconst(instr);
+	//stack related
+	func_map["pop"]=pop;
+	func_map["push"]=push;
 
-		//stack related
-		if(ch==hpop)
-			return pop(instr);
-			
-		if(ch==hpush)
-			return push(instr);
-		
+	func_map["fadd"]=fadd;
 	
-	cerr << "FATAL" << endl;
-	exit(1);
-	return {};
+	if(func_map.count(cmd)==1){
+		return func_map[cmd](instr);
+	}else{
+	
+		cerr << "FATAL: (AssemblyCodeGen.cpp) "<< instr.cmd << " not supported" << endl;
+		exit(1);
+		return {};
+	}
 }
 
 //			VMInstr Compilation subroutines:
