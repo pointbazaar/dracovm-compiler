@@ -227,11 +227,18 @@ vector<string> fsub(VMInstr instr){
 }
 
 vector<string> fmul(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	//https://stackoverflow.com/questions/11853133/adding-floating-point-double-numbers-in-assembly
+	return {
+		"fld dword [esp]",
+		"pop eax",
+		"fld dword [esp]",
+		"pop eax",
+		"fmul",
+		//push temp value
+		"push 0", 
+		//fill that value
+		"fstp dword [esp]"
+	};
 }
 
 vector<string> fdiv(VMInstr instr){
