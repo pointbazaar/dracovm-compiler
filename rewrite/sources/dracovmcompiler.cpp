@@ -77,6 +77,10 @@ bool compile_main(vector<string> filenames){
 }
 
 bool compile_main2(map<string,vector<string>> vm_sources){
+
+	//DEBUG
+	cerr << "compile_main2" << endl;
+
 	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
 
 	//TODO: write these asm codes to their respective files

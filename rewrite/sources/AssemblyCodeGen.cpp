@@ -11,30 +11,36 @@ using namespace std;
 
 map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources){
 	
+	//DEBUG
+	cout << "compile_vmcodes" << endl;
+
 	//parse vm instructions
 
-	//map<string,vector<VMInstr>> instrs;
 	map<string,vector<string>> results;
 
 	for(auto const& entry : vm_sources){
-		string filename = entry.first;
+
+		const string filename = entry.first;
 		vector<string> vmcodes = entry.second;
 
 		//first vmcode denotes the subroutine,
 		//which should be put as the key in the
 		//'instrs' map
 
-		string subr_line = vmcodes.at(0);
-		string tmp = "subroutine ";
+
+		const string subr_line = vmcodes.at(0);
+		const string tmp = "subroutine ";
 		string subr_name = subr_line.substr(tmp.size());
 		subr_name = subr_name.substr(0,subr_name.find(" "));
+
+
 
 		//delete the subroutine declaration
 		vmcodes.erase(vmcodes.begin());
 
-		//vector<VMInstr> parsed;
-
 		vector<string> asm_cmds;	
+
+
 		for(auto const& vmcmd : vmcodes){
 
 			VMInstr instr(vmcmd);
@@ -43,7 +49,6 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 			asm_cmds.insert(asm_cmds.end(),asms.begin(),asms.end());
 		}
 
-		//instrs[subr_name]=parsed;
 		results[subr_name]=asm_cmds;
 	}
 
@@ -52,10 +57,11 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 }
 
 vector<string> compile_vm_instr(VMInstr instr){
+
+
 	//returns the assembly codes generated for a given
 	//vm instruction.
 	const string cmd=instr.cmd; //short for command
-
 
 	//create a map of function pointers
 	map<string,vector<string> (*)(VMInstr)> func_map;
@@ -74,6 +80,10 @@ vector<string> compile_vm_instr(VMInstr instr){
 
 	func_map["fadd"]=fadd;
 	func_map["flt"]=flt;
+	func_map["if-goto"]=if_goto;
+	func_map["exit"]=exit;
+	func_map["label"]=label;
+	
 	
 	if(func_map.count(cmd)==1){
 		return func_map[cmd](instr);
@@ -668,8 +678,8 @@ vector<string> ilt(VMInstr instr){
 vector<string> flt(VMInstr instr){
 
 	const int unique = rand();
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
+	const string label_true = ".eq_push"+to_string(unique);
+	const string label_end = ".eq_end"+to_string(unique);
 	
 	return {
 		"fld dword [esp]",
@@ -787,11 +797,10 @@ vector<string> if_goto(VMInstr instr){
 }
 
 vector<string> label(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
-
-	vector<string> res;
-	return res;
+	const string label=instr.arg1;
+	return {
+		label+":"
+	};
 }
 
 vector<string> arraystore(VMInstr instr){
