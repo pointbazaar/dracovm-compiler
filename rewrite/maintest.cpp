@@ -8,6 +8,8 @@
 
 using namespace std;
 
+int compile_and_run_with_name(string name,vector<string> vmcodes);
+
 bool test_fadd1();
 
 int main(int argc, char* argv[]){
@@ -30,6 +32,29 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
+int compile_and_run_with_name(string name,vector<string> vmcodes){
+	//returns the status code after running these vm codes
+	//the name has to equal the name of the subroutine
+	//in the vm code
+
+	map<string,vector<string>> mymap;
+	mymap["name"]=vmcodes;
+
+	compile_main2(mymap);
+
+	//start a process, and examine its exit value
+	int status=1;
+	const string call="./"+name;
+	status = system(call.c_str());
+
+	//as we are testing, we should remove the files that have been created
+
+	const string call2="rm "+name+".o "+name+".asm "+name+" ";
+	system(call2.c_str());
+
+	return status;
+}
+
 bool test_fadd1(){
 
 	const vector<string> vmcodes = {
@@ -37,6 +62,7 @@ bool test_fadd1(){
 		"fconst 3.0",
 		"fconst 2.0",
 		"fadd",
+		"fconst 7.0"
 		"flt",
 		"if-goto exit0",
 		"iconst 1",
@@ -46,16 +72,5 @@ bool test_fadd1(){
 		"exit"
 	};
 
-	map<string,vector<string>> mymap;
-	mymap["FADD1_main"]=vmcodes;
-
-	compile_main2(mymap);
-
-	//start a process, and examine its exit value
-	int status=1;
-	status = system("./FADD1_main");
-
-	system("rm FADD1_main FADD1_main.o FADD1_main.asm");
-
-	return status==0;
+	return 0==compile_and_run_with_name("FADD1_main",vmcodes);
 }
