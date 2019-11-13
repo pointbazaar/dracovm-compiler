@@ -79,7 +79,20 @@ bool compile_main(vector<string> filenames){
 bool compile_main2(map<string,vector<string>> vm_sources){
 	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
 
-	//TODO: print these asm codes
+	//TODO: write these asm codes to their respective files
+	for(auto const& entry : asm_codes){
+		string filename = entry.first;
+		vector<string> myasm = entry.second;
+
+		ofstream file;
+		file.open(filename);
+
+		for(string line : myasm){
+			file << line << endl;
+		}
+
+		file.close();
+	}
 
 	//TODO: call nasm, ld
 
