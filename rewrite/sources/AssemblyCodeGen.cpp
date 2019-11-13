@@ -73,6 +73,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["push"]=push;
 
 	func_map["fadd"]=fadd;
+	func_map["flt"]=flt;
 	
 	if(func_map.count(cmd)==1){
 		return func_map[cmd](instr);
@@ -510,77 +511,237 @@ vector<string> ieq(VMInstr instr){
 }
 
 vector<string> feq(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+	
+	return {
+		"fld dword [esp]",
+		"pop eax",
+		"fld dword [esp]",
+		"pop eax",
 
-	vector<string> res;
-	return res;
+		"fcomp",
+
+		//store status of comparison
+		"fstsw eax",
+
+		"je "+label_true,
+		"push 0",
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1",
+
+		label_end+":",
+	};
 }
 
 
 vector<string> igt(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
 
-	vector<string> res;
-	return res;
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+
+	return {
+		//pop operands
+		"pop eax",
+		"pop ebx",
+		
+		"cmp eax,ebx",
+		
+		"jg "+label_true,
+		"push 0", //push false
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1", //push true
+
+		label_end+":"		
+	};
 }
 
 vector<string> fgt(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+	
+	return {
+		"fld dword [esp]",
+		"pop eax",
+		"fld dword [esp]",
+		"pop eax",
 
-	vector<string> res;
-	return res;
+		"fcomp",
+
+		//store status of comparison
+		"fstsw eax",
+
+		"jg "+label_true,
+		"push 0",
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1",
+
+		label_end+":",
+	};
 }
 
 vector<string> igeq(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
 
-	vector<string> res;
-	return res;
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+
+	return {
+		//pop operands
+		"pop eax",
+		"pop ebx",
+		
+		"cmp eax,ebx",
+		
+		"jge "+label_true,
+		"push 0", //push false
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1", //push true
+
+		label_end+":"		
+	};
 }
 
 vector<string> fgeq(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+	
+	return {
+		"fld dword [esp]",
+		"pop eax",
+		"fld dword [esp]",
+		"pop eax",
 
-	vector<string> res;
-	return res;
+		"fcomp",
+
+		//store status of comparison
+		"fstsw eax",
+
+		"jge "+label_true,
+		"push 0",
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1",
+
+		label_end+":",
+	};
 }
 
 
 vector<string> ilt(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
 
-	vector<string> res;
-	return res;
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+
+	return {
+		//pop operands
+		"pop eax",
+		"pop ebx",
+		
+		"cmp eax,ebx",
+		
+		"jl "+label_true,
+		"push 0", //push false
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1", //push true
+
+		label_end+":"		
+	};
 }
 
 vector<string> flt(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
 
-	vector<string> res;
-	return res;
+	const int unique = rand();
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+	
+	return {
+		"fld dword [esp]",
+		"pop eax",
+		"fld dword [esp]",
+		"pop eax",
+
+		"fcomp",
+
+		//store status of comparison
+		"fstsw eax",
+
+		"jl "+label_true,
+		"push 0",
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1",
+
+		label_end+":",
+	};
 }
 
 vector<string> ileq(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
 
-	vector<string> res;
-	return res;
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+
+	return {
+		//pop operands
+		"pop eax",
+		"pop ebx",
+		
+		"cmp eax,ebx",
+		
+		"jle "+label_true,
+		"push 0", //push false
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1", //push true
+
+		label_end+":"		
+	};
 }
 
 vector<string> fleq(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const int unique = rand();
+	const string label_true = ".eq_push"+unique;
+	const string label_end = ".eq_end"+unique;
+	
+	return {
+		"fld dword [esp]",
+		"pop eax",
+		"fld dword [esp]",
+		"pop eax",
 
-	vector<string> res;
-	return res;
+		"fcomp",
+
+		//store status of comparison
+		"fstsw eax",
+
+		"jle "+label_true,
+		"push 0",
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1",
+
+		label_end+":",
+	};
 }
 
 vector<string> inc(const VMInstr instr){
