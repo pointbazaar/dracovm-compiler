@@ -89,6 +89,9 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["flt"]=flt;
 
 	func_map["iadd"]=iadd;
+	func_map["isub"]=isub;
+	func_map["imod"]=imod;
+	func_map["idiv"]=idiv;
 
 	func_map["if-goto"]=if_goto;
 	func_map["exit"]=exit;

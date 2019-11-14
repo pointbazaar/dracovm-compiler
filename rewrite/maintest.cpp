@@ -12,17 +12,21 @@ int testrun(string name,vector<string> vmcodes);
 
 bool test_fadd1();
 bool test_fadd2();
+
 bool test_fsub();
 bool test_fsub2();
+
 bool test_iadd();
-/*
-bool test_sub();
-bool test_mod();
-bool test_mod2();
-bool test_div();
-bool test_div_positive_by_negative();
-bool test_div_negative_by_positive();
-*/
+bool test_isub();
+bool test_imod();
+
+bool test_imod2();
+
+bool test_idiv();
+
+bool test_idiv_positive_by_negative();
+bool test_idiv_negative_by_positive();
+
 
 int main(int argc, char* argv[]){
 	
@@ -34,7 +38,13 @@ int main(int argc, char* argv[]){
 		test_fadd2(),
 		test_fsub(),
 		test_fsub2(),
-		test_iadd()
+		test_iadd(),
+		test_isub(),
+		test_imod(),
+		test_imod2(),
+		test_idiv(),
+		test_idiv_positive_by_negative(),
+		test_idiv_negative_by_positive()
 	};
 
 	for(bool x : test_results){
@@ -159,4 +169,90 @@ bool test_iadd(){
 	};
 
 	return 5==testrun("IADD_main",vmcodes);
+}
+
+bool test_isub(){
+	const vector<string> vmcodes={
+		"subroutine ISUB_main 0 args 0 locals",
+		"iconst 3",
+		"iconst 2",
+		"isub",
+		"exit"
+	};
+
+	return 1==testrun("ISUB_main",vmcodes);
+}
+
+
+bool test_imod(){
+	const vector<string> vmcodes={
+		"subroutine IMOD_main 0 args 0 locals",
+		"iconst 3",
+		"iconst 2",
+		"imod",
+		"exit"
+	};
+
+	return 1==testrun("IMOD_main",vmcodes);
+}
+
+
+bool test_imod2(){
+	const vector<string> vmcodes={
+		"subroutine IMOD2_main 0 args 0 locals",
+		"iconst 23",
+		"iconst 6",
+		"imod",
+		"exit"
+	};
+
+	return 5==testrun("IMOD2_main",vmcodes);
+}
+
+bool test_idiv(){
+	const vector<string> vmcodes={
+		"subroutine IDIV_main 0 args 0 locals",
+		"iconst 6",
+		"iconst 2",
+		"idiv",
+		"exit"
+	};
+
+	return 3==testrun("IDIV_main",vmcodes);
+}
+
+bool test_idiv_positive_by_negative(){
+	const vector<string> vmcodes={
+		"subroutine IDIV2_main 0 args 0 locals",
+		"iconst 200",
+		"iconst -10",
+		"idiv",
+		"iconst 20",
+		"iadd",
+		"exit"
+	};
+
+	return 0==testrun("IDIV2_main",vmcodes);
+
+}
+
+bool test_idiv_negative_by_positive(){
+
+	//https://stackoverflow.com/questions/46574893/divide-a-positive-number-by-a-negative-number-in-assembly
+
+    //maybe the problem is that -300 is not sign-extended
+    // edx:eax is the dividend. so if edx == 0b0... then maybe there is a problem?
+
+	
+	const vector<string> vmcodes={
+		"subroutine IDIV3_main 0 args 0 locals",
+		"iconst -300",
+		"iconst 10",
+		"idiv",
+		"iconst 30",
+		"iadd",
+		"exit"
+	};
+
+	return 0==testrun("IDIV3_main",vmcodes);
 }
