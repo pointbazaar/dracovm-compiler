@@ -23,9 +23,12 @@ VMInstr::VMInstr(const string str){
 		exit(1);
 	}
 
-	if(res.size()>3){
+	if(res.size()>6){
+		//normal vm instr are <=3 words, but
+		//subroutine declaration commands may be up to 6 words
+
 		cerr << "vm command " << str 
-			<< " was too long. max size is 3 words." << endl;
+			<< " was too long. max size is 6 words." << endl;
 	}
 
 	this->cmd=res.at(0);

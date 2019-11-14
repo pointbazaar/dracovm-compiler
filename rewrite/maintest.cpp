@@ -145,12 +145,17 @@ bool test_fsub2(){
 		"subroutine FSUB2_main 0 args 0 locals",
         "fconst 30.0",
         "fconst 2.0",
+
         "fsub",
+
         "fconst 7.0",
+
         "flt",
         "if-goto exit0",
+
         "iconst 1",
         "exit",
+        
         "label exit0",
         "iconst 0",
         "exit"
@@ -243,7 +248,7 @@ bool test_idiv_negative_by_positive(){
     //maybe the problem is that -300 is not sign-extended
     // edx:eax is the dividend. so if edx == 0b0... then maybe there is a problem?
 
-	
+
 	const vector<string> vmcodes={
 		"subroutine IDIV3_main 0 args 0 locals",
 		"iconst -300",

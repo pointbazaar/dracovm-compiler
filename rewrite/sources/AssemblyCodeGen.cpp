@@ -33,18 +33,12 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		string subr_name = subr_line.substr(tmp.size());
 		subr_name = subr_name.substr(0,subr_name.find(" "));
 
-
-
-		//delete the subroutine declaration
-		vmcodes.erase(vmcodes.begin());
-
 		vector<string> asm_cmds;	
 
 		//add startup codes
 		asm_cmds.push_back("section .text");
 		asm_cmds.push_back("global _start");
 		asm_cmds.push_back("_start:");
-
 
 		for(auto const& vmcmd : vmcodes){
 
@@ -93,6 +87,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["imod"]=imod;
 	func_map["idiv"]=idiv;
 
+	func_map["subroutine"]=subroutine;
 	func_map["if-goto"]=if_goto;
 	func_map["exit"]=exit;
 	func_map["label"]=label;
@@ -247,11 +242,40 @@ vector<string> swap(VMInstr instr){
 }
 
 vector<string> subroutine(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const string name = instr.arg1;
+	//   *
+	//to provide a base to reference arguments and local variables
+    //ebp will point to the return address of the caller
+    //above it there are the current subroutines arguments,
+    //below it are its local variables
 
-	vector<string> res;
-	return res;
+	if(name.compare("main")==0){
+		//we need not save ebp of the caller, as there is no caller
+      	//our ebp is iconst 0, to reference local variables, we need an ebp
+		return {
+			//fake return address for main
+			"mov eax,0",
+			"push eax",
+
+			//*
+			"mov ebp,esp"
+		};
+	}else{
+		//save the ebp of the caller
+      	//push ebp
+		return {
+
+			"push ebp",
+			//swap
+			"pop ebx",
+			"pop eax",
+			"push ebx",
+			"push eax",
+
+			//*
+			"mov ebp,esp"
+		};
+	}
 }
 
 vector<string> call(VMInstr instr){
@@ -427,6 +451,7 @@ vector<string> imul(VMInstr instr){
 vector<string> idiv(VMInstr instr){
 
 	return {
+		"; idiv:"
 		"pop ecx",	//pop the divisor
 		"pop eax",	//pop the dividend
 
