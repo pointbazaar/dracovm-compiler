@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
 }
 
 int testrun(string name,vector<string> vmcodes){
-	//returns the status code after running these vm codes
+	//returns the startus code after running these vm codes
 	//the name has to equal the name of the subroutine
 	//in the vm code
 
@@ -79,7 +79,8 @@ int testrun(string name,vector<string> vmcodes){
 	const string call2="rm "+name+".o "+name+".asm "+name+" ";
 	system(call2.c_str());
 
-	return status;
+	//https://stackoverflow.com/questions/20193464/how-to-get-the-exit-code-of-program-invoked-by-system-call
+	return WEXITSTATUS(status);
 }
 
 bool test_fadd1(){
@@ -174,9 +175,9 @@ bool test_iadd(){
 		"exit"
 	};
 
-	bool res = 5 == (testrun("IADD_main",vmcodes));
+	int res = (testrun("IADD_main",vmcodes));
 	cout << res << endl;
-	return res;
+	return res==5;
 }
 
 bool test_isub(){
