@@ -4,6 +4,7 @@
 
 #include "VMInstr.hpp"
 #include "AssemblyCodeGen.hpp"
+#include "BuiltinSubroutines.hpp"
 
 using namespace std;
 
@@ -48,6 +49,10 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 			asm_cmds.insert(asm_cmds.end(),asms.begin(),asms.end());
 		}
 
+		//add the builtin subroutines
+		const vector<string> builtins = compile_builtin_subroutines();
+		asm_cmds.insert(asm_cmds.end(),builtins.begin(),builtins.end());
+
 		results[subr_name]=asm_cmds;
 	}
 
@@ -88,9 +93,14 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["idiv"]=idiv;
 
 	func_map["subroutine"]=subroutine;
+	func_map["call"]=call;
 	func_map["if-goto"]=if_goto;
 	func_map["exit"]=exit;
 	func_map["label"]=label;
+
+	//array related
+	func_map["arrayread"]=arrayread;
+	func_map["arraystore"]=arraystore;
 
 	
 	if(func_map.count(cmd)==1){
@@ -288,7 +298,7 @@ vector<string> call(VMInstr instr){
 		"pop eax",
 		"pop ebx",
 		"push eax",
-		"push ebx"
+		"push ebx",
 
 		//get our ebp back
 		"pop ebp"
