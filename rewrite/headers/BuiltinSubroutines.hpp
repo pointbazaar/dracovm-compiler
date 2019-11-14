@@ -5,4 +5,16 @@ using namespace std;
 
 	vector<string> compile_builtin_subroutines();
 
+
+	vector<string> _readchar();
+	vector<string> _putchar();
+	vector<string> _putdigit();
+	vector<string> _new();
+	vector<string> _free();
+	vector<string> _len();
+	vector<string> _abs();
+	vector<string> _time();
+	vector<string> _fopen();
+	vector<string> _fputs();
+
 #endif
