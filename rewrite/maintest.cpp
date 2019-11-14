@@ -64,12 +64,13 @@ int testrun(string name,vector<string> vmcodes){
 	//in the vm code
 
 	map<string,vector<string>> mymap;
-	mymap["name"]=vmcodes;
+	mymap[name]=vmcodes;
 
 	compile_main2(mymap);
 
 	//start a process, and examine its exit value
-	int status=1;
+
+	int status=47; //random value thats hopefully never tested for
 	const string call="./"+name;
 	status = system(call.c_str());
 
@@ -155,7 +156,7 @@ bool test_fsub2(){
 
         "iconst 1",
         "exit",
-        
+
         "label exit0",
         "iconst 0",
         "exit"
@@ -173,7 +174,9 @@ bool test_iadd(){
 		"exit"
 	};
 
-	return 5==testrun("IADD_main",vmcodes);
+	bool res = 5 == (testrun("IADD_main",vmcodes));
+	cout << res << endl;
+	return res;
 }
 
 bool test_isub(){

@@ -420,7 +420,7 @@ vector<string> iadd(VMInstr instr){
 	//https://c9x.me/x86/html/file_module_x86_id_5.html
 
 	return {
-		";  iadd : "
+		";  iadd : ",
 		"pop eax",
 		"pop ebx",
 		"add eax,ebx",
@@ -430,7 +430,7 @@ vector<string> iadd(VMInstr instr){
 
 vector<string> isub(VMInstr instr){
 	return {
-		";	isub: "
+		";	isub: ",
 		"pop ebx",
 		"pop eax",
 		"sub eax,ebx",
@@ -441,7 +441,7 @@ vector<string> isub(VMInstr instr){
 vector<string> imul(VMInstr instr){
 
 	return {
-		"; imul:"
+		"; imul:",
 		"pop ebx",
 		"pop eax",
 		"imul eax,ebx",
@@ -452,7 +452,7 @@ vector<string> imul(VMInstr instr){
 vector<string> idiv(VMInstr instr){
 
 	return {
-		"; idiv:"
+		"; idiv:",
 		"pop ecx",	//pop the divisor
 		"pop eax",	//pop the dividend
 
@@ -471,7 +471,7 @@ vector<string> imod(VMInstr instr){
 	//https://stackoverflow.com/questions/8021772/assembly-language-how-to-do-modulo
 	
 	return {
-		"; -- START imod  -- "
+		"; -- START imod  -- ",
 		"pop ebx",
 		"pop eax",
 		"xor edx,edx",
