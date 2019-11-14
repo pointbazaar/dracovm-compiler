@@ -14,8 +14,8 @@ bool test_fadd1();
 bool test_fadd2();
 bool test_fsub();
 bool test_fsub2();
+bool test_iadd();
 /*
-bool test_add();
 bool test_sub();
 bool test_mod();
 bool test_mod2();
@@ -33,7 +33,8 @@ int main(int argc, char* argv[]){
 		test_fadd1(),
 		test_fadd2(),
 		test_fsub(),
-		test_fsub2()
+		test_fsub2(),
+		test_iadd()
 	};
 
 	for(bool x : test_results){
@@ -146,4 +147,16 @@ bool test_fsub2(){
 	};
 
 	return 1==testrun("FSUB2_main",vmcodes);
+}
+
+bool test_iadd(){
+	const vector<string> vmcodes={
+		"subroutine IADD_main 0 args 0 locals",
+		"iconst 3",
+		"iconst 2",
+		"iadd",
+		"exit"
+	};
+
+	return 5==testrun("IADD_main",vmcodes);
 }
