@@ -8,9 +8,21 @@
 
 using namespace std;
 
-int compile_and_run_with_name(string name,vector<string> vmcodes);
+int testrun(string name,vector<string> vmcodes);
 
 bool test_fadd1();
+bool test_fadd2();
+bool test_fsub();
+/*
+bool test_fsub2();
+bool test_add();
+bool test_sub();
+bool test_mod();
+bool test_mod2();
+bool test_div();
+bool test_div_positive_by_negative();
+bool test_div_negative_by_positive();
+*/
 
 int main(int argc, char* argv[]){
 	
@@ -18,7 +30,9 @@ int main(int argc, char* argv[]){
 	//TODO:
 
 	vector<bool> test_results = {
-		test_fadd1()
+		test_fadd1(),
+		test_fadd2(),
+		test_fsub()
 	};
 
 	for(bool x : test_results){
@@ -32,7 +46,7 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-int compile_and_run_with_name(string name,vector<string> vmcodes){
+int testrun(string name,vector<string> vmcodes){
 	//returns the status code after running these vm codes
 	//the name has to equal the name of the subroutine
 	//in the vm code
@@ -72,5 +86,44 @@ bool test_fadd1(){
 		"exit"
 	};
 
-	return 0==compile_and_run_with_name("FADD1_main",vmcodes);
+	return 0==testrun("FADD1_main",vmcodes);
+}
+
+bool test_fadd2(){
+
+	const vector<string> vmcodes={
+		"subroutine FADD2_main 0 args 0 locals",
+        "fconst 3.0",
+        "fconst 6.0",
+        "fadd",
+        "fconst 7.0",
+        "flt",
+        "if-goto exit0",
+        "iconst 1",
+        "exit",
+        "label exit0",
+        "iconst 0",
+        "exit"
+	};
+
+	return 1==testrun("FADD2_main",vmcodes);
+}
+
+bool test_fsub(){
+	const vector<string> vmcodes={
+			"subroutine FSUB_main 0 args 0 locals",
+            "fconst 3.0",
+            "fconst 2.0",
+            "fsub",
+            "fconst 7.0",
+            "flt",
+            "if-goto exit0",
+            "iconst 1",
+            "exit",
+            "label exit0",
+            "iconst 0",
+            "exit"
+	};
+
+	return 0==testrun("FSUB_main",vmcodes);
 }
