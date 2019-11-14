@@ -242,14 +242,15 @@ vector<string> swap(VMInstr instr){
 }
 
 vector<string> subroutine(VMInstr instr){
-	const string name = instr.arg1;
+	const string full_name = instr.arg1;
+	const string subr_name = full_name.substr(full_name.find("_")+1);
 	//   *
 	//to provide a base to reference arguments and local variables
     //ebp will point to the return address of the caller
     //above it there are the current subroutines arguments,
     //below it are its local variables
 
-	if(name.compare("main")==0){
+	if(subr_name.compare("main")==0){
 		//we need not save ebp of the caller, as there is no caller
       	//our ebp is iconst 0, to reference local variables, we need an ebp
 		return {
