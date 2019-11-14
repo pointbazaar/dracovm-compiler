@@ -13,8 +13,8 @@ int testrun(string name,vector<string> vmcodes);
 bool test_fadd1();
 bool test_fadd2();
 bool test_fsub();
-/*
 bool test_fsub2();
+/*
 bool test_add();
 bool test_sub();
 bool test_mod();
@@ -32,7 +32,8 @@ int main(int argc, char* argv[]){
 	vector<bool> test_results = {
 		test_fadd1(),
 		test_fadd2(),
-		test_fsub()
+		test_fsub(),
+		test_fsub2()
 	};
 
 	for(bool x : test_results){
@@ -126,4 +127,23 @@ bool test_fsub(){
 	};
 
 	return 0==testrun("FSUB_main",vmcodes);
+}
+
+bool test_fsub2(){
+	const vector<string> vmcodes={
+		"subroutine FSUB2_main 0 args 0 locals",
+        "fconst 30.0",
+        "fconst 2.0",
+        "fsub",
+        "fconst 7.0",
+        "flt",
+        "if-goto exit0",
+        "iconst 1",
+        "exit",
+        "label exit0",
+        "iconst 0",
+        "exit"
+	};
+
+	return 1==testrun("FSUB2_main",vmcodes);
 }
