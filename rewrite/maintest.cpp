@@ -10,23 +10,26 @@ using namespace std;
 
 int testrun(string name,vector<string> vmcodes);
 
+//arithmetic tests
 bool test_fadd1();
 bool test_fadd2();
-
 bool test_fsub();
 bool test_fsub2();
-
 bool test_iadd();
 bool test_isub();
 bool test_imod();
-
 bool test_imod2();
-
 bool test_idiv();
-
 bool test_idiv_positive_by_negative();
 bool test_idiv_negative_by_positive();
 
+//array related tests
+bool test_arraystore1();
+bool test_arrayread_arraystore();
+bool test_arrayread_arraystore2();
+bool test_arraystore_len();
+bool test_len_ok_with_stack();
+bool test_new_ok_with_stack();
 
 int main(int argc, char* argv[]){
 	
@@ -34,6 +37,7 @@ int main(int argc, char* argv[]){
 	//TODO:
 
 	vector<bool> test_results = {
+		//arithmetic related
 		test_fadd1(),
 		test_fadd2(),
 		test_fsub(),
@@ -44,7 +48,15 @@ int main(int argc, char* argv[]){
 		test_imod2(),
 		test_idiv(),
 		test_idiv_positive_by_negative(),
-		test_idiv_negative_by_positive()
+		test_idiv_negative_by_positive(),
+
+		//array related
+		test_arraystore1(),
+		test_arrayread_arraystore(),
+		test_arrayread_arraystore2(),
+		test_arraystore_len(),
+		test_len_ok_with_stack(),
+		test_new_ok_with_stack()
 	};
 
 	for(bool x : test_results){
@@ -264,4 +276,151 @@ bool test_idiv_negative_by_positive(){
 	};
 
 	return 0==testrun("IDIV3_main",vmcodes);
+}
+
+bool test_arraystore1(){
+	//tests if arraystore behaves as expected with the stack
+
+	const vector<string> vmcodes={
+		"subroutine ARRAYSTORE_main 0 args 0 locals",
+		"iconst 3",
+		"call Builtin_new",
+		"iconst 0", //store at index 0
+		"iconst 9", //store a 9
+		"arraystore",
+		//3 should be on stack
+		"exit"
+	};
+
+	return 3==testrun("ARRAYSTORE_main",vmcodes);
+}
+
+bool test_arrayread_arraystore(){
+	const vector<string> vmcodes={
+		"subroutine ARRAYREADARRAYSTORE_main 0 args 0 locals",
+		"iconst 3",
+		"call Builtin_new",
+		//return value is on stack
+		"swap",
+		"pop",
+		"dup",
+		//store at index 0
+		"iconst 0",
+		//store a 9
+		"iconst 9",
+		"arraystore",
+
+		//value stored, pointer to array on stack
+		"iconst 0",
+		"arrayread",
+		//value read is on stack, should be 9
+
+		"exit"
+	};
+
+	return 9==testrun("ARRAYREADARRAYSTORE_main",vmcodes);
+}
+
+bool test_arrayread_arraystore2(){
+
+	//this test should verify that we are using correct offsetting of 4 bytes.
+    //otherwise, the value at index 1 would be overwritten by the max-value int stored at index 0
+    //https://en.wikipedia.org/wiki/2,147,483,647
+
+
+	const vector<string> vmcodes={
+		"subroutine ARRAYREADARRAYSTORE2_main 0 args 0 locals",
+
+		"iconst 2",
+		"call Builtin_new",
+		"swap",
+		"pop",
+		"dup",
+		"dup",
+		"iconst 1",
+		"iconst 8",
+		"arraystore",
+
+		"iconst 0",
+		//store the highest int possible
+		"iconst 2147483647",
+		"arraystore",
+
+		"iconst 1",
+		"arrayread",
+
+		"iconst 0"
+
+		"exit"
+	};
+
+	return 8==testrun("ARRAYREADARRAYSTORE2_main",vmcodes);
+}
+
+bool test_arraystore_len(){
+	const vector<string> vmcodes={
+		"subroutine ARRAYSTORELEN_main 0 args 0 locals",
+		
+		"iconst 3",
+		"call Builtin_new",
+		"swap",
+		"pop",
+		"dup",
+
+		"iconst 0",
+		"iconst 9",
+		"arraystore",
+
+		"call Builtin_len",
+		"swap",
+		"pop",
+
+		//return value (supposed array length) on stack
+
+		"exit"
+	};
+
+	return 3==testrun("ARRAYSTORELEN_main",vmcodes);
+}
+
+bool test_len_ok_with_stack(){
+	const vector<string> vmcodes={
+		"subroutine LENOKSTACK_main 0 args 0 locals",
+
+		"iconst 1",
+		"iconst 3",
+		"call Builtin_new",
+
+		"call Builtin_len",
+		"pop",
+
+		"call Builtin_len",
+		"pop",
+
+		"call Builtin_len",
+		"pop",
+
+		"pop",//pop array pointer
+		"pop",//pop the 3
+
+		//1 should be on stack
+
+		"exit"
+	};
+
+	return 1==testrun("LENOKSTACK_main",vmcodes);
+}
+
+bool test_new_ok_with_stack(){
+	const vector<string> vmcodes={
+		"subroutine NEWOKSTACK_main 0 args 0 locals",
+
+		"iconst 5",
+		"call Builtin_new",
+		"pop", //pop the array pointer
+
+		"exit"
+	};
+
+	return 5==testrun("NEWOKSTACK_main",vmcodes);
 }
