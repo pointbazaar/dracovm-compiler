@@ -3,6 +3,8 @@
 #include <vector>
 
 #include "BuiltinSubroutines.hpp"
+#include "AssemblyCodeGen.hpp"
+#include "VMInstr.hpp"
 
 using namespace std;
 
@@ -50,31 +52,40 @@ vector<string> compile_builtin_subroutines(){
 
 
 vector<string> _readchar(){
-
+	//TODO
+	return {};
 }
 vector<string> _putchar(){
-
+	//TODO
+	return {};
 }
 vector<string> _putdigit(){
-
+	//TODO
+	return {};
 }
 vector<string> _new(){
-
+	//TODO
+	return {};
 }
 vector<string> _free(){
-
+	//TODO
+	return {};
 }
 vector<string> _len(){
-
+	//TODO
+	return {};
 }
 vector<string> _abs(){
-
+	//TODO
+	return {};
 }
 vector<string> _time(){
-
+	//TODO
+	return {};
 }
 vector<string> _fopen(){
-
+	//TODO
+	return {};
 }
 vector<string> _fputs(){
 	//https://www.tutorialspoint.com/c_standard_library/c_function_fputs.htm
@@ -86,14 +97,20 @@ vector<string> _fputs(){
     const int byte_offset_32_bit = 4;
 
     //prints a string to a file
-    return {
+    vector<string> res={
     	"subroutine Builtin_fputs 2 args 0 locals",
+    };
 
-    	//access our argument , ARG 0, by pushing it onto the stack
-	    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
+    //pop pointer to string buffer to write (Arg 0)
+    const vector<string> push1 = push(VMInstr("push ARG 0"));
 
-	    //access our argument , ARG 1, by pushing it onto the stack
-	    compile_push(VMCompilerPhases.SEGMENT_ARG,1,a);
+    //pop file descriptor (Arg 1)
+    const vector<string> push2 = push(VMInstr("push ARG 1"));
+
+    res.insert(res.end(),push1.begin(),push1.end());
+    res.insert(res.end(),push2.begin(),push2.end());
+
+    const vector<string> body = {
 
 	    "mov eax,"+SYS_WRITE,
 	    "pop ebx",//pop our filedescriptor argument
@@ -107,13 +124,21 @@ vector<string> _fputs(){
 	    "add ecx,"+byte_offset_32_bit,
 	    "int 0x80",
 
-	    "push 0"
+	    "push 0",
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.) 
+	    //swap
+	    "pop eax",
+	    "pop ebx",
+	    "push eax",
+	    "push ebx",
+
+	    //return from subroutine
+	    "ret"
     };
 
-    //we must swap return value with the return address in order to return
-    //(i am so dumb. took me so long to find this.)
-    compile_swap("swap return address with return value to return",a);
+    res.insert(res.end(),body.begin(),body.end());
 
-    //return from subroutine
-    SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
+    return body;
 }

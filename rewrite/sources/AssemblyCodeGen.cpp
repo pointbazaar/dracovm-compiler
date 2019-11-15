@@ -81,6 +81,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	//stack related
 	func_map["pop"]=pop;
 	func_map["push"]=push;
+	func_map["swap"]=swap;
 
 	func_map["fadd"]=fadd;
 	func_map["fsub"]=fsub;
