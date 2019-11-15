@@ -60,8 +60,60 @@ vector<string> _putchar(){
 	return {};
 }
 vector<string> _putdigit(){
-	//TODO
-	return {};
+	
+	vector<string> res = subroutine(VMInstr(
+		"subroutine Builtin_putdigit 0 args 0 locals"
+	));
+
+	const vector<string> push1 = push(VMInstr("push ARG 0"));
+
+	const vector<string> body = {
+		//prints the Int on top of stack as char to stdout
+
+	    //access our argument , ARG 0, by pushing it onto the stack
+	    //push1
+
+	    "mov eax,"+SYS_WRITE,	//putdigit: sys_write syscall
+	    "mov ebx,1",	//putdigit: stdout
+
+	    //duplicate the value on stack, add offset to make it a char
+	    "pop ecx",
+	    "push ecx",
+	    "add ecx,48", //putdigit: add offset to make it char
+	    "push ecx",
+
+	    "mov ecx,esp", //print the Int on the stack
+
+	    //val length
+	    "mov edx,1",  	//putdigit: value length
+	    "int 0x80",		//call kernel
+
+	    //pop that value which we pushed
+	    "pop ecx",
+
+	    //pop ARG 0 which we pushed
+	    "pop ecx",
+
+	    //push return value
+	    "mov edx,0",	//putdigit: push return value
+	    "push edx",		//putdigit: push return value
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.)
+	    //swap
+	    "pop eax",
+	    "pop ebx",
+	    "push eax",
+	    "push ebx",
+
+	    "ret"
+	};
+
+
+	res.insert(res.end(),push1.begin(),push1.end());
+	res.insert(res.end(),body.begin(),body.end());
+
+	return res;
 }
 vector<string> _new(){
 	//TODO
@@ -97,9 +149,7 @@ vector<string> _fputs(){
     const int byte_offset_32_bit = 4;
 
     //prints a string to a file
-    vector<string> res={
-    	"subroutine Builtin_fputs 2 args 0 locals",
-    };
+    vector<string> res=subroutine(VMInstr("subroutine Builtin_fputs 2 args 0 locals"));
 
     //pop pointer to string buffer to write (Arg 0)
     const vector<string> push1 = push(VMInstr("push ARG 0"));
