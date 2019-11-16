@@ -25,6 +25,7 @@ using namespace std;
   //..
   const int SYS_TIME   = 13;
   //..
+  const int SYS_MMAP   = 192;
 
 vector<string> compile_builtin_subroutines(){
 	//TODO
@@ -155,8 +156,78 @@ vector<string> _putdigit(){
 	return res;
 }
 vector<string> _new(){
-	//TODO
-	return {};
+
+	const int byte_offset_32bit=4;
+	
+	const vector<string> res={
+		//http://lxr.linux.no/#linux+v3.6/arch/x86/ia32/ia32entry.S#L372
+	    //http://man7.org/linux/man-pages/man2/mmap.2.html
+
+	    //TODO: handle the error if memory could not be allocated
+	    
+	    //malloc receives as an argument the amount of DWORDs to allocate
+
+	    join(subroutine(VMInstr("subroutine Builtin_new 0 args 0 locals")),"\n"),
+
+	    //access our argument, push it onto the stack
+	    join(push(VMInstr("push ARG 0")),"\n"),
+
+
+	    //this is to multiply by 4, so we allocate 32bit units.
+	    //pop our argument into ecx
+	    //size of segment to be allocated
+	    "pop ecx",
+
+	    //push our size for the length-prefix later on
+	    //LINKED CODE 2 (they only work together)
+	    "push ecx",
+
+	    //increment by 1, as our array should be length-prefixed, and we need a place to store the length
+	    "inc ecx",
+
+	    "mov ecx,"+byte_offset_32bit,
+	    "imul eax,ecx",
+	    "mov ecx,eax",
+
+
+	    "mov eax,"+SYS_MMAP,
+	    "xor ebx,ebx",	//addr=NULL
+	    "mov edx,0x7",	//prot = PROT_READ | PROT_WRITE | PROT_EXEC
+	    "mov esi,0x22",	//flags=MAP_PRIVATE | MAP_ANONYMOUS
+	    "mov edi,-1",	//fd=-1
+
+	    //LINKED CODE 1 (they only work together)
+	    "push ebp",	//save ebp as we should not mess with it
+	    
+	    "mov ebp,0",	//offset=0 (4096*0)
+	    "int 0x80",
+
+	     //LINKED CODE 1 (they only work together)
+	    "pop ebp",	//restore ebp as we should not mess with it
+
+	    //eax should now contain
+	    //the address of the allocated memory segment
+
+	    //put the length-prefix at the start
+	    //pop our length-prefix
+	    "pop ebx",
+	    //LINKED CODE 2 (they only work together)
+
+	    //mov [eax],ebx //store the length at index 0
+	    "mov [eax],ebx",
+
+	    //now we push that pointer on the stack
+	    "push eax",
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.)
+	    join(swap(VMInstr("swap")),"\n"),
+
+	    //return from subroutine
+	    "ret"
+	};
+
+	return res;
 }
 vector<string> _free(){
 	//TODO
