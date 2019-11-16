@@ -38,33 +38,36 @@ int main(int argc, char* argv[]){
 
 	vector<bool> test_results = {
 		//arithmetic related
-		test_fadd1(),
-		test_fadd2(),
-		test_fsub(),
-		test_fsub2(),
-		test_iadd(),
-		test_isub(),
-		test_imod(),
-		test_imod2(),
-		test_idiv(),
+		test_fadd1(),	//0
+		test_fadd2(),	//1
+		test_fsub(),	//2
+		test_fsub2(),	//3
+		test_iadd(),	//4
+		test_isub(),	//5
+		test_imod(),	//6
+		test_imod2(),	//7
+		test_idiv(),	//8
 		test_idiv_positive_by_negative(),
-		test_idiv_negative_by_positive(),
+		test_idiv_negative_by_positive(),	//10
 
 		//array related
 		test_arraystore1(),
-		test_arrayread_arraystore(),
+		test_arrayread_arraystore(),	//12
 		test_arrayread_arraystore2(),
-		test_arraystore_len(),
+		test_arraystore_len(),	//14
+		
 		test_len_ok_with_stack(),
-		test_new_ok_with_stack()
+		test_new_ok_with_stack()	//16
 	};
-
+	int i=0;
 	for(bool x : test_results){
+		cout << i << ": ";
 		if(x){
 			cout << "PASS " << endl;
 		}else{
 			cout << "FAIL " << endl;
 		}
+		i++;
 	}
 	
 	return 0;
@@ -335,25 +338,23 @@ bool test_arrayread_arraystore2(){
 	const vector<string> vmcodes={
 		"subroutine ARRAYREADARRAYSTORE2_main 0 args 0 locals",
 
-		"iconst 2",
-		"call Builtin_new",
+		"iconst 2",			//+1
+		"call Builtin_new",	//+1
 		"swap",
-		"pop",
-		"dup",
-		"dup",
-		"iconst 1",
-		"iconst 8",
-		"arraystore",
+		"pop",				//-1
+		"dup",				//+1
+		"dup",				//+1
+		"iconst 1",			//+1
+		"iconst 8",			//+1
+		"arraystore",		//-3
 
-		"iconst 0",
+		"iconst 0",			//+1
 		//store the highest int possible
-		"iconst 2147483647",
-		"arraystore",
+		"iconst 2147483647",//+1
+		"arraystore",		//-3
 
-		"iconst 1",
-		"arrayread",
-
-		"iconst 0"
+		"iconst 1",			//+1
+		"arrayread",		//-1
 
 		"exit"
 	};
