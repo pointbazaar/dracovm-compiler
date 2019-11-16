@@ -55,8 +55,44 @@ vector<string> compile_builtin_subroutines(){
 
 
 vector<string> _readchar(){
-	//TODO
-	return {};
+	
+	const vector<string> res={
+
+	    //TODO: handle errors that could occur
+		join(subroutine(VMInstr("subroutine Builtin_readchar 0 args 0 locals")),"\n"),
+
+	    //push a placeholder for the value to read on the stack
+	    "mov eax,0",
+   		"push eax",
+
+	    //SYSCALL START
+	    "mov eax,"+SYS_READ,	//sys_read
+	    "mov ebx,0",			//stdin
+
+	    //print the char on stack
+	    //read into the placeholder DWORD we pushed onto the stack
+	    "mov ecx,esp",	
+	    
+
+
+	    //val length
+	    "mov edx,1",
+	    "int 0x80",
+	    //SYSCALL END
+
+	    //push return value: we do not need to push a return value,
+	    //as we already pushed a placeholder where our char (which has been read by now)
+	    // should have been placed
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.)
+	    join(swap(VMInstr("swap")),"\n"),
+
+	    //return from subroutine
+	    "ret"
+	};
+
+	return res;
 }
 vector<string> _putchar(){
 	//TODO
