@@ -84,15 +84,19 @@ int testrun(string name,vector<string> vmcodes){
 
 	int status=47; //random value thats hopefully never tested for
 	const string call="./"+name;
-	status = system(call.c_str());
+	status = WEXITSTATUS(system(call.c_str()));
 
 	//as we are testing, we should remove the files that have been created
 
-	const string call2="rm "+name+".o "+name+".asm "+name+" ";
-	system(call2.c_str());
+	const bool remove_files=true;
+
+	if(remove_files){
+		const string call2="rm "+name+".o "+name+".asm "+name+" ";
+		system(call2.c_str());
+	}
 
 	//https://stackoverflow.com/questions/20193464/how-to-get-the-exit-code-of-program-invoked-by-system-call
-	return WEXITSTATUS(status);
+	return status;
 }
 
 bool test_fadd1(){

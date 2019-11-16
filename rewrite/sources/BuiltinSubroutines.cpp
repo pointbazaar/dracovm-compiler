@@ -14,21 +14,21 @@ using namespace std;
  //https://www.informatik.htw-dresden.de/~beck/ASM/syscall_list.html
 
   //eax values (syscall numbers):
-  const int SYS_EXIT   = 1;
-  const int SYS_FORK   = 2;
-  const int SYS_READ   = 3;
-  const int SYS_WRITE  = 4;
-  const int SYS_OPEN   = 5;
-  const int SYS_CLOSE  = 6;
-  const int SYS_WAITPID= 7;
-  const int SYS_CREAT  = 8;
+  const string SYS_EXIT   = "1";
+  const string SYS_FORK   = "2";
+  const string SYS_READ   = "3";
+  const string SYS_WRITE  = "4";
+  const string SYS_OPEN   = "5";
+  const string SYS_CLOSE  = "6";
+  const string SYS_WAITPID= "7";
+  const string SYS_CREAT  = "8";
   //..
-  const int SYS_TIME   = 13;
+  const string SYS_TIME   = "13";
   //..
-  const int SYS_MMAP   = 192;
+  const string SYS_MMAP   = "192";
 
 vector<string> compile_builtin_subroutines(){
-	//TODO
+	
 	vector<string> asms;
 
 	vector<vector<string>> asmcodes = {
@@ -157,7 +157,7 @@ vector<string> _putdigit(){
 }
 vector<string> _new(){
 
-	const int byte_offset_32bit=4;
+	const string byte_offset_32bit="4";
 	
 	const vector<string> res={
 		//http://lxr.linux.no/#linux+v3.6/arch/x86/ia32/ia32entry.S#L372
@@ -167,7 +167,7 @@ vector<string> _new(){
 	    
 	    //malloc receives as an argument the amount of DWORDs to allocate
 
-	    join(subroutine(VMInstr("subroutine Builtin_new 0 args 0 locals")),"\n"),
+	    join(subroutine(VMInstr("subroutine Builtin_new 1 args 0 locals")),"\n"),
 
 	    //access our argument, push it onto the stack
 	    join(push(VMInstr("push ARG 0")),"\n"),
@@ -309,7 +309,7 @@ vector<string> _fputs(){
     //arg 0: string to write
     //arg 1: filedescriptor of the file to write to
     //returns: 0
-    const int byte_offset_32_bit = 4;
+    const string byte_offset_32_bit = "4";
 
     //prints a string to a file
     vector<string> sub1=subroutine(VMInstr("subroutine Builtin_fputs 2 args 0 locals"));
@@ -366,9 +366,7 @@ string join(vector<string> vec, string delim)
 
 	for(int i=0;i<vec.size();i++){
 		res << vec.at(i);
-		if(i<vec.size()-1){
-			res << delim;
-		}
+		res << delim;
 	}
 
     return res.str();

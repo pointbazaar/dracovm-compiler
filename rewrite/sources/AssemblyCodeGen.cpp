@@ -82,6 +82,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["pop"]=pop;
 	func_map["push"]=push;
 	func_map["swap"]=swap;
+	func_map["dup"]=dup;
 
 	func_map["fadd"]=fadd;
 	func_map["fsub"]=fsub;
@@ -117,6 +118,8 @@ vector<string> compile_vm_instr(VMInstr instr){
 //			VMInstr Compilation subroutines:
 
 vector<string> iconst(VMInstr instr){
+	//cout << "DEBUG " << instr.arg1 << " stoi" << endl << flush;
+
 	const int i = stoi(instr.arg1);
 	return {
 		"push "+to_string(i)+"	; iconst"
@@ -127,8 +130,11 @@ vector<string> fconst(VMInstr instr){
 	//parse arg
 	const float f = stof(instr.arg1);
 	return {
-		"mov eax, __float32__("+to_string(f)+")		;fconst",
-		"push eax					;fconst"
+		"",
+		"; fconst:",
+
+		"mov eax, __float32__("+to_string(f)+")		",
+		"push eax					"
 	};
 }
 
@@ -143,6 +149,13 @@ vector<string> pop(VMInstr instr){
 
 	const int byte_offset_32_bit=4;
 
+	if(instr.arg1.compare("")==0 && instr.arg2.compare("")==0){
+		//simply pop the value to discard it
+		return {
+			"pop eax"
+		};
+	}
+
 	const string segment = instr.arg1;
 	const int index      = stoi(instr.arg2);
 
@@ -150,6 +163,7 @@ vector<string> pop(VMInstr instr){
 		//ebp is on the caller's retun address, with the local variable below
 
 		return {
+			"",
 			"; pop LOCAL "+to_string(index),
 			
 			"mov eax,ebp",
@@ -169,6 +183,7 @@ vector<string> pop(VMInstr instr){
 		//ebp is on the caller's return address, with the arguments above
 		
 		return {
+			"",
 			"; pop ARG "+to_string(index),
 			
 			"mov eax,"+to_string(2*byte_offset_32_bit),
@@ -197,6 +212,7 @@ vector<string> push(VMInstr instr){
 
 		//eax=ebp-index-1
 		return {
+			"",
 			";	push LOCAL "+to_string(index),
 			
 			"mov eax,ebp",
@@ -218,6 +234,7 @@ vector<string> push(VMInstr instr){
 		//eax=ebp+index+2*(4 byte)
 
 		return {
+			"",
 			"; push ARG "+to_string(index),
 
 			"mov eax,"+to_string(2*byte_offset_32_bit),
@@ -236,6 +253,7 @@ vector<string> push(VMInstr instr){
 
 vector<string> dup(VMInstr instr){
 	return {
+		"",
 		"mov eax, [esp]  ;dup",
 		"push eax        ;dup"
 	};
@@ -244,7 +262,9 @@ vector<string> dup(VMInstr instr){
 vector<string> swap(VMInstr instr){
 	//swaps the 2 values on top of stack
 	return {
-		"; swap:"
+		"",
+		"; swap:",
+
 		"pop eax",
 		"pop ebx",
 		"push eax",
@@ -265,6 +285,12 @@ vector<string> subroutine(VMInstr instr){
 		//we need not save ebp of the caller, as there is no caller
       	//our ebp is iconst 0, to reference local variables, we need an ebp
 		return {
+			"",
+			"; subroutine :",
+
+			//jump label for the subroutine
+			full_name+":",
+
 			//fake return address for main
 			"mov eax,0",
 			"push eax",
@@ -276,6 +302,11 @@ vector<string> subroutine(VMInstr instr){
 		//save the ebp of the caller
       	//push ebp
 		return {
+
+			"",
+			"; subroutine:",
+			//jump label for the subroutine
+			full_name+":",
 
 			"push ebp",
 			//swap
@@ -293,6 +324,9 @@ vector<string> subroutine(VMInstr instr){
 vector<string> call(VMInstr instr){
 	string subr_name = instr.arg1;
 	return {
+		"",
+		"; call:",
+
 		"call "+subr_name,
 
 		//swap return value with saved ebp
@@ -315,6 +349,9 @@ vector<string> _return(VMInstr instr){
 vector<string> exit(VMInstr instr){
 
 	return {
+		"",
+		"; exit:",
+
 		"mov eax,1",	//system call number: (sys_exit)	
 		"pop ebx",		//pop exit code from stack
 		"int 0x80"		//interrupt
@@ -332,7 +369,9 @@ vector<string> pushsubroutine(VMInstr instr){
 vector<string> callfromstack(VMInstr instr){
 
 	return {
+		"",
 		"; callfromstack :",
+
 		"pop eax",
 		"call eax",
 
@@ -353,7 +392,9 @@ vector<string> fadd(VMInstr instr){
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
 	return {
-		"; START fadd"
+		"",
+		"; fadd:",
+
 		//init floating point unit
 		"finit",
 		//load from stack
@@ -364,7 +405,6 @@ vector<string> fadd(VMInstr instr){
 		"fadd",
 		"push 0",			//push unknown value
 		"fstp dword [esp]" //fill that value
-		"; END 	 fadd"
 	};
 }
 
@@ -373,7 +413,9 @@ vector<string> fsub(VMInstr instr){
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
 	return {
-		"; START fadd"
+		"",
+		"; fsub:",
+
 		//init floating point unit
 		"finit",
 		//load from stack
@@ -384,13 +426,15 @@ vector<string> fsub(VMInstr instr){
 		"fsub",
 		"push 0",			//push unknown value
 		"fstp dword [esp]" //fill that value
-		"; END 	 fadd"
 	};
 }
 
 vector<string> fmul(VMInstr instr){
 	//https://stackoverflow.com/questions/11853133/adding-floating-point-double-numbers-in-assembly
 	return {
+		"",
+		"; fmul:",
+
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
@@ -431,7 +475,9 @@ vector<string> iadd(VMInstr instr){
 	//https://c9x.me/x86/html/file_module_x86_id_5.html
 
 	return {
+		"",
 		";  iadd : ",
+
 		"pop eax",
 		"pop ebx",
 		"add eax,ebx",
@@ -441,7 +487,9 @@ vector<string> iadd(VMInstr instr){
 
 vector<string> isub(VMInstr instr){
 	return {
+		"",
 		";	isub: ",
+
 		"pop ebx",
 		"pop eax",
 		"sub eax,ebx",
@@ -452,7 +500,9 @@ vector<string> isub(VMInstr instr){
 vector<string> imul(VMInstr instr){
 
 	return {
+		"",
 		"; imul:",
+
 		"pop ebx",
 		"pop eax",
 		"imul eax,ebx",
@@ -463,7 +513,9 @@ vector<string> imul(VMInstr instr){
 vector<string> idiv(VMInstr instr){
 
 	return {
+		"",
 		"; idiv:",
+
 		"pop ecx",	//pop the divisor
 		"pop eax",	//pop the dividend
 
@@ -482,7 +534,9 @@ vector<string> imod(VMInstr instr){
 	//https://stackoverflow.com/questions/8021772/assembly-language-how-to-do-modulo
 	
 	return {
-		"; -- START imod  -- ",
+		"",
+		"; imod: ",
+
 		"pop ebx",
 		"pop eax",
 		"xor edx,edx",
@@ -490,14 +544,15 @@ vector<string> imod(VMInstr instr){
 		//https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
 		"cdq",
 		"idiv ebx",
-		"push edx",
-		"; -- END 	imod --"
+		"push edx"
 	};
 }
 
 vector<string> ineg(VMInstr instr){
 	return {
-		";----- ineg -----",
+		"",
+		"; ineg:",
+
 		"pop eax",
 		"mov ebx,-1",
 		"imul eax,ebx",
@@ -508,7 +563,9 @@ vector<string> ineg(VMInstr instr){
 vector<string> _and(VMInstr instr){
 
 	return {
+		"",
 		"; and:",
+
 		"pop ebx",
 		"pop eax",
 		"and eax,ebx",
@@ -526,19 +583,23 @@ vector<string> _not(VMInstr instr){
 
     //https://www.tutorialspoint.com/assembly_programming/assembly_logical_instructions.htm
 
-	const string comment = "	;not";
 	const vector<string> res{
-		"mov ebx,1"+comment,
-		"pop eax"+comment,
-		"xor eax ebx"+comment,
-		"push eax"+comment
+		"",
+		"; not:",
+
+		"mov ebx,1",
+		"pop eax",
+		"xor eax ebx",
+		"push eax"
 	};
 	return res;
 }
 
 vector<string> _or(VMInstr instr){
 	return {
-		"; or: "
+		"",
+		"; or: ",
+
 		"pop eax",
 		"pop ebx",
 		"or eax,ebx",
@@ -553,6 +614,9 @@ vector<string> ieq(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 
 	return {
+		"",
+		"; ieq:"
+
 		//pop operands
 		"pop eax",
 		"pop ebx",
@@ -576,6 +640,9 @@ vector<string> feq(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 	
 	return {
+		"",
+		"; feq:",
+
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
@@ -605,6 +672,9 @@ vector<string> igt(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 
 	return {
+		"",
+		"; igt:",
+
 		//pop operands
 		"pop eax",
 		"pop ebx",
@@ -628,6 +698,9 @@ vector<string> fgt(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 	
 	return {
+		"",
+		"; fgt:",
+
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
@@ -656,6 +729,9 @@ vector<string> igeq(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 
 	return {
+		"",
+		"; igeq:",
+
 		//pop operands
 		"pop eax",
 		"pop ebx",
@@ -679,6 +755,9 @@ vector<string> fgeq(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 	
 	return {
+		"",
+		"; fgeq:"
+
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
@@ -708,6 +787,9 @@ vector<string> ilt(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 
 	return {
+		"",
+		"; ilt:",
+
 		//pop operands
 		"pop eax",
 		"pop ebx",
@@ -732,6 +814,9 @@ vector<string> flt(VMInstr instr){
 	const string label_end = ".eq_end"+to_string(unique);
 	
 	return {
+		"",
+		"; flt:",
+
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
@@ -760,6 +845,9 @@ vector<string> ileq(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 
 	return {
+		"",
+		"; ileq:",
+
 		//pop operands
 		"pop eax",
 		"pop ebx",
@@ -783,6 +871,9 @@ vector<string> fleq(VMInstr instr){
 	const string label_end = ".eq_end"+unique;
 	
 	return {
+		"",
+		"; fleq:",
+
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
@@ -836,6 +927,9 @@ vector<string> if_goto(VMInstr instr){
 
 	const string subr_name = instr.arg1;
 	return {
+		"",
+		"; if-goto:"
+
 		//pop condition
 		"pop eax",
 		//ebx=true
@@ -857,6 +951,8 @@ vector<string> arraystore(VMInstr instr){
 
 	const int byte_offset_32_bit = 4;
 	return {
+		"",
+		"; arraystore:",
 		
 		"pop ebx", //value to store
 		"pop ecx", //index
@@ -890,7 +986,9 @@ vector<string> arrayread(VMInstr instr){
 	*/
 	const int byte_offset_32_bit = 4;
 	return {
+		"",
 		";arrayread:",
+
 		"pop ebx",
 		//increment the address, as our arrays are length-prefixed in dragon
 		"inc ebx",
@@ -909,9 +1007,12 @@ vector<string> arrayread(VMInstr instr){
 vector<string> lshiftl(VMInstr instr){
 	const string comment = "	;lshiftl";
 	const vector<string> res{
+		"",
+		"; lshiftl:",
+
 		"pop ecx"+comment,
 		"pop eax"+comment,
-		"shl eax cl"+comment,
+		"shl eax, cl"+comment,
 		"push eax"+comment
 	};
 	return res;
@@ -920,9 +1021,12 @@ vector<string> lshiftl(VMInstr instr){
 vector<string> lshiftr(VMInstr instr){
 	const string comment = "	;lshiftl";
 	const vector<string> res{
+		"",
+		"; lshiftr:",
+
 		"pop ecx"+comment,
 		"pop eax"+comment,
-		"shr eax cl"+comment,
+		"shr eax, cl"+comment,
 		"push eax"+comment
 	};
 	return res;
@@ -934,6 +1038,8 @@ vector<string> ror(VMInstr instr){
 	string n = instr.arg1;
 
 	return {
+		"",
+		"; ror:",
 		"pop eax",
 		"ror eax, "+n,
 		"push eax"
@@ -946,6 +1052,8 @@ vector<string> rol(VMInstr instr){
 	string n = instr.arg1;
 	
 	return {
+		"",
+		"; rol:",
 		"pop eax",
 		"rol eax, "+n,
 		"push eax"
