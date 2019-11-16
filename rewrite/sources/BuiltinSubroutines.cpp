@@ -197,8 +197,35 @@ vector<string> _abs(){
 	return {};
 }
 vector<string> _time(){
-	//TODO
-	return {};
+	
+	const vector<string> res={
+		//time in seconds since the epoch
+	    //https://fresh.flatassembler.net/lscr/
+
+	    //takes 0 arguments
+	    //returns a PInt
+
+	    join(subroutine(VMInstr("subroutine Builtin_time 0 args 0 locals")),"\n"),
+
+	    "mov eax,"+SYS_TIME,
+	    "mov ebx,0",			//return time only in eax
+	    "xor ecx,ecx",
+	    "xor edx,edx",
+	    "int 0x80",
+
+
+	    //push return value
+	    "push eax",		
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.)
+	    join(swap(VMInstr("swap")),"\n"),
+
+	    //return from subroutine
+	    "ret"
+	};
+
+	return res;
 }
 vector<string> _fopen(){
 	//TODO
