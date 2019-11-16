@@ -10,7 +10,7 @@ using namespace std;
 
 int testrun(string name,vector<string> vmcodes);
 
-//arithmetic tests
+//arithmetic tests (all from ArithmeticFocusedAssemblyGeneratorTest)
 bool test_fadd1();
 bool test_fadd2();
 bool test_fsub();
@@ -23,13 +23,31 @@ bool test_idiv();
 bool test_idiv_positive_by_negative();
 bool test_idiv_negative_by_positive();
 
-//array related tests
+//array related tests (all from ArrayFocusedAssemblyGeneratorTest)
 bool test_arraystore1();
 bool test_arrayread_arraystore();
 bool test_arrayread_arraystore2();
 bool test_arraystore_len();
 bool test_len_ok_with_stack();
 bool test_new_ok_with_stack();
+
+//logic focused tests (all from LogicFocusedAssemblyCodeGeneratorTest)
+bool test_ieq_false();
+bool test_ieq_true();
+bool test_ineq_true();
+bool test_ineq_false();
+bool test_igt_true();
+bool test_igt_false();
+bool test_ilt_true();
+bool test_ilt_false();
+bool test_swap();
+bool test_and();
+bool test_and2();
+bool test_or();
+bool test_or2();
+bool test_feq1();
+bool test_feq2();
+
 
 int main(int argc, char* argv[]){
 	
