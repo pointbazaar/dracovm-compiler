@@ -17,4 +17,7 @@ using namespace std;
 	vector<string> _fopen();
 	vector<string> _fputs();
 
+
+	string join(vector<string> vec, string delim);
+
 #endif

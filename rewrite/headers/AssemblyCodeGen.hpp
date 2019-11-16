@@ -1,7 +1,6 @@
 #ifndef ASSEMBLYCODEGEN_HPP
 #define ASSEMBLYCOGENGEN_HPP
 
-
 class VMInstr;
 
 std::map<std::string,std::vector<std::string>> compile_vmcodes(std::map<std::string,std::vector<std::string>> vm_sources);

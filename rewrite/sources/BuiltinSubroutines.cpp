@@ -1,6 +1,9 @@
 #include <map>
 #include <iostream>
 #include <vector>
+#include <numeric>
+#include <iterator>
+#include <sstream>
 
 #include "BuiltinSubroutines.hpp"
 #include "AssemblyCodeGen.hpp"
@@ -61,17 +64,22 @@ vector<string> _putchar(){
 }
 vector<string> _putdigit(){
 	
-	vector<string> res = subroutine(VMInstr(
+	const vector<string> sub1 = subroutine(VMInstr(
 		"subroutine Builtin_putdigit 0 args 0 locals"
 	));
 
 	const vector<string> push1 = push(VMInstr("push ARG 0"));
-
-	const vector<string> body = {
+	//TODO: reduce() the vector<string> to do it inline 
+	//in the vector literal
+	
+	const vector<string> res = {
 		//prints the Int on top of stack as char to stdout
+
+		join(sub1,"\n"),
 
 	    //access our argument , ARG 0, by pushing it onto the stack
 	    //push1
+	    join(push1,"\n"),
 
 	    "mov eax,"+SYS_WRITE,	//putdigit: sys_write syscall
 	    "mov ebx,1",	//putdigit: stdout
@@ -109,10 +117,6 @@ vector<string> _putdigit(){
 	    "ret"
 	};
 
-
-	res.insert(res.end(),push1.begin(),push1.end());
-	res.insert(res.end(),body.begin(),body.end());
-
 	return res;
 }
 vector<string> _new(){
@@ -149,7 +153,7 @@ vector<string> _fputs(){
     const int byte_offset_32_bit = 4;
 
     //prints a string to a file
-    vector<string> res=subroutine(VMInstr("subroutine Builtin_fputs 2 args 0 locals"));
+    vector<string> sub1=subroutine(VMInstr("subroutine Builtin_fputs 2 args 0 locals"));
 
     //pop pointer to string buffer to write (Arg 0)
     const vector<string> push1 = push(VMInstr("push ARG 0"));
@@ -157,10 +161,14 @@ vector<string> _fputs(){
     //pop file descriptor (Arg 1)
     const vector<string> push2 = push(VMInstr("push ARG 1"));
 
-    res.insert(res.end(),push1.begin(),push1.end());
-    res.insert(res.end(),push2.begin(),push2.end());
 
-    const vector<string> body = {
+    const vector<string> res = {
+
+    	join(sub1,"\n"),
+
+    	join(push1,"\n"),
+
+    	join(push2,"\n"),
 
 	    "mov eax,"+SYS_WRITE,
 	    "pop ebx",//pop our filedescriptor argument
@@ -188,7 +196,22 @@ vector<string> _fputs(){
 	    "ret"
     };
 
-    res.insert(res.end(),body.begin(),body.end());
-
-    return body;
+    return res;
 }
+
+
+
+string join(vector<string> vec, string delim)
+{
+	stringstream res;
+
+	for(int i=0;i<vec.size();i++){
+		res << vec.at(i);
+		if(i<vec.size()-1){
+			res << delim;
+		}
+	}
+
+    return res.str();
+}
+
