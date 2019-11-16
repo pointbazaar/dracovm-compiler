@@ -75,7 +75,24 @@ int main(int argc, char* argv[]){
 		test_arraystore_len(),	//14
 		
 		test_len_ok_with_stack(),
-		test_new_ok_with_stack()	//16
+		test_new_ok_with_stack(),	//16
+
+		//logic related
+		test_ieq_false(),
+		test_ieq_true(),
+		test_ineq_true(),
+		test_ineq_false(),
+		test_igt_true(),
+		test_igt_false(),
+		test_ilt_true(),
+		test_ilt_false(),
+		test_swap(),
+		test_and(),
+		test_and2(),
+		test_or(),
+		test_or2(),
+		test_feq1(),
+		test_feq2()
 	};
 	int i=0;
 	for(bool x : test_results){
@@ -446,4 +463,80 @@ bool test_new_ok_with_stack(){
 	};
 
 	return 5==testrun("NEWOKSTACK_main",vmcodes);
+}
+
+
+bool test_ieq_false(){
+	//TODO
+	return false;
+}
+
+bool test_ieq_true(){
+	//TODO
+	return false;
+}
+
+bool test_ineq_true(){
+	//TODO
+	return false;
+}
+
+bool test_ineq_false(){
+	//TODO
+	return false;
+}
+
+bool test_igt_true(){
+	//TODO
+	return false;
+}
+
+bool test_igt_false(){
+	//TODO
+	return false;
+}
+
+bool test_ilt_true(){
+	//TODO
+	return false;
+}
+
+bool test_ilt_false(){
+	//TODO
+	return false;
+}
+
+bool test_swap(){
+	//TODO
+	return false;
+}
+
+bool test_and(){
+	//TODO
+	return false;
+}
+
+bool test_and2(){
+	//TODO
+	return false;
+}
+
+bool test_or(){
+	//TODO
+	return false;
+}
+
+bool test_or2(){
+	//TODO
+	return false;
+}
+
+bool test_feq1(){
+	//TODO
+	return false;
+}
+
+bool test_feq2(){
+	//TODO
+	return false;
 }
