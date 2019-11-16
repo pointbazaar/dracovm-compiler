@@ -105,7 +105,6 @@ vector<string> _putdigit(){
 	));
 
 	const vector<string> push1 = push(VMInstr("push ARG 0"));
-	//TODO: reduce() the vector<string> to do it inline 
 	//in the vector literal
 	
 	const vector<string> res = {
@@ -164,8 +163,34 @@ vector<string> _free(){
 	return {};
 }
 vector<string> _len(){
-	//TODO
-	return {};
+
+	const vector<string> res={
+		//returns the length of a length-prefixed memory segment
+
+		join(subroutine(VMInstr("subroutine Builtin_len 1 args 0 locals")),"\n"),
+
+	    //access our argument , ARG 0, by pushing it onto the stack
+	    join(push(VMInstr("push ARG 0")),"\n"),
+
+	    //pointer is now on stack
+	    "pop eax",
+
+	    //mov eax,[eax] //get the length stored at that location
+	    "mov eax,[eax]",
+
+	    //push return value
+	    "push eax",
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.)
+	    join(swap(VMInstr("swap")),"\n"),
+
+	    //return from subroutine
+	    "ret"
+
+	};
+
+	return res;
 }
 vector<string> _abs(){
 	//TODO
