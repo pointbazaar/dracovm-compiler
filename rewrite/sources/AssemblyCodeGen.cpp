@@ -842,8 +842,8 @@ vector<string> ilt(VMInstr instr){
 		"; ilt:",
 
 		//pop operands
-		"pop eax",
 		"pop ebx",
+		"pop eax",
 		
 		"cmp eax,ebx",
 		
