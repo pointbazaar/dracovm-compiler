@@ -608,7 +608,7 @@ bool test_igt_false(){
 		"subroutine IGTFALSE_main 0 args 0 locals",
 
 		"iconst 11",
-		"iconst 10",
+		"iconst 11",
 
 		"igt",
 		"if-goto label1",
