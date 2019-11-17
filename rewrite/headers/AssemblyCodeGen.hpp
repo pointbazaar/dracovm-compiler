@@ -60,6 +60,10 @@ std::vector<std::string> _or(VMInstr instr);
 std::vector<std::string> ieq(VMInstr instr);
 std::vector<std::string> feq(VMInstr instr);
 
+//not equal
+std::vector<std::string> ineq(VMInstr instr);
+//std::vector<std::string> fneq(VMInstr instr);
+
 //greater than
 std::vector<std::string> igt(VMInstr instr);
 std::vector<std::string> fgt(VMInstr instr);

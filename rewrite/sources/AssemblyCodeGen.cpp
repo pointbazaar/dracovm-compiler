@@ -67,6 +67,9 @@ vector<string> compile_vm_instr(VMInstr instr){
 	//vm instruction.
 	const string cmd=instr.cmd; //short for command
 
+	//DEBUG
+	//cout << cmd << endl;
+
 	//create a map of function pointers
 	map<string,vector<string> (*)(VMInstr)> func_map;
 
@@ -84,16 +87,28 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["swap"]=swap;
 	func_map["dup"]=dup;
 
+	//float arithmetic
 	func_map["fadd"]=fadd;
 	func_map["fsub"]=fsub;
 
+	//float comparisons
 	func_map["flt"]=flt;
 
+	//integer arithmetic
 	func_map["iadd"]=iadd;
 	func_map["isub"]=isub;
 	func_map["imod"]=imod;
 	func_map["idiv"]=idiv;
 
+	//integer comparisons
+	func_map["ieq"]=ieq;
+	func_map["ineq"]=ineq;
+	func_map["ilt"]=ilt;
+	func_map["ileq"]=ileq;
+	func_map["igeq"]=igeq;
+	func_map["igt"]=igt;
+
+	//subroutine related
 	func_map["subroutine"]=subroutine;
 	func_map["call"]=call;
 	func_map["if-goto"]=if_goto;
@@ -608,7 +623,7 @@ vector<string> _or(VMInstr instr){
 }
 
 vector<string> ieq(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
@@ -635,7 +650,8 @@ vector<string> ieq(VMInstr instr){
 }
 
 vector<string> feq(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
+
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
 	
@@ -666,7 +682,7 @@ vector<string> feq(VMInstr instr){
 
 
 vector<string> igt(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
@@ -693,7 +709,8 @@ vector<string> igt(VMInstr instr){
 }
 
 vector<string> fgt(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
+
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
 	
@@ -723,7 +740,7 @@ vector<string> fgt(VMInstr instr){
 }
 
 vector<string> igeq(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
@@ -750,7 +767,8 @@ vector<string> igeq(VMInstr instr){
 }
 
 vector<string> fgeq(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
+
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
 	
@@ -779,9 +797,36 @@ vector<string> fgeq(VMInstr instr){
 	};
 }
 
+vector<string> ineq(VMInstr instr){
+	const string unique = to_string(rand());
+
+	const string label_true = ".ineq_push"+unique;
+	const string label_end = ".ineq_end"+unique;
+
+	return {
+		"",
+		"; ineq:"
+
+		//pop operands
+		"pop eax",
+		"pop ebx",
+		
+		"cmp eax,ebx",
+		
+		"jne "+label_true,
+		"push 0", //push false
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1", //push true
+
+		label_end+":"		
+	};
+}
+
 
 vector<string> ilt(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;

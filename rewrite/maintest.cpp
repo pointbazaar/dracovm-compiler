@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <vector>
 #include <string>
@@ -68,6 +69,7 @@ int main(int argc, char* argv[]){
 		test_idiv_positive_by_negative(),
 		test_idiv_negative_by_positive(),	//10
 
+
 		//array related
 		test_arraystore1(),
 		test_arrayread_arraystore(),	//12
@@ -77,26 +79,38 @@ int main(int argc, char* argv[]){
 		test_len_ok_with_stack(),
 		test_new_ok_with_stack(),	//16
 
+		
 		//logic related
-		test_ieq_false(),
-		test_ieq_true(),
-		test_ineq_true(),
-		test_ineq_false(),
-		test_igt_true(),
-		test_igt_false(),
-		test_ilt_true(),
-		test_ilt_false(),
-		test_swap(),
-		test_and(),
-		test_and2(),
-		test_or(),
-		test_or2(),
-		test_feq1(),
-		test_feq2()
+		test_ieq_false(), 	//17	//one of these is failing
+		test_ieq_true(),	//18	//
+
+		
+		test_ineq_true(),	//19
+		test_ineq_false(),	//20
+		
+		
+		test_igt_true(),	//21
+		test_igt_false(),	//22
+
+		test_ilt_true(),	//23
+		test_ilt_false(),	//24
+		
+
+		test_swap(),		//25
+
+		test_and(),			//26
+		test_and2(),		//27
+
+		test_or(),			//28
+		test_or2(),			//29
+
+		test_feq1(),		//30
+		test_feq2()			//31
+		
 	};
 	int i=0;
 	for(bool x : test_results){
-		cout << i << ": ";
+		cout << setw(3) << i << ": ";
 		if(x){
 			cout << "PASS " << endl;
 		}else{
@@ -467,28 +481,120 @@ bool test_new_ok_with_stack(){
 
 
 bool test_ieq_false(){
-	//TODO
-	return false;
+	cout << "test ieq_false" << endl;
+	const vector<string> vmcodes={
+		"subroutine IEQFALSE_main 0 args 0 locals",
+
+		"iconst 1",
+		"iconst 0",
+
+		"ieq",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 0",
+
+		"exit"
+	};
+
+	return 45==testrun("IEQFALSE_main",vmcodes);
 }
 
 bool test_ieq_true(){
-	//TODO
-	return false;
+	cout << "test ieq_true" << endl;
+	const vector<string> vmcodes={
+		"subroutine IEQTRUE_main 0 args 0 locals",
+
+		"iconst 11",
+		"iconst 11",
+
+		"ieq",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 3",
+		
+
+		"exit"
+	};
+
+	return 3==testrun("IEQTRUE_main",vmcodes);
 }
 
 bool test_ineq_true(){
-	//TODO
-	return false;
+	cout << "test ineq_true" << endl;
+	const vector<string> vmcodes={
+		"subroutine INEQTRUE_main 0 args 0 locals",
+
+		"iconst 1",
+		"iconst 0",
+
+		"ineq",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 0",
+		
+
+		"exit"
+	};
+
+	return 0==testrun("INEQTRUE_main",vmcodes);
 }
 
 bool test_ineq_false(){
-	//TODO
-	return false;
+	cout << "test ineq_false" << endl;
+	const vector<string> vmcodes={
+		"subroutine INEQFALSE_main 0 args 0 locals",
+
+		"iconst 11",
+		"iconst 11",
+
+		"ineq",
+		"if-goto label1",
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 3",
+		
+
+		"exit"
+	};
+
+	return 45==testrun("INEQFALSE_main",vmcodes);
 }
 
 bool test_igt_true(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine IGTTRUE_main 0 args 0 locals",
+
+		"iconst 11",
+		"iconst 10",
+
+		"igt",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 3",
+		
+
+		"exit"
+	};
+
+	return 3==testrun("IGTTRUE_main",vmcodes);
 }
 
 bool test_igt_false(){
