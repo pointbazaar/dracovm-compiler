@@ -721,7 +721,7 @@ bool test_and2(){
 		"exit"
 	};
 
-	return 1==testrun("AND2_main",vmcodes);
+	return 0==testrun("AND2_main",vmcodes);
 }
 
 bool test_or(){
