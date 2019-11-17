@@ -93,6 +93,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 
 	//float comparisons
 	func_map["flt"]=flt;
+	func_map["feq"]=feq;
 
 	//integer arithmetic
 	func_map["iadd"]=iadd;
@@ -118,6 +119,11 @@ vector<string> compile_vm_instr(VMInstr instr){
 	//array related
 	func_map["arrayread"]=arrayread;
 	func_map["arraystore"]=arraystore;
+
+	//logic
+	func_map["and"]=_and;
+	func_map["or"]=_or;
+	func_map["not"]=_not;
 
 	
 	if(func_map.count(cmd)==1){

@@ -109,15 +109,24 @@ int main(int argc, char* argv[]){
 		
 	};
 	int i=0;
+	int passed = 0;
+	int failed = 0;
 	for(bool x : test_results){
 		cout << setw(3) << i << ": ";
 		if(x){
 			cout << "PASS " << endl;
+			passed++;
 		}else{
 			cout << "FAIL " << endl;
+			failed++;
 		}
 		i++;
 	}
+
+	cout << test_results.size() 
+		<< " Tests, " 
+		<< passed << " Passed, "
+		<< failed << " Failed.";
 	
 	return 0;
 }
@@ -595,51 +604,188 @@ bool test_igt_true(){
 }
 
 bool test_igt_false(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine IGTFALSE_main 0 args 0 locals",
+
+		"iconst 11",
+		"iconst 10",
+
+		"igt",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 3",
+		
+
+		"exit"
+	};
+
+	return 45==testrun("IGTFALSE_main",vmcodes);
 }
 
 bool test_ilt_true(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine ILTTRUE_main 0 args 0 locals",
+
+		"iconst 2",
+		"iconst 11",
+
+		"ilt",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 3",
+		
+
+		"exit"
+	};
+
+	return 3==testrun("ILTTRUE_main",vmcodes);
 }
 
 bool test_ilt_false(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine ILTFALSE_main 0 args 0 locals",
+
+		"iconst 11",
+		"iconst 11",
+
+		"ilt",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 3",
+		
+
+		"exit"
+	};
+
+	return 45==testrun("ILTFALSE_main",vmcodes);
 }
 
 bool test_swap(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine SWAP_main 0 args 0 locals",
+
+		"iconst 2",
+		"iconst 11",
+
+		"swap",
+		"igt",
+		"if-goto label1",
+
+		"iconst 45",
+		"exit",
+
+		"label label1",
+		"iconst 3",
+		
+
+		"exit"
+	};
+
+	return 3==testrun("SWAP_main",vmcodes);
 }
 
 bool test_and(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine AND_main 0 args 0 locals",
+
+		"iconst 1",
+		"iconst 1",
+
+		"and",
+		"exit"
+	};
+
+	return 1==testrun("AND_main",vmcodes);
 }
 
 bool test_and2(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine AND2_main 0 args 0 locals",
+
+		"iconst 1",
+		"iconst 0",
+
+		"and",
+		"exit"
+	};
+
+	return 1==testrun("AND2_main",vmcodes);
 }
 
 bool test_or(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine OR_main 0 args 0 locals",
+
+		"iconst 0",
+		"iconst 0",
+
+		"or",
+		"exit"
+	};
+
+	return 0==testrun("OR_main",vmcodes);
 }
 
 bool test_or2(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine OR2_main 0 args 0 locals",
+
+		"iconst 1",
+		"iconst 0",
+
+		"or",
+		"exit"
+	};
+
+	return 1==testrun("OR2_main",vmcodes);
 }
 
 bool test_feq1(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine FEQ1_main 0 args 0 locals",
+
+		"fconst 3.0",
+        "fconst 3.0",
+        "feq",
+        "if-goto exit0",
+        "iconst 1",
+        "exit",
+        "label exit0",
+        "iconst 0",
+        "exit"
+
+	};
+
+	return 0==testrun("FEQ1_main",vmcodes);
 }
 
 bool test_feq2(){
-	//TODO
-	return false;
+	const vector<string> vmcodes={
+		"subroutine FEQ2_main 0 args 0 locals",
+
+		"fconst 3.0",
+        "fconst 3.1",
+        "feq",
+        "if-goto exit0",
+        "iconst 1",
+        "exit",
+        "label exit0",
+        "iconst 0",
+        "exit"
+
+	};
+
+	return 1==testrun("FEQ2_main",vmcodes);
 }
