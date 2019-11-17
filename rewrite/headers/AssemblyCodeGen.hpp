@@ -58,11 +58,15 @@ std::vector<std::string> _or(VMInstr instr);
 
 //equal
 std::vector<std::string> ieq(VMInstr instr);
-std::vector<std::string> feq(VMInstr instr);
+//std::vector<std::string> feq(VMInstr instr);	
+//will not be implemented, comparing floats for equality is not a good idea
+
 
 //not equal
 std::vector<std::string> ineq(VMInstr instr);
 //std::vector<std::string> fneq(VMInstr instr);
+//will not be implemented, comparing floats for equality is not a good idea
+
 
 //greater than
 std::vector<std::string> igt(VMInstr instr);

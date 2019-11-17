@@ -93,7 +93,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 
 	//float comparisons
 	func_map["flt"]=flt;
-	func_map["feq"]=feq;
+	//func_map["feq"]=feq;	//not implemented
 
 	//integer arithmetic
 	func_map["iadd"]=iadd;
@@ -652,37 +652,6 @@ vector<string> ieq(VMInstr instr){
 		"push 1", 				//push true
 
 		label_end+":"		
-	};
-}
-
-vector<string> feq(VMInstr instr){
-	const string unique = to_string(rand());
-
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
-	
-	return {
-		"",
-		"; feq:",
-
-		"fld dword [esp]",
-		"pop eax",
-		"fld dword [esp]",
-		"pop eax",
-
-		"fcomp",
-
-		//store status of comparison
-		"fstsw ax",
-
-		"je "+label_true,
-		"push 0",
-		"jmp "+label_end,
-
-		label_true+":",
-		"push 1",
-
-		label_end+":",
 	};
 }
 
