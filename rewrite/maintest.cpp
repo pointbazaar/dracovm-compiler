@@ -49,6 +49,13 @@ bool test_or2();
 bool test_feq1();
 bool test_feq2();
 
+//subroutine focused (all from SubroutineFocusedAssemblyCodeGeneratedTest)
+bool test_readchar();
+bool test_putchar();
+bool test_putdigit();
+bool test_putchar_multiple();
+bool test_compile_new_and_len();
+
 
 int main(int argc, char* argv[]){
 	
@@ -56,7 +63,8 @@ int main(int argc, char* argv[]){
 	//TODO:
 
 	vector<bool> test_results = {
-		//arithmetic related
+
+		//arithmetic related (11)
 		test_fadd1(),	//0
 		test_fadd2(),	//1
 		test_fsub(),	//2
@@ -70,7 +78,7 @@ int main(int argc, char* argv[]){
 		test_idiv_negative_by_positive(),	//10
 
 
-		//array related
+		//array related (6)
 		test_arraystore1(),				//11
 		test_arrayread_arraystore(),	//12
 		test_arrayread_arraystore2(),	//13
@@ -80,7 +88,7 @@ int main(int argc, char* argv[]){
 		test_new_ok_with_stack(),	//16
 
 		
-		//logic related
+		//logic related (15)
 		test_ieq_false(), 	//17
 		test_ieq_true(),	//18
 
@@ -105,7 +113,15 @@ int main(int argc, char* argv[]){
 		test_or2(),			//29
 
 		test_feq1(),		//30
-		test_feq2()			//31
+		test_feq2(),		//31
+
+		//subroutine related (5)
+		test_readchar(),
+		test_putchar(),
+		test_putdigit(),
+		test_putchar_multiple(),
+		test_compile_new_and_len()
+
 		
 	};
 	int i=0;
@@ -754,10 +770,35 @@ bool test_or2(){
 
 bool test_feq1(){
 	//TODO: remove it once migration from java is complete
-	return true;
+	return false;
 }
 
 bool test_feq2(){
 	//TODO: remove it once migration from java is complete
-	return true;
+	return false;
+}
+
+bool test_readchar(){
+	//TODO
+	return false;
+}
+
+bool test_putchar(){
+	//TODO
+	return false;
+}
+
+bool test_putdigit(){
+		//TODO
+	return false;
+}
+
+bool test_putchar_multiple(){
+		//TODO
+	return false;
+}
+
+bool test_compile_new_and_len(){
+		//TODO
+	return false;
 }
