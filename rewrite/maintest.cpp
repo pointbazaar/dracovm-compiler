@@ -66,23 +66,23 @@ int main(int argc, char* argv[]){
 		test_imod(),	//6
 		test_imod2(),	//7
 		test_idiv(),	//8
-		test_idiv_positive_by_negative(),
+		test_idiv_positive_by_negative(),	//9
 		test_idiv_negative_by_positive(),	//10
 
 
 		//array related
-		test_arraystore1(),
+		test_arraystore1(),				//11
 		test_arrayread_arraystore(),	//12
-		test_arrayread_arraystore2(),
-		test_arraystore_len(),	//14
+		test_arrayread_arraystore2(),	//13
+		test_arraystore_len(),			//14
 		
-		test_len_ok_with_stack(),
+		test_len_ok_with_stack(),	//15
 		test_new_ok_with_stack(),	//16
 
 		
 		//logic related
-		test_ieq_false(), 	//17	//one of these is failing
-		test_ieq_true(),	//18	//
+		test_ieq_false(), 	//17
+		test_ieq_true(),	//18
 
 		
 		test_ineq_true(),	//19
@@ -526,7 +526,6 @@ bool test_ieq_true(){
 }
 
 bool test_ineq_true(){
-	cout << "test ineq_true" << endl;
 	const vector<string> vmcodes={
 		"subroutine INEQTRUE_main 0 args 0 locals",
 

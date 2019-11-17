@@ -639,11 +639,11 @@ vector<string> ieq(VMInstr instr){
 		"cmp eax,ebx",
 		
 		"je "+label_true,
-		"push 0", //push false
+		"push 0", 				//push false
 		"jmp "+label_end,
 
 		label_true+":",
-		"push 1", //push true
+		"push 1", 				//push true
 
 		label_end+":"		
 	};
@@ -692,17 +692,17 @@ vector<string> igt(VMInstr instr){
 		"; igt:",
 
 		//pop operands
-		"pop eax",
 		"pop ebx",
+		"pop eax",
 		
 		"cmp eax,ebx",
 		
 		"jg "+label_true,
-		"push 0", //push false
+		"push 0", 				//push false
 		"jmp "+label_end,
 
 		label_true+":",
-		"push 1", //push true
+		"push 1", 				//push true
 
 		label_end+":"		
 	};
@@ -774,7 +774,7 @@ vector<string> fgeq(VMInstr instr){
 	
 	return {
 		"",
-		"; fgeq:"
+		"; fgeq:",
 
 		"fld dword [esp]",
 		"pop eax",
@@ -805,7 +805,7 @@ vector<string> ineq(VMInstr instr){
 
 	return {
 		"",
-		"; ineq:"
+		"; ineq:",
 
 		//pop operands
 		"pop eax",
@@ -814,11 +814,11 @@ vector<string> ineq(VMInstr instr){
 		"cmp eax,ebx",
 		
 		"jne "+label_true,
-		"push 0", //push false
+		"push 0", 				//push false
 		"jmp "+label_end,
 
 		label_true+":",
-		"push 1", //push true
+		"push 1", 				//push true
 
 		label_end+":"		
 	};
@@ -973,7 +973,7 @@ vector<string> if_goto(VMInstr instr){
 	const string subr_name = instr.arg1;
 	return {
 		"",
-		"; if-goto:"
+		"; if-goto:",
 
 		//pop condition
 		"pop eax",
