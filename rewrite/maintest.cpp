@@ -481,7 +481,6 @@ bool test_new_ok_with_stack(){
 
 
 bool test_ieq_false(){
-	cout << "test ieq_false" << endl;
 	const vector<string> vmcodes={
 		"subroutine IEQFALSE_main 0 args 0 locals",
 
@@ -504,7 +503,6 @@ bool test_ieq_false(){
 }
 
 bool test_ieq_true(){
-	cout << "test ieq_true" << endl;
 	const vector<string> vmcodes={
 		"subroutine IEQTRUE_main 0 args 0 locals",
 

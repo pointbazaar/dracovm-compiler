@@ -630,7 +630,7 @@ vector<string> ieq(VMInstr instr){
 
 	return {
 		"",
-		"; ieq:"
+		"; ieq:",
 
 		//pop operands
 		"pop eax",
