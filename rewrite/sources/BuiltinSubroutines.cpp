@@ -96,8 +96,52 @@ vector<string> _readchar(){
 	return res;
 }
 vector<string> _putchar(){
-	//TODO
-	return {};
+	const vector<string> sub1 = subroutine(VMInstr(
+		"subroutine Builtin_putchar 0 args 0 locals"
+	));
+
+	const vector<string> push1 = push(VMInstr("push ARG 0"));
+	//in the vector literal
+	
+	const vector<string> res = {
+		//prints the Int on top of stack as char to stdout
+
+		join(sub1,"\n"),
+
+	    //access our argument , ARG 0, by pushing it onto the stack
+	    //push1
+	    join(push1,"\n"),
+
+	    "mov eax,"+SYS_WRITE,	// sys_write syscall
+	    "mov ebx,1",	//stdout
+
+	    "mov ecx,esp", //print the Int on the stack
+
+	    //val length
+	    "mov edx,1",  	//: value length
+	    "int 0x80",		//call kernel
+
+	    
+
+	    //pop ARG 0 which we pushed
+	    "pop ecx",
+
+	    //push return value
+	    "mov edx,0",	//: push return value
+	    "push edx",		//: push return value
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.)
+	    //swap
+	    "pop eax",
+	    "pop ebx",
+	    "push eax",
+	    "push ebx",
+
+	    "ret"
+	};
+
+	return res;
 }
 vector<string> _putdigit(){
 	
@@ -155,6 +199,7 @@ vector<string> _putdigit(){
 
 	return res;
 }
+
 vector<string> _new(){
 
 	const string byte_offset_32bit="4";
