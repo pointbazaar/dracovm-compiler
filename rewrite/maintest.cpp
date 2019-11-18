@@ -779,26 +779,133 @@ bool test_feq2(){
 }
 
 bool test_readchar(){
-	//TODO
+	const vector<string> vmcodes={
+		"subroutine READCHAR_main 0 args 0 locals",
+
+		"call Builtin_readchar",
+		"call Builtin_putchar",
+
+		"iconst 0",
+		"exit"
+	};
+	
+	//TODO: use outputstream, test inputstream
+	/*
+	pr.getOutputStream().write('c');
+    pr.getOutputStream().write('\n');
+    pr.getOutputStream().close();
+
+    pr.waitFor();
+
+    assertEquals(0,pr.exitValue());
+    assertEquals("c", IOUtils.toString(pr.getInputStream()));
+	*/
+
+	//return 0==testrun("READCHAR_main",vmcodes);
 	return false;
 }
 
 bool test_putchar(){
+	const vector<string> vmcodes={
+		"subroutine PUTCHAR_main 0 args 0 locals",
+
+		"cconst 'c'",
+		"call Builtin_putchar",
+
+		"pop",
+		"iconst 0",
+		"exit"
+	};
 	//TODO
+	/*
+	assertEquals(0,pr.exitValue());
+    assertEquals("c", IOUtils.toString(pr.getInputStream()));
+
+	*/
+
+	//return 1==testrun("PUTCHAR_main",vmcodes);
 	return false;
 }
 
 bool test_putdigit(){
-		//TODO
+	const vector<string> vmcodes={
+		"subroutine PUTDIGIT_main 0 args 0 locals",
+
+		"iconst 3",
+		"call Builtin_putdigit",
+
+		"pop",
+		"iconst 0",
+		"exit"
+	};
+	//TODO
+	/*
+		assertEquals(0,pr.exitValue());
+    	assertEquals("3", IOUtils.toString(pr.getInputStream()));
+	*/
+
+	//return 1==testrun("PUTDIGIT_main",vmcodes);
 	return false;
 }
 
 bool test_putchar_multiple(){
-		//TODO
+	const vector<string> vmcodes={
+		"subroutine PUTCHARMULT_main 0 args 0 locals",
+
+		"iconst 234",
+
+		"cconst 'a'",
+		"call Builtin_putchar",
+		"pop",
+		"pop",
+
+		"cconst 'b'",
+		"call Builtin_putchar",
+		"pop",
+		"pop",
+
+		"cconst 'c'",
+		"call Builtin_putchar",
+		"pop",
+		"pop",
+
+		"exit"
+	};
+	//TODO
+	/*
+		assertEquals(exit_code,pr.exitValue());
+    	assertEquals("abc", IOUtils.toString(pr.getInputStream()));
+	*/
+
+	//return 1==testrun("PUTCHARMULT_main",vmcodes);
 	return false;
 }
 
 bool test_compile_new_and_len(){
-		//TODO
+	const vector<string> vmcodes={
+		"subroutine NEWLEN_main 0 args 0 locals",
+
+		"iconst 3",
+
+		"call Builtin_new",
+		"swap",
+		"pop",
+		"call Builtin_len",
+		"swap",
+		"pop",
+		"call Builtin_putdigit",
+		"pop",
+		"pop",
+		"iconst 0",
+
+		"exit"
+	};
+	//TODO
+	/*
+		assertEquals(0,pr.exitValue());
+    	assertEquals("3", IOUtils.toString(pr.getInputStream()));
+	*/
+
+	//return 0==testrun("NEWLEN_main",vmcodes);
 	return false;
 }
