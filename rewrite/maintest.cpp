@@ -186,7 +186,7 @@ int testrun(string name,vector<string> vmcodes){
 	map<string,vector<string>> mymap;
 	mymap[name]=vmcodes;
 
-	compile_main2(mymap);
+	compile_main2(mymap,name);
 
 	//start a process, and examine its exit value
 

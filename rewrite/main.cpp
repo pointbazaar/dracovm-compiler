@@ -27,7 +27,7 @@ int main(int argc, char* argv[]){
 	//compare to see if -help 
 	if(help_option.compare(argv[1])==0){
 		// print help and genereal info
-	cout << "USAGE: dracovm (FILE.subroutine.dracovm)*" << endl;
+	cout << "USAGE: dracovm -o EXEC_FILE_NAME (FILE.subroutine.dracovm)*" << endl;
 	cout << "USAGE: dracovm -help " << endl;
 	cout << "AUTHOR: alex23667@gmail.com" << endl;
 	cout << "REPO: https://github.com/pointbazaar/dracovm-compiler" << endl;
@@ -58,7 +58,10 @@ int main(int argc, char* argv[]){
 	
 	vector <string> filenames;
 
-	for(int i=1;i<argc;i++){
+	const string exec_filename = argv[2];
+
+	//the +2 is because -o EXEC_FILE_NAME
+	for(int i=1+2;i<argc;i++){
 		string filename = argv[i];
 		filenames.push_back(filename);
 		cout << " - " << filename << endl;
@@ -66,7 +69,7 @@ int main(int argc, char* argv[]){
 
 	cout << endl;
 
-	bool success = compile_main(filenames);
+	bool success = compile_main(filenames,exec_filename);
 
 	if(success){
 		cout << "BUILD SUCCESSFUL" << endl;

@@ -6,10 +6,11 @@
 
 #include "dracovmcompiler.hpp"
 #include "AssemblyCodeGen.hpp"
+#include "BuiltinSubroutines.hpp"
 
 using namespace std;
 
-bool compile_main(vector<string> filenames){
+bool compile_main(vector<string> filenames,string exec_filename){
 	cout << "compile_main" << endl;
 
 	// from these filenames, check if each has 
@@ -73,15 +74,17 @@ bool compile_main(vector<string> filenames){
 	//for now, to complete the rewrite quickly, just compile,
 	//without incremental compilation
 
-	return compile_main2(vm_sources);
+	return compile_main2(vm_sources,exec_filename);
 }
 
-bool compile_main2(map<string,vector<string>> vm_sources){
+bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 
 	//DEBUG
 	cerr << "compile_main2" << endl;
 
 	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
+
+	vector<string> obj_files;
 
 	//write these asm codes to their respective files
 	for(auto const& entry : asm_codes){
@@ -101,10 +104,12 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 		const string call1 = "nasm -f elf "+filename+".asm";
 		system(call1.c_str());
 
-		//call ld
-		const string call2 = "ld -melf_i386 -s -o "+filename+" "+filename+".o";
-		system(call2.c_str());
+		obj_files.push_back(filename+".o");
 	}
+
+	//call ld to link all the object files
+	const string call2 = "ld -melf_i386 -s -o "+exec_filename+" "+join(obj_files," ");
+	system(call2.c_str());
 
 	return true;
 }
