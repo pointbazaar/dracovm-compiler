@@ -9,6 +9,7 @@
 using namespace std;
 
 //https://en.wikipedia.org/wiki/X86_instruction_listings
+//https://c9x.me/x86/
 
 map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources){
 	
@@ -93,6 +94,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 
 	//float comparisons
 	func_map["flt"]=flt;
+	func_map["fgt"]=fgt;
 	//func_map["feq"]=feq;	//not implemented
 
 	//integer arithmetic
@@ -143,7 +145,7 @@ vector<string> iconst(VMInstr instr){
 
 	const int i = stoi(instr.arg1);
 	return {
-		"push "+to_string(i)+"	; iconst"
+		"push dword "+to_string(i)+"	; iconst"
 	};
 }
 
@@ -154,15 +156,15 @@ vector<string> fconst(VMInstr instr){
 		"",
 		"; fconst:",
 
-		"mov eax, __float32__("+to_string(f)+")		",
-		"push eax					"
+		"mov eax, __float32__("+to_string(f)+")	",
+		"push eax"
 	};
 }
 
 vector<string> cconst(VMInstr instr){
 	
 	return {
-		"push '"+instr.arg1+"'	; cconst"		
+		"push dword '"+instr.arg1+"'	; cconst"		
 	};
 }
 
@@ -418,13 +420,16 @@ vector<string> fadd(VMInstr instr){
 
 		//init floating point unit
 		"finit",
+
 		//load from stack
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
-		"pop ebx",
+		"pop eax",
+
 		"fadd",
-		"push 0",			//push unknown value
+
+		"push dword 0",			//push unknown value
 		"fstp dword [esp]" //fill that value
 	};
 }
@@ -439,13 +444,15 @@ vector<string> fsub(VMInstr instr){
 
 		//init floating point unit
 		"finit",
+
 		//load from stack
 		"fld dword [esp]",
 		"pop eax",
 		"fld dword [esp]",
 		"pop ebx",
+
 		"fsub",
-		"push 0",			//push unknown value
+		"push dword 0",			//push unknown value
 		"fstp dword [esp]" //fill that value
 	};
 }
@@ -455,6 +462,8 @@ vector<string> fmul(VMInstr instr){
 	return {
 		"",
 		"; fmul:",
+
+		"finit",
 
 		"fld dword [esp]",
 		"pop eax",
@@ -684,14 +693,22 @@ vector<string> igt(VMInstr instr){
 }
 
 vector<string> fgt(VMInstr instr){
+
+	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
+	const string BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS = "0100011100000000B";
+
+    const string BITMASK_FLOAT_GREATER = "0000000000000000B";
 	const string unique = to_string(rand());
 
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
+	const string label_true = ".fgt_push"+unique;
+	const string label_end = ".fgt_end"+unique;
 	
 	return {
 		"",
 		"; fgt:",
+
+
+		"finit",
 
 		"fld dword [esp]",
 		"pop eax",
@@ -703,7 +720,10 @@ vector<string> fgt(VMInstr instr){
 		//store status of comparison
 		"fstsw ax",
 
-		"jg "+label_true,
+		"and eax,"+BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS,
+		"cmp eax,"+BITMASK_FLOAT_GREATER,
+
+		"je "+label_true,
 		"push 0",
 		"jmp "+label_end,
 
@@ -750,6 +770,8 @@ vector<string> fgeq(VMInstr instr){
 	return {
 		"",
 		"; fgeq:",
+
+		"finit",
 
 		"fld dword [esp]",
 		"pop eax",
@@ -829,29 +851,40 @@ vector<string> ilt(VMInstr instr){
 
 vector<string> flt(VMInstr instr){
 
+	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
+
+    const string BITMASK_LESS = "0000000100000000B";
+	const string BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS = "0100011100000000B";
+
 	const int unique = rand();
-	const string label_true = ".eq_push"+to_string(unique);
-	const string label_end = ".eq_end"+to_string(unique);
+	const string label_less = ".flt_less"+to_string(unique);
+	const string label_end = ".flt_end"+to_string(unique);
 	
 	return {
 		"",
 		"; flt:",
 
-		"fld dword [esp]",
-		"pop eax",
+		"finit",
+
 		"fld dword [esp]",
 		"pop eax",
 
-		"fcomp",
+		"fld dword [esp]",
+		"pop eax",
+
+		"fcom st0,st1",
 
 		//store status of comparison
 		"fstsw ax",
 
-		"jl "+label_true,
+		"and eax,"+BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS,
+		"cmp eax,"+BITMASK_LESS,
+		"je "+label_less,
+
 		"push 0",
 		"jmp "+label_end,
 
-		label_true+":",
+		label_less+":",
 		"push 1",
 
 		label_end+":",
@@ -893,6 +926,9 @@ vector<string> fleq(VMInstr instr){
 	return {
 		"",
 		"; fleq:",
+
+
+		"finit",
 
 		"fld dword [esp]",
 		"pop eax",

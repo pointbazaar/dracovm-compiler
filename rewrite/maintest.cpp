@@ -48,6 +48,12 @@ bool test_or();
 bool test_or2();
 bool test_feq1();
 bool test_feq2();
+//all from the .java, except these 4:
+bool test_flt1();
+bool test_flt2();
+bool test_fgt1();
+bool test_fgt2();
+
 
 //subroutine focused (all from SubroutineFocusedAssemblyCodeGeneratedTest)
 bool test_readchar();
@@ -55,6 +61,13 @@ bool test_putchar();
 bool test_putdigit();
 bool test_putchar_multiple();
 bool test_compile_new_and_len();
+
+//Builtin Subroutine Tests (all from BuiltinSubroutinesInAssemblyTest)
+bool test_abs();
+bool test_time();
+bool test_fopen();
+bool test_fopen_fputs();
+
 
 
 int main(int argc, char* argv[]){
@@ -115,13 +128,23 @@ int main(int argc, char* argv[]){
 		test_feq1(),		//30
 		test_feq2(),		//31
 
+		test_flt1(),		//32
+		test_flt2(),		//33
+		test_fgt1(),		//34
+		test_fgt2(),		//35
+
 		//subroutine related (5)
 		test_readchar(),
 		test_putchar(),
 		test_putdigit(),
 		test_putchar_multiple(),
-		test_compile_new_and_len()
+		test_compile_new_and_len(),
 
+		//builtin subroutine related
+		test_abs(),
+		test_time(),
+		test_fopen(),
+		test_fopen_fputs()
 		
 	};
 	int i=0;
@@ -180,14 +203,20 @@ bool test_fadd1(){
 
 	const vector<string> vmcodes = {
 		"subroutine FADD1_main 0 args 0 locals",
+
 		"fconst 3.0",
 		"fconst 2.0",
+
 		"fadd",
+
 		"fconst 7.0"
+
 		"flt",
+
 		"if-goto exit0",
 		"iconst 1",
 		"exit",
+
 		"label exit0",
 		"iconst 0",
 		"exit"
@@ -778,6 +807,62 @@ bool test_feq2(){
 	return false;
 }
 
+bool test_flt1(){
+	const vector<string> vmcodes={
+		"subroutine FLT1_main 0 args 0 locals",
+
+		"fconst 1.0",
+		"fconst 0.0",
+
+		"flt",
+		"exit"
+	};
+
+	return 0==testrun("FLT1_main",vmcodes);
+}
+
+bool test_flt2(){
+	const vector<string> vmcodes={
+		"subroutine FLT2_main 0 args 0 locals",
+
+		"fconst 1.0",
+		"fconst 2.0",
+
+		"flt",
+		"exit"
+	};
+
+	return 1==testrun("FLT2_main",vmcodes);
+}
+
+bool test_fgt1(){
+	const vector<string> vmcodes={
+		"subroutine FGT1_main 0 args 0 locals",
+
+		"fconst 1.0",
+		"fconst 0.0",
+
+		"fgt",
+		"exit"
+	};
+
+	return 1==testrun("FGT1_main",vmcodes);
+}
+
+bool test_fgt2(){
+	const vector<string> vmcodes={
+		"subroutine FGT2_main 0 args 0 locals",
+
+		"fconst 1.0",
+		"fconst 2.0",
+
+		"fgt",
+		"exit"
+	};
+
+	return 0==testrun("FGT2_main",vmcodes);
+}
+
 bool test_readchar(){
 	const vector<string> vmcodes={
 		"subroutine READCHAR_main 0 args 0 locals",
@@ -907,5 +992,25 @@ bool test_compile_new_and_len(){
 	*/
 
 	//return 0==testrun("NEWLEN_main",vmcodes);
+	return false;
+}
+
+bool test_abs(){
+	//TODO: implement
+	return false;
+}
+
+bool test_time(){
+	//TODO: implement
+	return false;
+}
+
+bool test_fopen(){
+	//TODO: implement
+	return false;
+}
+
+bool test_fopen_fputs(){
+	//TODO: implement
 	return false;
 }
