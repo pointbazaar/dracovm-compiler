@@ -101,6 +101,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["iadd"]=iadd;
 	func_map["isub"]=isub;
 	func_map["imod"]=imod;
+	func_map["imul"]=imul;
 	func_map["idiv"]=idiv;
 
 	func_map["dec"]=dec;
