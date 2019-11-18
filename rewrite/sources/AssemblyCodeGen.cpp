@@ -115,6 +115,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["subroutine"]=subroutine;
 	func_map["call"]=call;
 	func_map["if-goto"]=if_goto;
+	func_map["goto"]=_goto;
 	func_map["exit"]=exit;
 	func_map["label"]=label;
 
@@ -972,11 +973,13 @@ vector<string> dec(VMInstr instr){
 }
 
 vector<string> _goto(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	const string label = instr.arg1;
+	return {
+		"",
+		"; goto:",
 
-	vector<string> res;
-	return res;
+		"jmp "+label
+	};
 }
 
 vector<string> if_goto(VMInstr instr){

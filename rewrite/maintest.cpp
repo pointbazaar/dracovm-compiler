@@ -68,7 +68,10 @@ bool test_time();
 bool test_fopen();
 bool test_fopen_fputs();
 
-
+//general (from AssemblyCodeGeneratorTest)
+bool test_correct_return_code();
+bool test_goto();
+bool test_if_goto();
 
 int main(int argc, char* argv[]){
 	
@@ -144,7 +147,12 @@ int main(int argc, char* argv[]){
 		test_abs(),
 		test_time(),
 		test_fopen(),
-		test_fopen_fputs()
+		test_fopen_fputs(),
+
+		//general
+		test_correct_return_code(),
+		test_goto(),
+		test_if_goto()
 		
 	};
 	int i=0;
@@ -1013,4 +1021,46 @@ bool test_fopen(){
 bool test_fopen_fputs(){
 	//TODO: implement
 	return false;
+}
+
+bool test_correct_return_code(){
+	const vector<string> vmcodes={
+		"subroutine RETURNCODE_main 0 args 0 locals",
+
+		"iconst 45",
+		"exit"
+	};
+
+	return 45==testrun("RETURNCODE_main",vmcodes);
+}
+
+bool test_goto(){
+	const vector<string> vmcodes={
+		"subroutine GOTO_main 0 args 0 locals",
+
+		"goto label1",
+		"iconst 45",
+		"exit",
+		"label label1",
+		"iconst 0",
+		"exit"
+	};
+
+	return 0==testrun("GOTO_main",vmcodes);
+}
+
+bool test_if_goto(){
+	const vector<string> vmcodes={
+		"subroutine IFGOTO_main 0 args 0 locals",
+
+		"iconst 1",
+		"if-goto label1",
+		"iconst 45",
+		"exit",
+		"label label1",
+		"iconst 0",
+		"exit"
+	};
+
+	return 0==testrun("IFGOTO_main",vmcodes);
 }
