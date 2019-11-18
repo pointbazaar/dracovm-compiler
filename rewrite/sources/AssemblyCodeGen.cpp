@@ -961,7 +961,7 @@ vector<string> inc(const VMInstr instr){
 	//maybe this can work. maybe it can be done
 	//in a single instruction
 	return {
-		"inc [esp] ;	inc"
+		"inc dword [esp] ;	inc"
 	};
 }
 
@@ -971,7 +971,7 @@ vector<string> dec(VMInstr instr){
 	//maybe this can work. maybe it can be done
 	//in a single instruction
 	return {
-		"dec [esp]	;dec"
+		"dec dword [esp]	;dec"
 	};
 }
 
