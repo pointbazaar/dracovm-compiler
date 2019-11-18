@@ -103,6 +103,9 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["imod"]=imod;
 	func_map["idiv"]=idiv;
 
+	func_map["dec"]=dec;
+	func_map["inc"]=inc;
+
 	//integer comparisons
 	func_map["ieq"]=ieq;
 	func_map["ineq"]=ineq;
