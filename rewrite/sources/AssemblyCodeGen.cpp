@@ -220,7 +220,7 @@ vector<string> pop(VMInstr instr){
 			"mov [eax],ebx"
 		};
 	}else{
-		cerr << "FATAL" << endl;
+		cerr << "FATAL (AssemblyCodeGen.cpp) , instr: " << segment << endl;
 		exit(1);
 	}
 }
@@ -245,7 +245,7 @@ vector<string> push(VMInstr instr){
 			"sub eax,ebx",
 
 			"mov ebx,"+to_string(index*byte_offset_32_bit),
-			"sub eax,ebx"
+			"sub eax,ebx",
 			
 			"mov eax,[eax]",
 			"push eax"
@@ -620,7 +620,7 @@ vector<string> _not(VMInstr instr){
 
 		"mov ebx,1",
 		"pop eax",
-		"xor eax ebx",
+		"xor eax, ebx",
 		"push eax"
 	};
 	return res;
