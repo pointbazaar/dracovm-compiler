@@ -7,3 +7,17 @@
 This is the compiler for the intermediate language produced by https://github.com/pointbazaar/dragon/.
 
 It takes this stack-based intermediate language and compiles it to Intel x86 Assembly Language.
+
+# Goals
+
+- [ ] fully incremental Compiler
+- [ ] ability to link with object files from other programming languages, which use c-style calling convention
+
+- [x] integer arithmetic support
+- [x] integer comparison support
+
+- [ ] float arithmetic support
+- [ ] float comparison support
+
+- [x] array support
+- [x] length-prefixed arrays
