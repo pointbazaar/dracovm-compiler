@@ -43,6 +43,10 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		asm_cmds.push_back("section .text");
 		asm_cmds.push_back("global _start");
 
+		//define our own subroutine label as global,
+		//so it can be correctly linked
+		asm_cmds.push_back("global "+subr_name);
+
 		//TODO: define the external labels that 
 		//might be jumped to, but are not in this file
 		for(auto const& vmcmd : vmcodes){

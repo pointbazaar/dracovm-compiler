@@ -79,6 +79,8 @@ bool compile_main(vector<string> filenames,string exec_filename){
 
 bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 
+	//https://eli.thegreenplace.net/2013/07/09/library-order-in-static-linking
+
 	//DEBUG
 	cerr << "compile_main2" << endl;
 
@@ -116,7 +118,7 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 	const string call2 = "ld -melf_i386 -s -o "+exec_filename+" "+join(obj_files," ");
 	//for understanding and debugging
 	cout << call2 << endl;
-	
+
 	success &= WEXITSTATUS(system(call2.c_str()))==0;
 
 	return success;
