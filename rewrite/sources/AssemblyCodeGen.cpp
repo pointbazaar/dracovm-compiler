@@ -40,6 +40,17 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		//add startup codes
 		asm_cmds.push_back("section .text");
 		asm_cmds.push_back("global _start");
+
+		//TODO: define the external labels that 
+		//might be jumped to, but are not in this file
+		for(auto const& vmcmd : vmcodes){
+			const VMInstr instr(vmcmd);
+			if(instr.cmd.compare("call")==0){
+				asm_cmds.push_back("extern "+instr.arg1);
+			}
+		}
+
+
 		asm_cmds.push_back("_start:");
 
 		for(auto const& vmcmd : vmcodes){
@@ -51,6 +62,8 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		}
 
 		//add the builtin subroutines
+		//TODO: every subroutine should have its own .asm file,
+		//and the builtin subroutines also
 		const vector<string> builtins = compile_builtin_subroutines();
 		asm_cmds.insert(asm_cmds.end(),builtins.begin(),builtins.end());
 
