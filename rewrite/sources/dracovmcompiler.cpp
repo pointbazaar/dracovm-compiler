@@ -86,6 +86,8 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 
 	vector<string> obj_files;
 
+	bool success=true;
+
 	//write these asm codes to their respective files
 	for(auto const& entry : asm_codes){
 		string filename = entry.first;
@@ -102,16 +104,16 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 
 		//call nasm
 		const string call1 = "nasm -f elf "+filename+".asm";
-		system(call1.c_str());
+		success &= WEXITSTATUS(system(call1.c_str())) == 0;
 
 		obj_files.push_back(filename+".o");
 	}
 
 	//call ld to link all the object files
 	const string call2 = "ld -melf_i386 -s -o "+exec_filename+" "+join(obj_files," ");
-	system(call2.c_str());
+	success &= WEXITSTATUS(system(call2.c_str()))==0;
 
-	return true;
+	return success;
 }
 
 /*

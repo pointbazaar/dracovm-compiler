@@ -34,6 +34,8 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		const string tmp = "subroutine ";
 		string subr_name = subr_line.substr(tmp.size());
 		subr_name = subr_name.substr(0,subr_name.find(" "));
+		const string subr_name_without_namespace = 
+			subr_name.substr(subr_name.find("_")+1);
 
 		vector<string> asm_cmds;	
 
@@ -50,8 +52,10 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 			}
 		}
 
-
-		asm_cmds.push_back("_start:");
+		//if this is the main subroutine, it should have the start label
+		if(subr_name_without_namespace.compare("main")==0){
+			asm_cmds.push_back("_start:");
+		}
 
 		for(auto const& vmcmd : vmcodes){
 
