@@ -120,6 +120,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["call"]=call;
 	func_map["if-goto"]=if_goto;
 	func_map["goto"]=_goto;
+	func_map["return"]=_return;
 	func_map["exit"]=exit;
 	func_map["label"]=label;
 
