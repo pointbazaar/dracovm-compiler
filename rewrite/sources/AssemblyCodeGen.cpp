@@ -51,7 +51,10 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		//might be jumped to, but are not in this file
 		for(auto const& vmcmd : vmcodes){
 			const VMInstr instr(vmcmd);
-			if(instr.cmd.compare("call")==0){
+			if(
+				instr.cmd.compare("call")==0
+				|| instr.cmd.compare("pushsubroutine")==0
+			){
 				asm_cmds.push_back("extern "+instr.arg1);
 			}
 		}
