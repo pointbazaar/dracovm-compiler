@@ -104,6 +104,9 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 
 		//call nasm
 		const string call1 = "nasm -f elf "+filename+".asm";
+		//for understanding and debugging
+		cout << call1 << endl;
+
 		success &= WEXITSTATUS(system(call1.c_str())) == 0;
 
 		obj_files.push_back(filename+".o");
@@ -111,6 +114,9 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 
 	//call ld to link all the object files
 	const string call2 = "ld -melf_i386 -s -o "+exec_filename+" "+join(obj_files," ");
+	//for understanding and debugging
+	cout << call2 << endl;
+	
 	success &= WEXITSTATUS(system(call2.c_str()))==0;
 
 	return success;
