@@ -138,7 +138,9 @@ vector<string> compile_vm_instr(VMInstr instr){
 
 	//subroutine related
 	func_map["subroutine"]=subroutine;
+	func_map["pushsubroutine"]=pushsubroutine;
 	func_map["call"]=call;
+	func_map["callfromstack"]=callfromstack;
 	func_map["if-goto"]=if_goto;
 	func_map["goto"]=_goto;
 	func_map["return"]=_return;
