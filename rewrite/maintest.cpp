@@ -24,6 +24,8 @@ bool test_idiv();
 bool test_idiv_positive_by_negative();
 bool test_idiv_negative_by_positive();
 
+
+
 //array related tests (all from ArrayFocusedAssemblyGeneratorTest)
 bool test_arraystore1();
 bool test_arrayread_arraystore();
@@ -72,6 +74,9 @@ bool test_fopen_fputs();
 bool test_correct_return_code();
 bool test_goto();
 bool test_if_goto();
+
+bool test_lshiftl();
+bool test_lshiftr();
 
 int main(int argc, char* argv[]){
 	
@@ -152,7 +157,10 @@ int main(int argc, char* argv[]){
 		//general
 		test_correct_return_code(),
 		test_goto(),
-		test_if_goto()
+		test_if_goto(),
+
+		test_lshiftl(),
+		test_lshiftr()
 		
 	};
 	int i=0;
@@ -1256,4 +1264,30 @@ bool test_if_goto(){
 	};
 
 	return 0==testrun("IFGOTO_main",vmcodes);
+}
+
+bool test_lshiftl(){
+	const vector<string> vmcodes={
+		"subroutine LSHIFTL_main 0 args 0 locals",
+
+		"iconst 1",
+		"iconst 1",
+		"lshiftl",
+		"exit"
+	};
+
+	return 2==testrun("LSHIFTL_main",vmcodes);
+}
+
+bool test_lshiftr(){
+	const vector<string> vmcodes={
+		"subroutine LSHIFTR_main 0 args 0 locals",
+
+		"iconst 2",
+		"iconst 1",
+		"lshiftr",
+		"exit"
+	};
+
+	return 1==testrun("LSHIFTR_main",vmcodes);
 }
