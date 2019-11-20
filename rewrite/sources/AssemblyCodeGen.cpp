@@ -131,6 +131,9 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["dec"]=dec;
 	func_map["inc"]=inc;
 
+	func_map["lshiftl"]=lshiftl;
+	func_map["lshiftr"]=lshiftr;
+
 	//integer comparisons
 	func_map["ieq"]=ieq;
 	func_map["ineq"]=ineq;
