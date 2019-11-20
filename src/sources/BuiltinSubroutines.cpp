@@ -345,6 +345,48 @@ vector<string> _time(){
 }
 vector<string> _fopen(){
 	//TODO
+	/*
+	// ([Char] filename ,PInt accessmode)~>PInt fopen
+    //takes 2 arguments: the file name ([Char]), and the access mode (PInt)
+    //returns a file descriptor (PInt) which can then be used with fputs to write to a file
+
+    SubroutineFocusedAssemblyCodeGenerator.compile_subroutine("Builtin_fopen",a);
+
+    //access our argument , ARG 1, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,1,a);
+
+    //access our argument , ARG 0, by pushing it onto the stack
+    compile_push(VMCompilerPhases.SEGMENT_ARG,0,a);
+
+    //stack:
+    //accessmode
+    //filename <- esp
+
+    a.mov(eax,SYS_OPEN,"fopen: sys_open");
+    a.pop(ebx,"fopen: get the filename [Char] pointer");
+
+    //tood : we should get the syntactic sugar with the strings in dragon
+    //to insert a nullbyte at the end. or use a specially prepared string with this syscall
+    //because it is a c-style syscall, it expects a '\0' at the end of the filename probably
+    //https://stackoverflow.com/questions/8312290/how-to-open-a-file-in-assembler-and-modify-it
+
+    a.add(ebx, byte_offset_32bit,"offset to the start, as arrays are length-prefixed in dragon");
+    //ebx now contains the filename argument
+    a.pop(ecx,"fopen: access mode");
+
+
+    a.call_kernel();
+
+    //push return value
+    a.push(eax,"fopen: push return value (file descriptor in eax)");
+
+    //we must swap return value with the return address in order to return
+    //(i am so dumb. took me so long to find this.)
+    compile_swap("swap return address with return value to return",a);
+
+    //return from subroutine
+    SubroutineFocusedAssemblyCodeGenerator.compile_return(a);
+	*/
 	return {};
 }
 vector<string> _fputs(){

@@ -416,6 +416,10 @@ vector<string> exit(VMInstr instr){
 	};
 }
 
+////https://cs.lmu.edu/~ray/notes/nasmtutorial/
+////https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
+
+
 vector<string> pushsubroutine(VMInstr instr){
 	const string name = instr.arg1;
 
@@ -443,6 +447,11 @@ vector<string> callfromstack(VMInstr instr){
 		"pop ebp"	
 	};
 }
+
+//https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+//<3 data sheets
+
+//https://stackoverflow.com/questions/37775144/how-to-load-the-value-stored-in-extended-registereax-into-st0-of-floating-poin
 
 
 vector<string> fadd(VMInstr instr){
@@ -575,6 +584,8 @@ vector<string> imul(VMInstr instr){
 	};
 }
 
+//https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
+
 vector<string> idiv(VMInstr instr){
 
 	return {
@@ -590,6 +601,8 @@ vector<string> idiv(VMInstr instr){
 		//https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq
 		"cdq",
 
+		//using idiv instead of div, because 
+		//idiv should also work for signed values
 		"idiv ecx",
 		"push eax"
 	};
@@ -768,6 +781,8 @@ vector<string> fgt(VMInstr instr){
 		label_end+":",
 	};
 }
+
+//https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
 
 vector<string> igeq(VMInstr instr){
 	const string unique = to_string(rand());
