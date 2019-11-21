@@ -81,6 +81,12 @@ bool test_lshiftr();
 //later
 bool test_iexp();
 
+//floating point multiplication, division
+bool test_fmul1();
+bool test_fmul2();
+bool test_fdiv1();
+bool test_fdiv2();
+
 int main(int argc, char* argv[]){
 	
 	cout << "START TESTS" << endl;
@@ -166,7 +172,16 @@ int main(int argc, char* argv[]){
 		test_lshiftr(),		//49
 
 		//later
-		test_iexp()			//50
+		test_iexp(),			//50
+
+		//floating point multiplication, division
+		//(these may depend on flt,fgt, and so on, so these tests should
+		//only be debugged if the depedency commands
+		// are passing all their tests )
+		test_fmul1(),	//51
+		test_fmul2(),	//52
+		test_fdiv1(),	//53
+		test_fdiv2()	//54
 		
 	};
 	int i=0;
@@ -1312,4 +1327,68 @@ bool test_iexp(){
 	};
 
 	return 8==testrun("IEXP_main",vmcodes);
+}
+
+bool test_fmul1(){
+	const vector<string> vmcodes={
+		"subroutine FMUL1_main 0 args 0 locals",
+
+		"fconst 2.0",
+		"fconst 2.0",
+		"fmul",
+		"fconst 4.1",
+
+		"flt",
+		"exit"
+	};
+
+	return 1==testrun("FMUL1_main",vmcodes);
+}
+
+bool test_fmul2(){
+	const vector<string> vmcodes={
+		"subroutine FMUL2_main 0 args 0 locals",
+
+		"fconst 2.0",
+		"fconst 2.0",
+		"fmul",
+		"fconst 3.9",
+
+		"fgt",
+		"exit"
+	};
+
+	return 1==testrun("FMUL2_main",vmcodes);
+}
+
+bool test_fdiv1(){
+	const vector<string> vmcodes={
+		"subroutine FDIV1_main 0 args 0 locals",
+
+		"fconst 4.0",
+		"fconst 2.0",
+		"fdiv",
+		"fconst 2.1",
+
+		"flt",
+		"exit"
+	};
+
+	return 1==testrun("FDIV1_main",vmcodes);
+}
+
+bool test_fdiv2(){
+	const vector<string> vmcodes={
+		"subroutine FDIV2_main 0 args 0 locals",
+
+		"fconst 4.0",
+		"fconst 2.0",
+		"fdiv",
+		"fconst 1.9",
+
+		"fgt",
+		"exit"
+	};
+
+	return 1==testrun("FDIV2_main",vmcodes);
 }

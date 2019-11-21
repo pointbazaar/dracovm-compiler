@@ -115,6 +115,8 @@ vector<string> compile_vm_instr(VMInstr instr){
 	//float arithmetic
 	func_map["fadd"]=fadd;
 	func_map["fsub"]=fsub;
+	func_map["fmul"]=fmul;
+	func_map["fdiv"]=fdiv;
 
 	//float comparisons
 	func_map["flt"]=flt;
@@ -460,32 +462,9 @@ vector<string> fadd(VMInstr instr){
 	//https://stackoverflow.com/questions/11853133/adding-floating-point-double-numbers-in-assembly
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
-	/*
 	return {
 		"",
 		"; fadd:",
-
-		//init floating point unit
-		"finit",
-
-		//load from stack
-		"fld dword [esp]",
-		"pop eax",
-		"fld dword [esp]",
-		"pop eax",
-
-		"fadd",
-
-		"push dword 0",			//push unknown value
-		"fstp dword [esp]" //fill that value
-	};
-	*/
-	return {
-		"",
-		"; fadd:",
-
-		//init floating point unit
-		"finit",
 
 		//load from stack
 		"movss xmm0, [esp]",
@@ -509,9 +488,6 @@ vector<string> fsub(VMInstr instr){
 		"",
 		"; fsub:",
 
-		//init floating point unit
-		"finit",
-
 		//load from stack
 		"movss xmm0, [esp]",
 		"pop eax",
@@ -532,26 +508,37 @@ vector<string> fmul(VMInstr instr){
 		"",
 		"; fmul:",
 
-		"finit",
+		//load from stack
+		"movss xmm0, [esp]",
+		"pop eax",
 
-		"fld dword [esp]",
+		"movss xmm1, [esp]",
 		"pop eax",
-		"fld dword [esp]",
-		"pop eax",
-		"fmul",
-		//push temp value
-		"push 0", 
-		//fill that value
-		"fstp dword [esp]"
+
+		"mulss xmm1,xmm0",
+
+		"push dword 0",			//push placeholder
+		"movss [esp], xmm1" 	//fill that value
 	};
 }
 
 vector<string> fdiv(VMInstr instr){
-	cerr << "NOT IMPLEMENTED" << endl;
-	exit(1);
+	return {
+		"",
+		"; fdiv:",
 
-	vector<string> res;
-	return res;
+		//load from stack
+		"movss xmm0, [esp]",
+		"pop eax",
+
+		"movss xmm1, [esp]",
+		"pop eax",
+
+		"divss xmm1,xmm0",
+
+		"push dword 0",			//push placeholder
+		"movss [esp], xmm1" 	//fill that value
+	};
 }
 
 vector<string> fmod(VMInstr instr){
