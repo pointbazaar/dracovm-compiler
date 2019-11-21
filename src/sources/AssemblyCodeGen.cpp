@@ -121,6 +121,13 @@ vector<string> compile_vm_instr(VMInstr instr){
 	//float comparisons
 	func_map["flt"]=flt;
 	func_map["fgt"]=fgt;
+	func_map["fleq"]=fleq;
+	func_map["fgeq"]=fgeq;
+	
+	//these 2 will probably not be implemented,
+	//as i found no matching instruction in the book.
+	//also, they are not very important
+	//func_map["fneq"]=fneq;//not implemented
 	//func_map["feq"]=feq;	//not implemented
 
 	//integer arithmetic
@@ -789,11 +796,8 @@ vector<string> igt(VMInstr instr){
 }
 
 vector<string> fgt(VMInstr instr){
-
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
-	
 	const string unique = to_string(rand());
-
 	const string label_above = ".fgt_push"+unique;
 	const string label_end = ".fgt_end"+unique;
 	
@@ -813,6 +817,60 @@ vector<string> fgt(VMInstr instr){
 		"jmp "+label_end,
 
 		label_above+":",
+		"push 1",
+
+		label_end+":",
+	};
+}
+
+vector<string> fleq(VMInstr instr){
+	const string unique = to_string(rand());
+	const string label_true = ".fleq_true"+unique;
+	const string label_end = ".fleq_end"+unique;
+	
+
+	return {
+
+		"movss xmm1, [esp]",
+		"pop eax",
+
+		"movss xmm0, [esp]",
+		"pop eax",
+
+		"ucomiss xmm0,xmm1",
+
+		"jbe "+label_true,
+		"push 0",
+		"jmp "+label_end,
+
+		label_true+":",
+		"push 1",
+
+		label_end+":",
+	};
+}
+
+vector<string> fgeq(VMInstr instr){
+	const string unique = to_string(rand());
+	const string label_true = ".fgeq_true"+unique;
+	const string label_end = ".fgeq_end"+unique;
+	
+
+	return {
+
+		"movss xmm1, [esp]",
+		"pop eax",
+
+		"movss xmm0, [esp]",
+		"pop eax",
+
+		"ucomiss xmm0,xmm1",
+
+		"jae "+label_true,
+		"push 0",
+		"jmp "+label_end,
+
+		label_true+":",
 		"push 1",
 
 		label_end+":",
@@ -845,39 +903,6 @@ vector<string> igeq(VMInstr instr){
 		"push 1", //push true
 
 		label_end+":"		
-	};
-}
-
-vector<string> fgeq(VMInstr instr){
-	const string unique = to_string(rand());
-
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
-	
-	return {
-		"",
-		"; fgeq:",
-
-		"finit",
-
-		"fld dword [esp]",
-		"pop eax",
-		"fld dword [esp]",
-		"pop eax",
-
-		"fcomp",
-
-		//store status of comparison
-		"fstsw ax",
-
-		"jge "+label_true,
-		"push 0",
-		"jmp "+label_end,
-
-		label_true+":",
-		"push 1",
-
-		label_end+":",
 	};
 }
 
@@ -994,38 +1019,6 @@ vector<string> ileq(VMInstr instr){
 	};
 }
 
-vector<string> fleq(VMInstr instr){
-	const int unique = rand();
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
-	
-	return {
-		"",
-		"; fleq:",
-
-
-		"finit",
-
-		"fld dword [esp]",
-		"pop eax",
-		"fld dword [esp]",
-		"pop eax",
-
-		"fcomp",
-
-		//store status of comparison
-		"fstsw ax",
-
-		"jle "+label_true,
-		"push 0",
-		"jmp "+label_end,
-
-		label_true+":",
-		"push 1",
-
-		label_end+":",
-	};
-}
 
 vector<string> inc(const VMInstr instr){
 	//increments the value on top of stack

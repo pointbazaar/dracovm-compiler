@@ -87,6 +87,12 @@ bool test_fmul2();
 bool test_fdiv1();
 bool test_fdiv2();
 
+//other floating point comparisons
+bool test_fleq1();
+bool test_fleq2();
+bool test_fgeq1();
+bool test_fgeq2();
+
 int main(int argc, char* argv[]){
 	
 	cout << "START TESTS" << endl;
@@ -181,7 +187,13 @@ int main(int argc, char* argv[]){
 		test_fmul1(),	//51
 		test_fmul2(),	//52
 		test_fdiv1(),	//53
-		test_fdiv2()	//54
+		test_fdiv2(),	//54
+
+		//other floating point comparisons
+		test_fleq1(),
+		test_fleq2(),
+		test_fgeq1(),
+		test_fgeq2()
 		
 	};
 	int i=0;
@@ -1391,4 +1403,64 @@ bool test_fdiv2(){
 	};
 
 	return 1==testrun("FDIV2_main",vmcodes);
+}
+
+
+bool test_fleq1(){
+	const vector<string> vmcodes={
+		"subroutine FLEQ1_main 0 args 0 locals",
+
+		"fconst 2.0",
+		"fconst 2.0",
+		"fleq",
+
+		"exit"
+	};
+
+	return 1==testrun("FLEQ1_main",vmcodes);
+}
+
+
+bool test_fleq2(){
+	const vector<string> vmcodes={
+		"subroutine FLEQ2_main 0 args 0 locals",
+
+		"fconst 2.001",
+		"fconst 2.0",
+		"fleq",
+
+		"exit"
+	};
+
+	return 0==testrun("FLEQ2_main",vmcodes);
+}
+
+
+bool test_fgeq1(){
+	const vector<string> vmcodes={
+		"subroutine FGEQ1_main 0 args 0 locals",
+
+		"fconst 2.0",
+		"fconst 2.0",
+		"fgeq",
+
+		"exit"
+	};
+
+	return 1==testrun("FGEQ1_main",vmcodes);
+}
+
+
+bool test_fgeq2(){
+	const vector<string> vmcodes={
+		"subroutine FGEQ2_main 0 args 0 locals",
+
+		"fconst 2.0",
+		"fconst 2.001",
+		"fgeq",
+
+		"exit"
+	};
+
+	return 0==testrun("FGEQ2_main",vmcodes);
 }
