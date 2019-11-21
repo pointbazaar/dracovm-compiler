@@ -117,6 +117,45 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 		obj_files.push_back(filename+".o");
 	}
 
+	{
+
+		//add the builtin subroutines
+		//every subroutine should have its own .asm file,
+		//and the builtin subroutines also
+		const map<string,vector<string>> builtin_asms = compile_builtin_subroutines();
+
+		for(auto const& builtin : builtin_asms){
+			string filename = builtin.first;
+			vector<string> asms = builtin.second;
+
+			ofstream file;
+			file.open(filename+".asm");
+
+			file << "section .text" << endl;
+			
+			//declare this subroutine as global so it is found by the linker
+			file << "global " << filename << endl; 
+
+			for(string line : asms){
+				file << line << endl;
+			}
+
+			file.close();
+
+
+			//call nasm
+			//the debugging symbol format is dwarf,
+			//as this is what worked with my gdb
+			const string call1 = "nasm -f elf -F dwarf -g "+filename+".asm";
+			//for understanding and debugging
+			cout << call1 << endl;
+
+			success &= WEXITSTATUS(system(call1.c_str())) == 0;
+
+			obj_files.push_back(filename+".o");
+		}
+	}
+
 	//call ld to link all the object files
 	//and specify the name of the excutable to be generated (-o)
 	const string call2 = "ld -melf_i386 -o "+exec_filename+" "+join(obj_files," ");

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-	vector<string> compile_builtin_subroutines();
+	map<string,vector<string>> compile_builtin_subroutines();
 
 
 	vector<string> _readchar();

@@ -72,11 +72,6 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 			asm_cmds.insert(asm_cmds.end(),asms.begin(),asms.end());
 		}
 
-		//add the builtin subroutines
-		//TODO: every subroutine should have its own .asm file,
-		//and the builtin subroutines also
-		const vector<string> builtins = compile_builtin_subroutines();
-		asm_cmds.insert(asm_cmds.end(),builtins.begin(),builtins.end());
 
 		results[subr_name]=asm_cmds;
 	}

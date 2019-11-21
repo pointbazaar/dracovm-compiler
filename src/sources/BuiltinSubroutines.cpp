@@ -27,29 +27,23 @@ using namespace std;
   //..
   const string SYS_MMAP   = "192";
 
-vector<string> compile_builtin_subroutines(){
+map<string,vector<string>> compile_builtin_subroutines(){
 	
-	vector<string> asms;
 
-	vector<vector<string>> asmcodes = {
-		_readchar(),
-		_putchar(),
-		_putdigit(),
-		_new(),
-		_free(),
-		_len(),
-		_abs(),
-		_time(),
-		_fopen(),
-		_fputs()
+	map<string,vector<string>> asmcodes = {
+		{"Builtin_readchar",_readchar()},
+		{"Builtin_putchar",_putchar()},
+		{"Builtin_putdigit",_putdigit()},
+		{"Builtin_new",_new()},
+		{"Builtin_free",_free()},
+		{"Builtin_len",_len()},
+		{"Builtin_abs",_abs()},
+		{"Builtin_time",_time()},
+		{"Builtin_fopen",_fopen()},
+		{"Builtin_fputs",_fputs()}
 	};
 
-	for(vector<string> asmcode : asmcodes){
-
-		asms.insert(asms.end(),asmcode.begin(),asmcode.end());
-	}
-
-	return asms;
+	return asmcodes;
 }
 
 
