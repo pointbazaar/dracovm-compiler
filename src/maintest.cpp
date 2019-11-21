@@ -145,28 +145,28 @@ int main(int argc, char* argv[]){
 		test_fgt2(),		//35
 
 		//subroutine related (5)
-		test_readchar(),
-		test_putchar(),
-		test_putdigit(),
-		test_putchar_multiple(),
-		test_compile_new_and_len(),
+		test_readchar(),	//36
+		test_putchar(),		//37
+		test_putdigit(),	//38
+		test_putchar_multiple(),	//39
+		test_compile_new_and_len(),	//40
 
 		//builtin subroutine related
-		test_abs(),
-		test_time(),
-		test_fopen(),
-		test_fopen_fputs(),
+		test_abs(),			//41
+		test_time(),		//42
+		test_fopen(),		//43
+		test_fopen_fputs(),	//44
 
 		//general
-		test_correct_return_code(),
-		test_goto(),
-		test_if_goto(),
+		test_correct_return_code(),	//45
+		test_goto(),				//46
+		test_if_goto(),				//47
 
-		test_lshiftl(),
-		test_lshiftr(),
+		test_lshiftl(),		//48
+		test_lshiftr(),		//49
 
 		//later
-		test_iexp()
+		test_iexp()			//50
 		
 	};
 	int i=0;

@@ -804,39 +804,28 @@ vector<string> igt(VMInstr instr){
 vector<string> fgt(VMInstr instr){
 
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
-	const string BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS = "0100011100000000B";
-
-    const string BITMASK_FLOAT_GREATER = "0000000000000000B";
+	
 	const string unique = to_string(rand());
 
-	const string label_true = ".fgt_push"+unique;
+	const string label_above = ".fgt_push"+unique;
 	const string label_end = ".fgt_end"+unique;
 	
+
 	return {
-		"",
-		"; fgt:",
 
-
-		"finit",
-
-		"fld dword [esp]",
-		"pop eax",
-		"fld dword [esp]",
+		"movss xmm1, [esp]",
 		"pop eax",
 
-		"fcomp",
+		"movss xmm0, [esp]",
+		"pop eax",
 
-		//store status of comparison
-		"fstsw ax",
+		"ucomiss xmm0,xmm1",
 
-		"and eax,"+BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS,
-		"cmp eax,"+BITMASK_FLOAT_GREATER,
-
-		"je "+label_true,
+		"ja "+label_above,
 		"push 0",
 		"jmp "+label_end,
 
-		label_true+":",
+		label_above+":",
 		"push 1",
 
 		label_end+":",
@@ -964,43 +953,11 @@ vector<string> flt(VMInstr instr){
 
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
-    const string BITMASK_LESS = "0000000100000000B";
-	const string BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS = "0100011100000000B";
-
 	const int unique = rand();
 	const string label_less = ".flt_less"+to_string(unique);
 	const string label_end = ".flt_end"+to_string(unique);
 	
-	/*
-	return {
-		"",
-		"; flt:",
-
-		"finit",
-
-		"fld dword [esp]",
-		"pop eax",
-
-		"fld dword [esp]",
-		"pop eax",
-
-		"fcom st0,st1",
-
-		//store status of comparison
-		"fstsw ax",
-
-		"and eax,"+BITMASK_FLOATING_POINT_ONLY_CONDITION_FLAGS,
-		"cmp eax,"+BITMASK_LESS,
-		"je "+label_less,
-
-		"push 0",
-		"jmp "+label_end,
-
-		label_less+":",
-		"push 1",
-
-		label_end+":",
-	};*/
+	
 	return {
 		"finit",
 
