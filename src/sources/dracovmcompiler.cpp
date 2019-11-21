@@ -108,7 +108,7 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 		//the format is elf
 		//the debugging symbol format is dwarf,
 		//as this is what worked with my gdb
-		const string call1 = "nasm -f elf -F dwarf -g"+filename+".asm";
+		const string call1 = "nasm -f elf -F dwarf -g "+filename+".asm";
 		//for understanding and debugging
 		cout << call1 << endl;
 

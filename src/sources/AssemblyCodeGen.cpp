@@ -460,6 +460,7 @@ vector<string> fadd(VMInstr instr){
 	//https://stackoverflow.com/questions/11853133/adding-floating-point-double-numbers-in-assembly
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
+	/*
 	return {
 		"",
 		"; fadd:",
@@ -478,6 +479,26 @@ vector<string> fadd(VMInstr instr){
 		"push dword 0",			//push unknown value
 		"fstp dword [esp]" //fill that value
 	};
+	*/
+	return {
+		"",
+		"; fadd:",
+
+		//init floating point unit
+		"finit",
+
+		//load from stack
+		"movss xmm0, [esp]",
+		"pop eax",
+
+		"movss xmm1, [esp]",
+		"pop eax",
+
+		"addss xmm0,xmm1",
+
+		"push dword 0",			//push unknown value
+		"movss [esp], xmm0" 	//fill that value
+	};
 }
 
 vector<string> fsub(VMInstr instr){
@@ -492,14 +513,16 @@ vector<string> fsub(VMInstr instr){
 		"finit",
 
 		//load from stack
-		"fld dword [esp]",
+		"movss xmm0, [esp]",
 		"pop eax",
-		"fld dword [esp]",
-		"pop ebx",
 
-		"fsub",
+		"movss xmm1, [esp]",
+		"pop eax",
+
+		"subss xmm1,xmm0",
+
 		"push dword 0",			//push unknown value
-		"fstp dword [esp]" //fill that value
+		"movss [esp], xmm1" 	//fill that value
 	};
 }
 
@@ -980,10 +1003,11 @@ vector<string> flt(VMInstr instr){
 	};*/
 	return {
 		"finit",
-		"movss xmm0, [esp]",
-		"pop eax",
 
 		"movss xmm1, [esp]",
+		"pop eax",
+
+		"movss xmm0, [esp]",
 		"pop eax",
 
 		"ucomiss xmm0,xmm1",
