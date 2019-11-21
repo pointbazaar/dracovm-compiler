@@ -48,8 +48,6 @@ bool test_and();
 bool test_and2();
 bool test_or();
 bool test_or2();
-bool test_feq1();
-bool test_feq2();
 //all from the .java, except these 4:
 bool test_flt1();
 bool test_flt2();
@@ -148,46 +146,45 @@ int main(int argc, char* argv[]){
 		test_or(),			//28
 		test_or2(),			//29
 
-		test_feq1(),		//30
-		test_feq2(),		//31
+		
 
-		test_flt1(),		//32
-		test_flt2(),		//33
-		test_fgt1(),		//34
-		test_fgt2(),		//35
+		test_flt1(),		//30
+		test_flt2(),		//31
+		test_fgt1(),		//32
+		test_fgt2(),		//33
 
 		//subroutine related (5)
-		test_readchar(),	//36
-		test_putchar(),		//37
-		test_putdigit(),	//38
-		test_putchar_multiple(),	//39
-		test_compile_new_and_len(),	//40
+		test_readchar(),	//34
+		test_putchar(),		//35
+		test_putdigit(),	//36
+		test_putchar_multiple(),	//37
+		test_compile_new_and_len(),	//38
 
 		//builtin subroutine related
-		test_abs(),			//41
-		test_time(),		//42
-		test_fopen(),		//43
-		test_fopen_fputs(),	//44
+		test_abs(),			//39
+		test_time(),		//40
+		test_fopen(),		//41
+		test_fopen_fputs(),	//42
 
 		//general
-		test_correct_return_code(),	//45
-		test_goto(),				//46
-		test_if_goto(),				//47
+		test_correct_return_code(),	//43
+		test_goto(),				//44
+		test_if_goto(),				//45
 
-		test_lshiftl(),		//48
-		test_lshiftr(),		//49
+		test_lshiftl(),		//46
+		test_lshiftr(),		//47
 
 		//later
-		test_iexp(),			//50
+		test_iexp(),			//48
 
 		//floating point multiplication, division
 		//(these may depend on flt,fgt, and so on, so these tests should
 		//only be debugged if the depedency commands
 		// are passing all their tests )
-		test_fmul1(),	//51
-		test_fmul2(),	//52
-		test_fdiv1(),	//53
-		test_fdiv2(),	//54
+		test_fmul1(),	//49
+		test_fmul2(),	//50
+		test_fdiv1(),	//51
+		test_fdiv2(),	//52
 
 		//other floating point comparisons
 		test_fleq1(),
@@ -848,15 +845,6 @@ bool test_or2(){
 	return 1==testrun("OR2_main",vmcodes);
 }
 
-bool test_feq1(){
-	//TODO: remove it once migration from java is complete
-	return false;
-}
-
-bool test_feq2(){
-	//TODO: remove it once migration from java is complete
-	return false;
-}
 
 bool test_flt1(){
 	const vector<string> vmcodes={
