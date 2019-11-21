@@ -78,6 +78,9 @@ bool test_if_goto();
 bool test_lshiftl();
 bool test_lshiftr();
 
+//later
+bool test_iexp();
+
 int main(int argc, char* argv[]){
 	
 	cout << "START TESTS" << endl;
@@ -160,7 +163,10 @@ int main(int argc, char* argv[]){
 		test_if_goto(),
 
 		test_lshiftl(),
-		test_lshiftr()
+		test_lshiftr(),
+
+		//later
+		test_iexp()
 		
 	};
 	int i=0;
@@ -1290,4 +1296,18 @@ bool test_lshiftr(){
 	};
 
 	return 1==testrun("LSHIFTR_main",vmcodes);
+}
+
+
+bool test_iexp(){
+	const vector<string> vmcodes={
+		"subroutine IEXP_main 0 args 0 locals",
+
+		"iconst 2",
+		"iconst 3",
+		"iexp",
+		"exit"
+	};
+
+	return 8==testrun("IEXP_main",vmcodes);
 }

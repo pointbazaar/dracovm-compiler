@@ -47,6 +47,7 @@ std::vector<std::string> isub(VMInstr instr);
 std::vector<std::string> imul(VMInstr instr);
 std::vector<std::string> idiv(VMInstr instr);
 std::vector<std::string> imod(VMInstr instr);
+std::vector<std::string> iexp(VMInstr instr);
 std::vector<std::string> ineg(VMInstr instr);
 
 //logic commands
