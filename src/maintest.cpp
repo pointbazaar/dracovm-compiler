@@ -256,9 +256,11 @@ bool test_fadd2(){
         "fadd",
         "fconst 7.0",
         "flt",
+
         "if-goto exit0",
         "iconst 1",
         "exit",
+        
         "label exit0",
         "iconst 0",
         "exit"

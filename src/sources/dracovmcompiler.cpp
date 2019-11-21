@@ -105,7 +105,10 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 		file.close();
 
 		//call nasm
-		const string call1 = "nasm -f elf "+filename+".asm";
+		//the format is elf
+		//the debugging symbol format is dwarf,
+		//as this is what worked with my gdb
+		const string call1 = "nasm -f elf -F dwarf -g"+filename+".asm";
 		//for understanding and debugging
 		cout << call1 << endl;
 
@@ -115,7 +118,8 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 	}
 
 	//call ld to link all the object files
-	const string call2 = "ld -melf_i386 -s -o "+exec_filename+" "+join(obj_files," ");
+	//and specify the name of the excutable to be generated (-o)
+	const string call2 = "ld -melf_i386 -o "+exec_filename+" "+join(obj_files," ");
 	//for understanding and debugging
 	cout << call2 << endl;
 

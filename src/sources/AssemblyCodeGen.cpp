@@ -188,6 +188,7 @@ vector<string> iconst(VMInstr instr){
 vector<string> fconst(VMInstr instr){
 	//parse arg
 	const float f = stof(instr.arg1);
+
 	return {
 		"",
 		"; fconst:",
@@ -947,6 +948,7 @@ vector<string> flt(VMInstr instr){
 	const string label_less = ".flt_less"+to_string(unique);
 	const string label_end = ".flt_end"+to_string(unique);
 	
+	/*
 	return {
 		"",
 		"; flt:",
@@ -968,6 +970,25 @@ vector<string> flt(VMInstr instr){
 		"cmp eax,"+BITMASK_LESS,
 		"je "+label_less,
 
+		"push 0",
+		"jmp "+label_end,
+
+		label_less+":",
+		"push 1",
+
+		label_end+":",
+	};*/
+	return {
+		"finit",
+		"movss xmm0, [esp]",
+		"pop eax",
+
+		"movss xmm1, [esp]",
+		"pop eax",
+
+		"ucomiss xmm0,xmm1",
+
+		"jb "+label_less,
 		"push 0",
 		"jmp "+label_end,
 
