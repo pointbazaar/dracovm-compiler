@@ -798,6 +798,7 @@ vector<string> fgt(VMInstr instr){
 	
 
 	return {
+		";fgt",
 
 		"movss xmm1, [esp]",
 		"pop eax",
@@ -825,6 +826,7 @@ vector<string> fleq(VMInstr instr){
 	
 
 	return {
+		"; fle",
 
 		"movss xmm1, [esp]",
 		"pop eax",
@@ -852,6 +854,7 @@ vector<string> fgeq(VMInstr instr){
 	
 
 	return {
+		";fge",
 
 		"movss xmm1, [esp]",
 		"pop eax",
@@ -966,7 +969,7 @@ vector<string> flt(VMInstr instr){
 	
 	
 	return {
-		"finit",
+		"; flt",
 
 		"movss xmm1, [esp]",
 		"pop eax",
