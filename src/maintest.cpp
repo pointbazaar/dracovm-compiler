@@ -224,12 +224,12 @@ int testrun(string name,vector<string> vmcodes){
 	map<string,vector<string>> mymap;
 	mymap[name]=vmcodes;
 
-	compile_main2(mymap,name);
+	compile_main2(mymap);
 
 	//start a process, and examine its exit value
 
 	int status=47; //random value thats hopefully never tested for
-	const string call="./"+name;
+	const string call="./main";
 	status = WEXITSTATUS(system(call.c_str()));
 
 	//as we are testing, we should remove the files that have been created
@@ -237,7 +237,7 @@ int testrun(string name,vector<string> vmcodes){
 	const bool remove_files=true;
 
 	if(remove_files){
-		const string call2="rm "+obj_filename(name)+" "+asm_filename(name)+"  "+name+" ";
+		const string call2="rm "+obj_filename(name)+" "+asm_filename(name)+" main";
 		system(call2.c_str());
 	}
 

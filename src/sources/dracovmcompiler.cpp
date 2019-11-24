@@ -10,7 +10,7 @@
 
 using namespace std;
 
-bool compile_main(vector<string> filenames,string exec_filename){
+bool compile_main(vector<string> filenames){
 	cout << "compile_main" << endl;
 
 	// from these filenames, check if each has 
@@ -74,15 +74,15 @@ bool compile_main(vector<string> filenames,string exec_filename){
 	//for now, to complete the rewrite quickly, just compile,
 	//without incremental compilation
 
-	return compile_main2(vm_sources,exec_filename);
+	return compile_main2(vm_sources);
 }
 
-bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
+bool compile_main2(map<string,vector<string>> vm_sources){
 
 	//https://eli.thegreenplace.net/2013/07/09/library-order-in-static-linking
 
 	//DEBUG
-	cerr << "compile_main2" << endl;
+	cout << "compile_main2" << endl;
 
 	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
 
@@ -96,6 +96,9 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 		vector<string> myasm = entry.second;
 
 		ofstream file;
+
+		cout << "write to: " << asm_filename(filename) << endl;
+
 		file.open(asm_filename(filename));
 
 		for(string line : myasm){
@@ -125,10 +128,11 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 		const map<string,vector<string>> builtin_asms = compile_builtin_subroutines();
 
 		for(auto const& builtin : builtin_asms){
-			string filename = builtin.first;
-			vector<string> asms = builtin.second;
+			const string filename = builtin.first;
+			const vector<string> asms = builtin.second;
 
 			ofstream file;
+			cout << "write to: " << asm_filename(filename) << endl;
 			file.open(asm_filename(filename));
 
 			file << "section .text" << endl;
@@ -157,8 +161,8 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 	}
 
 	//call ld to link all the object files
-	//and specify the name of the excutable to be generated (-o)
-	const string call2 = "ld -melf_i386 -o "+exec_filename+" "+join(obj_files," ");
+	//and specify the name of the excutable to be generated (-o main)
+	const string call2 = "ld -melf_i386 -o main "+join(obj_files," ");
 	//for understanding and debugging
 	cout << call2 << endl;
 
