@@ -3,3 +3,5 @@ dracovmtest
 *.subroutine.dracvm
 *.info
 dracovm
+
+.**.asm

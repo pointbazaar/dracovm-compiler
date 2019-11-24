@@ -237,7 +237,7 @@ int testrun(string name,vector<string> vmcodes){
 	const bool remove_files=true;
 
 	if(remove_files){
-		const string call2="rm "+name+".o "+name+".asm "+name+" ";
+		const string call2="rm "+obj_filename(name)+" "+asm_filename(name)+"  "+name+" ";
 		system(call2.c_str());
 	}
 

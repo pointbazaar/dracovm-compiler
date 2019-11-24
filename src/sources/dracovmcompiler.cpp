@@ -96,7 +96,7 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 		vector<string> myasm = entry.second;
 
 		ofstream file;
-		file.open(filename+".asm");
+		file.open(asm_filename(filename));
 
 		for(string line : myasm){
 			file << line << endl;
@@ -108,13 +108,13 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 		//the format is elf
 		//the debugging symbol format is dwarf,
 		//as this is what worked with my gdb
-		const string call1 = "nasm -f elf -F dwarf -g "+filename+".asm";
+		const string call1 = "nasm -f elf -F dwarf -g "+asm_filename(filename);
 		//for understanding and debugging
 		cout << call1 << endl;
 
 		success &= WEXITSTATUS(system(call1.c_str())) == 0;
 
-		obj_files.push_back(filename+".o");
+		obj_files.push_back(obj_filename(filename));
 	}
 
 	{
@@ -129,7 +129,7 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 			vector<string> asms = builtin.second;
 
 			ofstream file;
-			file.open(filename+".asm");
+			file.open(asm_filename(filename));
 
 			file << "section .text" << endl;
 			
@@ -146,13 +146,13 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 			//call nasm
 			//the debugging symbol format is dwarf,
 			//as this is what worked with my gdb
-			const string call1 = "nasm -f elf -F dwarf -g "+filename+".asm";
+			const string call1 = "nasm -f elf -F dwarf -g "+asm_filename(filename);
 			//for understanding and debugging
 			cout << call1 << endl;
 
 			success &= WEXITSTATUS(system(call1.c_str())) == 0;
 
-			obj_files.push_back(filename+".o");
+			obj_files.push_back(obj_filename(filename));
 		}
 	}
 
@@ -165,6 +165,15 @@ bool compile_main2(map<string,vector<string>> vm_sources, string exec_filename){
 	success &= WEXITSTATUS(system(call2.c_str()))==0;
 
 	return success;
+}
+
+
+string asm_filename(string filename){
+	return "."+filename+".asm";
+}
+
+string obj_filename(string filename){
+	return "."+filename+".o";
 }
 
 /*
