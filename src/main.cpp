@@ -66,7 +66,7 @@ int main(int argc, char* argv[]){
 
 	cout << endl;
 
-	bool success = compile_main(filenames,exec_filename);
+	bool success = compile_main(filenames);
 
 	if(success){
 		cout << "BUILD SUCCESSFUL" << endl;
