@@ -1005,8 +1005,8 @@ vector<string> ileq(VMInstr instr){
 		"; ileq:",
 
 		//pop operands
-		"pop eax",
 		"pop ebx",
+		"pop eax",
 		
 		"cmp eax,ebx",
 		
