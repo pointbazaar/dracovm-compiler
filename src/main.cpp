@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char* argv[]){
 
-	cout << "DRACOVM Compiler" << endl;
+	cout << "- DRACOVM Compiler -" << endl;
 	const unsigned int nSubroutines = argc-1;
 
 	//parse files given as arguments:
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 	
-	string help_option="-help";
+	const string help_option="-help";
 	
 	//compare to see if -help 
 	if(help_option.compare(argv[1])==0){

@@ -90,6 +90,7 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 
 	bool success=true;
 
+	cout << "call nasm to compile .asm files" << endl;
 	//write these asm codes to their respective files
 	for(auto const& entry : asm_codes){
 		string filename = entry.first;
@@ -120,6 +121,7 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 		obj_files.push_back(obj_filename(filename));
 	}
 
+	cout << "call nasm to compile builtin subroutines" << endl;
 	{
 
 		//add the builtin subroutines
