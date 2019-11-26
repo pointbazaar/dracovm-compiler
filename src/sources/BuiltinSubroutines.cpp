@@ -303,8 +303,42 @@ vector<string> _len(){
 	return res;
 }
 vector<string> _abs(){
-	//TODO
-	return {};
+	//returns the absolute value of an integer
+
+	const vector<string> res={
+		//returns the length of a length-prefixed memory segment
+
+		join(subroutine(VMInstr("subroutine Builtin_abs 1 args 0 locals")),"\n"),
+
+	    //access our argument , ARG 0, by pushing it onto the stack
+	    join(push(VMInstr("push ARG 0")),"\n"),
+	    //valueis now on stack
+
+	    "pop eax",
+
+	    "cmp eax,0",
+	    "jl invert",
+	    "jmp end",
+
+	    "invert:",
+	    "mov ebx,-1",
+	    "imul eax,ebx",
+
+	    "end:",
+
+	    //push return value
+	    "push eax",
+
+	    //we must swap return value with the return address in order to return
+	    //(i am so dumb. took me so long to find this.)
+	    join(swap(VMInstr("swap")),"\n"),
+
+	    //return from subroutine
+	    "ret"
+
+	};
+
+	return res;
 }
 vector<string> _time(){
 	

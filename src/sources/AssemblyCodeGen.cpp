@@ -25,6 +25,9 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		const string filename = entry.first;
 		vector<string> vmcodes = entry.second;
 
+		//debug
+		//cout << " compile vmcodes from " << filename << endl;
+
 		//first vmcode denotes the subroutine,
 		//which should be put as the key in the
 		//'instrs' map
@@ -38,6 +41,7 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 			subr_name.substr(subr_name.find("_")+1);
 
 		vector<string> asm_cmds;	
+
 
 		//add startup codes
 		asm_cmds.push_back("section .text");
@@ -88,7 +92,7 @@ vector<string> compile_vm_instr(VMInstr instr){
 	const string cmd=instr.cmd; //short for command
 
 	//DEBUG
-	//cout << cmd << endl;
+	//cout << "compile " << cmd << endl;
 
 	//create a map of function pointers
 	map<string,vector<string> (*)(VMInstr)> func_map;
@@ -963,9 +967,9 @@ vector<string> flt(VMInstr instr){
 
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
 
-	const int unique = rand();
-	const string label_less = ".flt_less"+to_string(unique);
-	const string label_end = ".flt_end"+to_string(unique);
+	const string unique = to_string(rand());
+	const string label_less = ".flt_less"+unique;
+	const string label_end = ".flt_end"+unique;
 	
 	
 	return {
@@ -991,7 +995,7 @@ vector<string> flt(VMInstr instr){
 }
 
 vector<string> ileq(VMInstr instr){
-	const int unique = rand();
+	const string unique = to_string(rand());
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
