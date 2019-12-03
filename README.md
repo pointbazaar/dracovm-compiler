@@ -4,9 +4,11 @@
 
 ## Description
 
-This is the compiler for the intermediate language produced by https://github.com/pointbazaar/dragon/.
+DracoVM Language is a **stack based intermediate language**.
 
-It takes this stack-based intermediate language and compiles it to Intel x86 Assembly Language.
+This is the compiler for the intermediate language produced by [dragon](https://github.com/pointbazaar/dragon/).
+
+It takes this stack-based intermediate language and compiles it to  **x86 Assembly Language**.
 
 You can use it to implement your own Programming Language on top of it.
 
