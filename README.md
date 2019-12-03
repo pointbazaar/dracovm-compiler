@@ -1,7 +1,5 @@
 # DracoVM Compiler
 
-[![CodeFactor](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler/badge)](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler)
-
 ## Description
 
 DracoVM Language is a **stack based intermediate language**.
