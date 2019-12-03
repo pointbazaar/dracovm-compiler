@@ -2,8 +2,6 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler/badge)](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler)
 
-[![Known Vulnerabilities](https://snyk.io/test/github/pointbazaar/dracovm-compiler/badge.svg)](https://snyk.io/test/github/pointbazaar/dracovm-compiler)
-
 ## Description
 
 This is the compiler for the intermediate language produced by https://github.com/pointbazaar/dragon/.
