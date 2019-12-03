@@ -1,7 +1,5 @@
 # DracoVM Compiler
 
-## Description
-
 DracoVM Language is a **stack based intermediate language**.
 
 This is the compiler for the intermediate language produced by [dragon](https://github.com/pointbazaar/dragon/).
