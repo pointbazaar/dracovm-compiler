@@ -1,6 +1,6 @@
 # DracoVM Compiler
 
-DracoVM Language is a **stack based intermediate language**.
+DracoVM Language is a **stack based intermediate language**. Meaning it is not meant to be written by humans.
 
 The DracoVM Compiler compiles it to  **x86 Assembly Language**.
 
