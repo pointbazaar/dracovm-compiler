@@ -30,6 +30,12 @@ You@Terminal:~$ dracovm Main.subroutine.dracovm
 - [x] array support
 - [x] length-prefixed arrays
 
+- [ ] Builtin Subroutines (mostly written in assembly) to execute linux system calls [syscalls](http://man7.org/linux/man-pages/man2/syscalls.2.html)
+  - [x] sys_time
+  - [1/2] sys_read
+  - [1/2] sys_write
+  - [x] sys_mmap
+
 ## Contributions
 
 Contributions are encouraged, but only in the Form of Issues, Suggestions and Forks. Pull Requests will probably not be accepted.
