@@ -327,8 +327,8 @@ vector<string> _abs(){
 
 	return res;
 }
+
 vector<string> _time(){
-	
 	const vector<string> res={
 		//time in seconds since the epoch
 	    //https://fresh.flatassembler.net/lscr/
@@ -424,7 +424,6 @@ vector<string> _fputs(){
 
 
     const vector<string> res = {
-
     	join(sub1,"\n"),
 
     	join(push1,"\n"),
