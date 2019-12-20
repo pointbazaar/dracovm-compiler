@@ -116,8 +116,9 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 		//for understanding and debugging
 		cout << call1 << endl;
 
-		success = success && ( WEXITSTATUS(system(call1.c_str())) == 0 );
-
+		bool exitzero1 =  ( WEXITSTATUS(system(call1.c_str())) == 0 );
+		success &= exitzero1;
+		
 		obj_files.push_back(obj_filename(filename));
 	}
 
@@ -156,7 +157,8 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 			//for understanding and debugging
 			cout << call1 << endl;
 
-			success = success && ( WEXITSTATUS(system(call1.c_str())) == 0);
+			bool exitzero2 =  ( WEXITSTATUS(system(call1.c_str())) == 0);
+			success &= exitzero2;
 
 			obj_files.push_back(obj_filename(filename));
 		}
@@ -168,7 +170,8 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 	//for understanding and debugging
 	cout << call2 << endl;
 
-	success = success && ( WEXITSTATUS(system(call2.c_str()))==0);
+	bool exitzero3 = ( WEXITSTATUS(system(call2.c_str()))==0);
+	success &= exitzero3;
 
 	return success;
 }
