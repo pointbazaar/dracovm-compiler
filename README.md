@@ -4,6 +4,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler/badge)](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler)
 [![GitHub license](https://img.shields.io/github/license/pointbazaar/dracovm-compiler.svg)](https://github.com/pointbazaar/dracovm-compiler/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/pointbazaar/dracovm-compiler.svg)](https://GitHub.com/pointbazaar/dracovm-compiler/issues/)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/pointbazaar/dracovm-compiler.svg)](http://isitmaintained.com/project/pointbazaar/dracovm-compiler "Average time to resolve an issue")
 
 DracoVM Language is a **stack based intermediate language**. Meaning it is not meant to be written by humans.
 
