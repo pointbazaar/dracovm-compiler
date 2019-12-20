@@ -15,9 +15,7 @@ using namespace std;
 map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources){
 	//DEBUG
 	cout << "compile_vmcodes" << endl;
-
 	//parse vm instructions
-
 	map<string,vector<string>> results;
 
 	for(auto const& entry : vm_sources){
@@ -30,7 +28,6 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		//first vmcode denotes the subroutine,
 		//which should be put as the key in the
 		//'instrs' map
-
 
 		const string subr_line = vmcodes.at(0);
 		const string tmp = "subroutine ";
@@ -49,7 +46,6 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		//define our own subroutine label as global,
 		//so it can be correctly linked
 		asm_cmds.push_back("global "+subr_name);
-
 		//TODO: define the external labels that 
 		//might be jumped to, but are not in this file
 		for(auto const& vmcmd : vmcodes){
@@ -73,12 +69,8 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 			vector<string> asms = compile_vm_instr(instr);
 			asm_cmds.insert(asm_cmds.end(),asms.begin(),asms.end());
 		}
-
-
 		results[subr_name]=asm_cmds;
 	}
-
-
 	return results;
 }
 
@@ -124,7 +116,6 @@ vector<string> compile_vm_instr(VMInstr instr){
 	//also, they are not very important
 	//func_map["fneq"]=fneq;//not implemented
 	//func_map["feq"]=feq;	//not implemented
-
 	//integer arithmetic
 	func_map["iadd"]=iadd;
 	func_map["isub"]=isub;
@@ -405,7 +396,6 @@ vector<string> _return(VMInstr instr){
 }
 
 vector<string> exit(VMInstr instr){
-
 	return {
 		"",
 		"; exit:",
@@ -619,7 +609,8 @@ vector<string> iexp(VMInstr instr){
 	//which is just added to every executable,
 	//and is just called.
 
-	const string unique = to_string(rand());
+	unsigned int seed=38293;
+	const string unique = to_string(rand(&seed));
 
 	const string label_calc = ".iexp_calc"+unique;
 	const string label_end = ".iexp_end"+unique;
@@ -1045,7 +1036,6 @@ vector<string> _goto(VMInstr instr){
 }
 
 vector<string> if_goto(VMInstr instr){
-
 	const string subr_name = instr.arg1;
 	return {
 		"",
@@ -1069,7 +1059,6 @@ vector<string> label(VMInstr instr){
 }
 
 vector<string> arraystore(VMInstr instr){
-
 	const int byte_offset_32_bit = 4;
 	return {
 		"",
@@ -1091,7 +1080,6 @@ vector<string> arraystore(VMInstr instr){
 }
 
 vector<string> arrayread(VMInstr instr){
-
 	/*
 	arrayread, stack looks like:
 	|undefined
