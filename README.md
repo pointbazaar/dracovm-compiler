@@ -7,6 +7,7 @@
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/pointbazaar/dracovm-compiler.svg)](http://isitmaintained.com/project/pointbazaar/dracovm-compiler "Average time to resolve an issue")
 [![HitCount](http://hits.dwyl.io/pointbazaar/dracovm-compiler.svg)](http://hits.dwyl.io/pointbazaar/dracovm-compiler)
 [![Open Source Love png2](https://badges.frapsoft.com/os/v2/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/pointbazaar/dracovm-compiler/graphs/commit-activity)
 
 DracoVM Language is a **stack based intermediate language**. Meaning it is not meant to be written by humans.
 
