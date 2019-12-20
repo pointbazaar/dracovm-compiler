@@ -20,7 +20,6 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 	map<string,vector<string>> results;
 
 	for(auto const& entry : vm_sources){
-
 		const string filename = entry.first;
 		vector<string> vmcodes = entry.second;
 
@@ -68,7 +67,6 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 		}
 
 		for(auto const& vmcmd : vmcodes){
-
 			VMInstr instr(vmcmd);
 			//compile
 			vector<string> asms = compile_vm_instr(instr);
@@ -172,7 +170,6 @@ vector<string> compile_vm_instr(VMInstr instr){
 	if(func_map.count(cmd)==1){
 		return func_map[cmd](instr);
 	}else{
-	
 		cerr << "FATAL: (AssemblyCodeGen.cpp) "<< instr.cmd << " not supported" << endl;
 		exit(1);
 		return {};
@@ -289,7 +286,6 @@ vector<string> push(VMInstr instr){
 			"mov eax,[eax]",
 			"push eax"
 		};
-		
 	}else if(segment.compare("ARG")==0){
 		//arguments are on the stack in reverse order
 		//ebp is on the caller's return address, with the arguments above
@@ -365,8 +361,6 @@ vector<string> subroutine(VMInstr instr){
 		//save the ebp of the caller
       	//push ebp
 		return {
-
-			"",
 			"; subroutine:",
 			//jump label for the subroutine
 			full_name+":",
@@ -434,7 +428,6 @@ vector<string> pushsubroutine(VMInstr instr){
 }
 
 vector<string> callfromstack(VMInstr instr){
-
 	return {
 		"",
 		"; callfromstack :",
@@ -585,7 +578,6 @@ vector<string> isub(VMInstr instr){
 }
 
 vector<string> imul(VMInstr instr){
-
 	return {
 		"",
 		"; imul:",
@@ -600,7 +592,6 @@ vector<string> imul(VMInstr instr){
 //https://www.cs.virginia.edu/~evans/cs216/guides/x86.html
 
 vector<string> idiv(VMInstr instr){
-
 	return {
 		"",
 		"; idiv:",
@@ -659,7 +650,6 @@ vector<string> iexp(VMInstr instr){
 
 vector<string> imod(VMInstr instr){
 	//https://stackoverflow.com/questions/8021772/assembly-language-how-to-do-modulo
-	
 	return {
 		"",
 		"; imod: ",
@@ -688,7 +678,6 @@ vector<string> ineg(VMInstr instr){
 }
 
 vector<string> _and(VMInstr instr){
-
 	return {
 		"",
 		"; and:",
@@ -701,7 +690,6 @@ vector<string> _and(VMInstr instr){
 }
 
 vector<string> _not(VMInstr instr){
-
 	//logical not
     //if there is a 1 (true) on the stack,
     // after this vm command, there must be a 0 (false) on the stack
