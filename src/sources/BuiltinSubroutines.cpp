@@ -28,8 +28,6 @@ using namespace std;
   const string SYS_MMAP   = "192";
 
 map<string,vector<string>> compile_builtin_subroutines(){
-	
-
 	map<string,vector<string>> asmcodes = {
 		{"Builtin_readchar",_readchar()},
 		{"Builtin_putchar",_putchar()},
@@ -46,13 +44,8 @@ map<string,vector<string>> compile_builtin_subroutines(){
 	return asmcodes;
 }
 
-
-
-
 vector<string> _readchar(){
-	
 	const vector<string> res={
-
 	    //TODO: handle errors that could occur
 		join(subroutine(VMInstr("subroutine Builtin_readchar 0 args 0 locals")),"\n"),
 
@@ -66,9 +59,7 @@ vector<string> _readchar(){
 
 	    //print the char on stack
 	    //read into the placeholder DWORD we pushed onto the stack
-	    "mov ecx,esp",	
-	    
-
+	    "mov ecx,esp",
 
 	    //val length
 	    "mov edx,1",
@@ -137,8 +128,8 @@ vector<string> _putchar(){
 
 	return res;
 }
+
 vector<string> _putdigit(){
-	
 	const vector<string> sub1 = subroutine(VMInstr(
 		"subroutine Builtin_putdigit 0 args 0 locals"
 	));
@@ -195,7 +186,6 @@ vector<string> _putdigit(){
 }
 
 vector<string> _new(){
-
 	const string byte_offset_32bit="4";
 	
 	const vector<string> res={
@@ -268,12 +258,13 @@ vector<string> _new(){
 
 	return res;
 }
+
 vector<string> _free(){
 	//TODO
 	return {};
 }
-vector<string> _len(){
 
+vector<string> _len(){
 	const vector<string> res={
 		//returns the length of a length-prefixed memory segment
 
@@ -297,14 +288,11 @@ vector<string> _len(){
 
 	    //return from subroutine
 	    "ret"
-
 	};
-
 	return res;
 }
 vector<string> _abs(){
 	//returns the absolute value of an integer
-
 	const vector<string> res={
 		//returns the length of a length-prefixed memory segment
 
@@ -335,7 +323,6 @@ vector<string> _abs(){
 
 	    //return from subroutine
 	    "ret"
-
 	};
 
 	return res;

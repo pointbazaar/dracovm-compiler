@@ -4,7 +4,6 @@
 using namespace std;
 
 class SubroutineInfoRow{
-
 	/*
 	This class is supposed to represent one row of information
 	(about one subroutine) in the .dracovm.info

@@ -4,7 +4,6 @@
 using namespace std;
 
 class VMInstr{
-
 	public:
 		std::string cmd;
 		std::string arg1; //may be ""

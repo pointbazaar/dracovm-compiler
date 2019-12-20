@@ -8,7 +8,6 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-
 	cout << "- DRACOVM Compiler -" << endl;
 	const unsigned int nSubroutines = argc-1;
 

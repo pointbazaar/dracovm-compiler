@@ -78,7 +78,6 @@ bool compile_main(vector<string> filenames){
 }
 
 bool compile_main2(map<string,vector<string>> vm_sources){
-
 	//https://eli.thegreenplace.net/2013/07/09/library-order-in-static-linking
 
 	//DEBUG
@@ -124,7 +123,6 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 
 	cout << "call nasm to compile builtin subroutines" << endl;
 	{
-
 		//add the builtin subroutines
 		//every subroutine should have its own .asm file,
 		//and the builtin subroutines also

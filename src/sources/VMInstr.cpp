@@ -45,7 +45,6 @@ VMInstr::VMInstr(const string str){
 }
 
 string VMInstr::toString(){
-
 	string a1 = (this->arg1=="")?"":this->arg1;
 	string a2 = (this->arg2=="")?"":this->arg2;
 	return this->cmd+" "+a1+" "+a2;
