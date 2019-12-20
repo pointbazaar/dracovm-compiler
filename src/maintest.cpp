@@ -92,7 +92,6 @@ bool test_fgeq1();
 bool test_fgeq2();
 
 int main(int argc, char* argv[]){
-	
 	cout << "START TESTS" << endl;
 	//TODO:
 
@@ -246,7 +245,6 @@ int testrun(string name,vector<string> vmcodes){
 }
 
 bool test_fadd1(){
-
 	const vector<string> vmcodes = {
 		"subroutine FADD1_main 0 args 0 locals",
 
@@ -272,7 +270,6 @@ bool test_fadd1(){
 }
 
 bool test_fadd2(){
-
 	const vector<string> vmcodes={
 		"subroutine FADD2_main 0 args 0 locals",
         "fconst 3.0",
@@ -412,11 +409,9 @@ bool test_idiv_positive_by_negative(){
 	};
 
 	return 0==testrun("IDIV2_main",vmcodes);
-
 }
 
 bool test_idiv_negative_by_positive(){
-
 	//https://stackoverflow.com/questions/46574893/divide-a-positive-number-by-a-negative-number-in-assembly
 
     //maybe the problem is that -300 is not sign-extended
@@ -480,7 +475,6 @@ bool test_arrayread_arraystore(){
 }
 
 bool test_arrayread_arraystore2(){
-
 	//this test should verify that we are using correct offsetting of 4 bytes.
     //otherwise, the value at index 1 would be overwritten by the max-value int stored at index 0
     //https://en.wikipedia.org/wiki/2,147,483,647
