@@ -1,0 +1,4 @@
+language: c++
+before_install:
+- cd src
+install: sudo ./build.sh
