@@ -12,7 +12,6 @@ using namespace std;
 //https://c9x.me/x86/
 
 map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources){
-	
 	//DEBUG
 	cout << "compile_vmcodes" << endl;
 
@@ -85,8 +84,6 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 }
 
 vector<string> compile_vm_instr(VMInstr instr){
-
-
 	//returns the assembly codes generated for a given
 	//vm instruction.
 	const string cmd=instr.cmd; //short for command
@@ -207,14 +204,12 @@ vector<string> fconst(VMInstr instr){
 }
 
 vector<string> cconst(VMInstr instr){
-	
 	return {
 		"push dword '"+instr.arg1+"'	; cconst"		
 	};
 }
 
 vector<string> pop(VMInstr instr){
-
 	const int byte_offset_32_bit=4;
 
 	if(instr.arg1.compare("")==0 && instr.arg2.compare("")==0){

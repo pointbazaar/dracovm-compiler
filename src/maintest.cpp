@@ -96,7 +96,6 @@ int main(int argc, char* argv[]){
 	//TODO:
 
 	vector<bool> test_results = {
-
 		//arithmetic related (11)
 		test_fadd1(),	//0
 		test_fadd2(),	//1
@@ -190,8 +189,8 @@ int main(int argc, char* argv[]){
 		test_fleq2(),
 		test_fgeq1(),
 		test_fgeq2()
-		
 	};
+	
 	int i=0;
 	int passed = 0;
 	int failed = 0;
