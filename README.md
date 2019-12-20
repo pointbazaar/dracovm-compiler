@@ -9,6 +9,7 @@
 [![Open Source Love png2](https://badges.frapsoft.com/os/v2/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/pointbazaar/dracovm-compiler/graphs/commit-activity)
 [![Generic badge](https://img.shields.io/badge/emits-x86-gray.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/Batteries-included-green.svg)](https://shields.io/)
 
 DracoVM Language is a **stack based intermediate language**. Meaning it is not meant to be written by humans.
 
