@@ -610,7 +610,7 @@ vector<string> iexp(VMInstr instr){
 	//and is just called.
 
 	unsigned int seed=38293;
-	const string unique = to_string(rand(&seed));
+	const string unique = to_string(rand_r(&seed));
 
 	const string label_calc = ".iexp_calc"+unique;
 	const string label_end = ".iexp_end"+unique;
