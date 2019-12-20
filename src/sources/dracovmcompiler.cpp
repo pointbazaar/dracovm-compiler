@@ -116,7 +116,7 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 		//for understanding and debugging
 		cout << call1 << endl;
 
-		success &= WEXITSTATUS(system(call1.c_str())) == 0;
+		success = success & ( WEXITSTATUS(system(call1.c_str())) == 0 );
 
 		obj_files.push_back(obj_filename(filename));
 	}
