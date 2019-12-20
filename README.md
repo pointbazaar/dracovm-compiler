@@ -1,7 +1,7 @@
 # DracoVM Compiler
 
 [![Build Status](https://travis-ci.org/pointbazaar/dracovm-compiler.svg?branch=master)](https://travis-ci.org/pointbazaar/dracovm-compiler)
-
+[![CodeFactor](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler/badge)](https://www.codefactor.io/repository/github/pointbazaar/dracovm-compiler)
 
 DracoVM Language is a **stack based intermediate language**. Meaning it is not meant to be written by humans.
 
