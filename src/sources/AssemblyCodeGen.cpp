@@ -1,6 +1,7 @@
-#include <map>
+//#include <map>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include "VMInstr.hpp"
 #include "AssemblyCodeGen.hpp"
@@ -723,7 +724,8 @@ vector<string> _or(VMInstr instr){
 }
 
 vector<string> ieq(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=20;
+	const string unique = to_string(rand_r(&seed));
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
@@ -751,7 +753,8 @@ vector<string> ieq(VMInstr instr){
 
 
 vector<string> igt(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=30;
+	const string unique = to_string(rand_r(&seed));
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
@@ -779,7 +782,8 @@ vector<string> igt(VMInstr instr){
 
 vector<string> fgt(VMInstr instr){
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
-	const string unique = to_string(rand());
+	unsigned int seed=40;
+	const string unique = to_string(rand_r(&seed));
 	const string label_above = ".fgt_push"+unique;
 	const string label_end = ".fgt_end"+unique;
 	
@@ -807,7 +811,8 @@ vector<string> fgt(VMInstr instr){
 }
 
 vector<string> fleq(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=12;
+	const string unique = to_string(rand_r(&seed));
 	const string label_true = ".fleq_true"+unique;
 	const string label_end = ".fleq_end"+unique;
 	
@@ -835,7 +840,8 @@ vector<string> fleq(VMInstr instr){
 }
 
 vector<string> fgeq(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=48;
+	const string unique = to_string(rand_r(&seed));
 	const string label_true = ".fgeq_true"+unique;
 	const string label_end = ".fgeq_end"+unique;
 	
@@ -865,7 +871,8 @@ vector<string> fgeq(VMInstr instr){
 //https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
 
 vector<string> igeq(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=439;
+	const string unique = to_string(rand_r(&seed));
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
@@ -892,7 +899,8 @@ vector<string> igeq(VMInstr instr){
 }
 
 vector<string> ineq(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=47389;
+	const string unique = to_string(rand_r(&seed));
 
 	const string label_true = ".ineq_push"+unique;
 	const string label_end = ".ineq_end"+unique;
@@ -920,7 +928,8 @@ vector<string> ineq(VMInstr instr){
 
 
 vector<string> ilt(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=7237;
+	const string unique = to_string(rand_r(&seed));
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
@@ -947,10 +956,9 @@ vector<string> ilt(VMInstr instr){
 }
 
 vector<string> flt(VMInstr instr){
-
 	//https://gist.github.com/nikAizuddin/0e307cac142792dcdeba
-
-	const string unique = to_string(rand());
+	unsigned int seed=8293;
+	const string unique = to_string(rand_r(&seed));
 	const string label_less = ".flt_less"+unique;
 	const string label_end = ".flt_end"+unique;
 	
@@ -978,7 +986,8 @@ vector<string> flt(VMInstr instr){
 }
 
 vector<string> ileq(VMInstr instr){
-	const string unique = to_string(rand());
+	unsigned int seed=329;
+	const string unique = to_string(rand_r(&seed));
 
 	const string label_true = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
