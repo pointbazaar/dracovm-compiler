@@ -5,3 +5,7 @@ dracovmtest
 dracovm
 
 .**.asm
+
+dracovm-debug
+dracovm
+test
