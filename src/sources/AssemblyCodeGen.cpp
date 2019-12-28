@@ -83,8 +83,9 @@ vector<string> compile_vm_instr(VMInstr instr){
 	//vm instruction.
 	const string cmd=instr.cmd; //short for command
 
-	//DEBUG
-	//cout << "compile " << cmd << endl;
+	if(DEBUG){
+		cout << "compile '" << cmd << "'" << endl;
+	}
 
 	//create a map of function pointers
 	map<string,vector<string> (*)(VMInstr)> func_map;
