@@ -13,8 +13,9 @@ using namespace std;
 //https://c9x.me/x86/
 
 map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources){
-	//DEBUG
-	cout << "compile_vmcodes" << endl;
+	if(DEBUG){
+		cout << "AssemblyCodeGen::compile_vmcodes" << endl;
+	}
 	//parse vm instructions
 	map<string,vector<string>> results;
 
@@ -75,6 +76,9 @@ map<string,vector<string>> compile_vmcodes(map<string,vector<string>> vm_sources
 }
 
 vector<string> compile_vm_instr(VMInstr instr){
+	if(DEBUG){
+		cout << "AssemblyCodeGen::compile_vm_instr" << endl;
+	}
 	//returns the assembly codes generated for a given
 	//vm instruction.
 	const string cmd=instr.cmd; //short for command

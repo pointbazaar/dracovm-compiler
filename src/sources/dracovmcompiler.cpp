@@ -11,7 +11,9 @@
 using namespace std;
 
 bool compile_main(vector<string> filenames){
-	cout << "compile_main" << endl;
+	if(DEBUG){
+		cout << "dracovmcompiler::compile_main" << endl;
+	}
 
 	// from these filenames, check if each has 
 	// correct '.subroutine.dracovm' extension
@@ -80,8 +82,9 @@ bool compile_main(vector<string> filenames){
 bool compile_main2(map<string,vector<string>> vm_sources){
 	//https://eli.thegreenplace.net/2013/07/09/library-order-in-static-linking
 
-	//DEBUG
-	cout << "compile_main2" << endl;
+	if(DEBUG){
+		cout << "dracovmcompiler::compile_main2" << endl;
+	}
 
 	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
 
@@ -89,7 +92,10 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 
 	bool success=true;
 
-	cout << "call nasm to compile .asm files" << endl;
+	if(DEBUG){
+		cout << "call nasm to compile .asm files" << endl;
+	}
+
 	//write these asm codes to their respective files
 	for(auto const& entry : asm_codes){
 		string filename = entry.first;
@@ -113,15 +119,18 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 		//as this is what worked with my gdb
 		const string call1 = "nasm -f elf -F dwarf -g "+asm_filename(filename);
 		//for understanding and debugging
-		cout << call1 << endl;
+		if(DEBUG){
+			cout << call1 << endl;
+		}
 
 		int exit1 = WEXITSTATUS(system(call1.c_str())) ;
 		success &= exit1==0;
 		
 		obj_files.push_back(obj_filename(filename));
 	}
-
-	cout << "call nasm to compile builtin subroutines" << endl;
+	if(DEBUG){
+		cout << "call nasm to compile builtin subroutines" << endl;
+	}
 	{
 		//add the builtin subroutines
 		//every subroutine should have its own .asm file,
@@ -166,7 +175,9 @@ bool compile_main2(map<string,vector<string>> vm_sources){
 	//and specify the name of the excutable to be generated (-o main)
 	const string call2 = "ld -melf_i386 -o main "+join(obj_files," ");
 	//for understanding and debugging
-	cout << call2 << endl;
+	if(DEBUG){
+		cout << call2 << endl;
+	}
 
 	bool exitzero3 = ( WEXITSTATUS(system(call2.c_str()))==0);
 	success &= exitzero3;

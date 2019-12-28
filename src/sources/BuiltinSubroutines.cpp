@@ -28,6 +28,10 @@ using namespace std;
   const string SYS_MMAP   = "192";
 
 map<string,vector<string>> compile_builtin_subroutines(){
+	if(DEBUG){
+		cout << "BuiltinSubroutines::compile_builtin_subroutines" << endl;
+	}
+
 	map<string,vector<string>> asmcodes = {
 		{"Builtin_readchar",_readchar()},
 		{"Builtin_putchar",_putchar()},

@@ -8,7 +8,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+
 	cout << "- DRACOVM Compiler -" << endl;
+
 	const unsigned int nSubroutines = argc-1;
 
 	//parse files given as arguments:
@@ -26,10 +28,10 @@ int main(int argc, char* argv[]){
 	//compare to see if -help 
 	if(help_option.compare(argv[1])==0){
 		// print help and genereal info
-	cout << "USAGE: dracovm (FILE.subroutine.dracovm)*" << endl;
-	cout << "USAGE: dracovm -help " << endl;
-	cout << "AUTHOR: alex23667@gmail.com" << endl;
-	cout << "REPO: https://github.com/pointbazaar/dracovm-compiler" << endl;
+		cout << "USAGE: dracovm (FILE.subroutine.dracovm)*" << endl;
+		cout << "USAGE: dracovm -help " << endl;
+		cout << "AUTHOR: alex23667@gmail.com" << endl;
+		cout << "REPO: https://github.com/pointbazaar/dracovm-compiler" << endl;
 		exit(0);
 	}
 
@@ -53,14 +55,18 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
-	cout << "VM Code Files to compile: " << endl << endl;
+	if(DEBUG){
+		cout << "VM Code Files to compile: " << endl << endl;
+	}
 	
 	vector <string> filenames;
 
 	for(int i=1;i<argc;i++){
 		string filename = argv[i];
 		filenames.push_back(filename);
-		cout << " - " << filename << endl;
+		if(DEBUG){
+			cout << " - " << filename << endl;
+		}
 	}
 
 	cout << endl;
