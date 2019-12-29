@@ -522,7 +522,6 @@ vector<string> ieq(VMInstr instr){
 
 
 vector<string> igt(VMInstr instr){
-	//TODO
 	unsigned int seed=30;
 	const string unique = to_string(rand_r(&seed));
 
@@ -532,6 +531,23 @@ vector<string> igt(VMInstr instr){
 	return {
 		"",
 		"; igt:",
+		
+		"pop r16",
+		"pop r17",
+		
+		"cp r16,r17",
+		"brpl "+label_true,
+		
+		//case false:
+		"ldi r16,0",
+		"rjmp "+label_end,
+		
+		label_true+":",
+		"ldi r16,1",
+		
+		
+		label_end+":",
+		"push r16"
 	
 	};
 }
@@ -540,7 +556,6 @@ vector<string> igt(VMInstr instr){
 //https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
 
 vector<string> igeq(VMInstr instr){
-	//TODO
 	unsigned int seed=439;
 	const string unique = to_string(rand_r(&seed));
 
@@ -550,12 +565,28 @@ vector<string> igeq(VMInstr instr){
 	return {
 		"",
 		"; igeq:",
+		
+		"pop r16",
+		"pop r17",
+		
+		"cp r16,r17",
+		"brge "+label_true,
+		
+		//case false:
+		"ldi r16,0",
+		"rjmp "+label_end,
+		
+		label_true+":",
+		"ldi r16,1",
+		
+		
+		label_end+":",
+		"push r16"
 	
 	};
 }
 
 vector<string> ineq(VMInstr instr){
-	//TODO
 	unsigned int seed=47389;
 	const string unique = to_string(rand_r(&seed));
 
@@ -566,13 +597,27 @@ vector<string> ineq(VMInstr instr){
 		"",
 		"; ineq:",
 
-				
+		"pop r16",
+		"pop r17",
+		
+		"cp r16,r17",
+		"brne "+label_true,
+		
+		//case false:
+		"ldi r16,0",
+		"rjmp "+label_end,
+		
+		label_true+":",
+		"ldi r16,1",
+		
+		
+		label_end+":",
+		"push r16"
 	};
 }
 
 
 vector<string> ilt(VMInstr instr){
-	//TODO
 	unsigned int seed=7237;
 	const string unique = to_string(rand_r(&seed));
 
@@ -583,69 +628,99 @@ vector<string> ilt(VMInstr instr){
 		"",
 		"; ilt:",
 
-			
+		"pop r16",
+		"pop r17",
+		
+		"cp r16,r17",
+		"brlo "+label_true,
+		
+		//case false:
+		"ldi r16,0",
+		"rjmp "+label_end,
+		
+		label_true+":",
+		"ldi r16,1",
+		
+		
+		label_end+":",
+		"push r16"
 	};
 }
 
 
 vector<string> ileq(VMInstr instr){
-	//TODO
 	unsigned int seed=329;
 	const string unique = to_string(rand_r(&seed));
 
-	const string label_true = ".eq_push"+unique;
+	const string label_false = ".eq_push"+unique;
 	const string label_end = ".eq_end"+unique;
 
 	return {
 		"",
 		"; ileq:",
 
-			
+		"pop r16",
+		"pop r17",
+		
+		"cp r16,r17",
+		"brpl "+label_false,
+		
+		//case true:
+		"ldi r16,1",
+		"rjmp "+label_end,
+		
+		label_false+":",
+		"ldi r16,0",
+		
+		
+		label_end+":",
+		"push r16"
 	};
 }
 
 
 vector<string> inc(const VMInstr instr){
-	//TODO
 	//increments the value on top of stack
 	
 	return {
-		
+		"pop r16",
+		"inc r16",
+		"push r16"
 	};
 }
 
 vector<string> dec(VMInstr instr){
-	//TODO
 	//decrements the value on top of stack
 
 	return {
-		
+		"pop r16",
+		"dec r16",
+		"push r16"
 	};
 }
 
 vector<string> _goto(VMInstr instr){
-	//TODO
 	const string label = instr.arg1;
 	return {
-		"",
-		"; goto:",
 
-		"jmp "+label
+		"rjmp "+label
 	};
 }
 
 vector<string> if_goto(VMInstr instr){
-	//TODO
 	const string subr_name = instr.arg1;
 	return {
 		"",
 		"; if-goto:",
-
+		
+		"pop r16",
+		
+		"cpi r16, 0x01",
+		"breq "+subr_name
 	};
 }
 
 vector<string> label(VMInstr instr){
-	//TODO
 	const string label=instr.arg1;
 	return {
 		label+":"
@@ -688,57 +763,28 @@ vector<string> arrayread(VMInstr instr){
 }
 
 vector<string> lshiftl(VMInstr instr){
-	//TODO
-	
-	const string comment = "	;lshiftl";
 	const vector<string> res{
 		"",
 		"; lshiftl:",
-
 		
+		"pop r16",
+		"lsl r16",
+		"push r16"
 	};
 	return res;
 }
 
 vector<string> lshiftr(VMInstr instr){
-	//TODO
-	
-	const string comment = "	;lshiftl";
 	const vector<string> res{
 		"",
 		"; lshiftr:",
 
-		
+		"pop r16",
+		"lsr r16",
+		"push r16"
 	};
 	return res;
 }
 
-vector<string> ror(VMInstr instr){
-	//TODO
-	
-	//example: ror 3
-	//rotates the bits of the element on top of stack to the right by the specified amount of bits
-	string n = instr.arg1;
-
-	return {
-		"",
-		"; ror:",
-		
-	};
-}
-
-vector<string> rol(VMInstr instr){
-	//TODO
-	
-	//example: rol 3
-	//rotates the bits of the element on top of stack to the left by the specified amount of bits
-	string n = instr.arg1;
-	
-	return {
-		"",
-		"; rol:",
-		
-	};
-}
 
 }

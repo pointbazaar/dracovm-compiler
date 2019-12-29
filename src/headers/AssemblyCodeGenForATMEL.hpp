@@ -88,10 +88,6 @@ std::vector<std::string> arrayread(VMInstr instr);
 std::vector<std::string> lshiftl(VMInstr instr);
 std::vector<std::string> lshiftr(VMInstr instr);
 
-//bit rotations: rotate left, rotate right
-std::vector<std::string> ror(VMInstr instr);
-std::vector<std::string> rol(VMInstr instr);
-
 }
 
 #endif
