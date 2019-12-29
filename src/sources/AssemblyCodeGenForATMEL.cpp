@@ -157,22 +157,22 @@ vector<string> compile_vm_instr(VMInstr instr){
 	}
 }
 
-//			VMInstr Compilation subroutines:
+// ---- VMInstr Compilation subroutines -----
 
 vector<string> iconst(VMInstr instr){
-	//TODO
-
 	const int i = stoi(instr.arg1);
 	return {
-		
+		"ldi r16, "+to_string(i),
+		"push r16"
 	};
 }
 
 
 vector<string> cconst(VMInstr instr){
-	//TODO
+	const int i= (int)(instr.arg1[0]);
 	return {
-		
+		"ldi r16, "+to_string(i),
+		"push r16"
 	};
 }
 
