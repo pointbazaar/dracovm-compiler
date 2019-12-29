@@ -290,11 +290,15 @@ vector<string> dup(VMInstr instr){
 }
 
 vector<string> swap(VMInstr instr){
-	//TODO
+	
 	//swaps the 2 values on top of stack
 	return {
 		"",
-		"; swap:"
+		"; swap:",
+		"pop r16",
+		"pop r17",
+		"push r16",
+		"push r17"
 	};
 }
 
@@ -347,58 +351,61 @@ vector<string> subroutine(VMInstr instr){
 }
 
 vector<string> call(VMInstr instr){
-	//TODO
 	string subr_name = instr.arg1;
 	return {
-		"",
-		"; call:",
-
-		
+		"rcall "+subr_name
 	};
 }
 
 vector<string> _return(VMInstr instr){
-	//TODO
 	return {
 		"ret"
 	};
 }
 
 vector<string> _exit(VMInstr instr){
-	//TODO
+	//because we have no OS, 
+	//we cannot really exit. as far as i know.
 	return {
 		"",
 		"; exit:",
+		"exit:",
+		"rjmp exit"
 
 	};
 }
-//https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
 //<3 data sheets
 
-//https://stackoverflow.com/questions/37775144/how-to-load-the-value-stored-in-extended-registereax-into-st0-of-floating-poin
-
-
 vector<string> iadd(VMInstr instr){
-	//TODO
 	return {
 		"",
-		";  iadd : "
+		";  iadd : ",
+		"pop r16",
+		"pop r17",
+		"add r16, r17",
+		"push r16"
 	};
 }
 
 vector<string> isub(VMInstr instr){
-	//TODO
 	return {
 		"",
-		";	isub: "
+		";	isub: ",
+		"pop r16",
+		"pop r17",
+		"sub r17, r16",
+		"push r17"
 	};
 }
 
 vector<string> imul(VMInstr instr){
-	//TODO
 	return {
 		"",
-		"; imul:"
+		"; imul:",
+		"pop r16",
+		"pop r17",
+		"muls r16,r17",
+		"push r16"
 	};
 }
 
@@ -406,69 +413,81 @@ vector<string> idiv(VMInstr instr){
 	//TODO
 	return {
 		"",
-		"; idiv:"
-	};
-}
-
-vector<string> iexp(VMInstr instr){
-	//TODO
-
-	unsigned int seed=38293;
-	const string unique = to_string(rand_r(&seed));
-
-	const string label_calc = ".iexp_calc"+unique;
-	const string label_end = ".iexp_end"+unique;
-
-	return {
-		"",
-		"; iexp:"
+		"; idiv:",
+		
+		"pop r16",
+		"pop r17"
 	};
 }
 
 vector<string> imod(VMInstr instr){
-	//TODO
+	//https://www.mikrocontroller.net/topic/23001
+	
 	return {
 		"",
-		"; imod: "
+		"; imod: ",
+		"pop r16",
+		"pop r17",
+		
+		"dec r16",
+		"and r17, r16",
+		
+		"push r17"	//push our result
 	};
 }
 
 vector<string> ineg(VMInstr instr){
-	//TODO
 	return {
 		"",
-		"; ineg:"
+		"; ineg:",
+		"pop r16",
+		"neg r16",
+		"push r16"
 	};
 }
 
 vector<string> _and(VMInstr instr){
-	//TODO
 	return {
 		"",
-		"; and:"
+		"; and:",
+		
+		"pop r16",
+		"pop r17",
+		
+		"and r16,r17",
+		"push r16"
 	};
 }
 
 vector<string> _not(VMInstr instr){
-	//TODO
 	//logical not
     
 	const vector<string> res{
 		"",
 		"; not:",
-
+		
+		"pop r16",
+		
+		"com r16",
+		
+		"push r16"
 		
 	};
 	return res;
 }
 
 vector<string> _or(VMInstr instr){
-	//TODO
+	//logical or
 	return {
 		"",
 		"; or: ",
-
-			
+		
+		"pop r16",
+		"pop r17",
+		
+		"or r16,r17",
+		
+		"push r16"
 	};
 }
 
@@ -484,7 +503,7 @@ vector<string> ieq(VMInstr instr){
 		"",
 		"; ieq:",
 
-			
+		
 	};
 }
 
