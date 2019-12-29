@@ -4,6 +4,8 @@
 class VMInstr;
 
 namespace AssemblyCodeGenForATMEL{
+	
+const int byte_offset_8_bit = 1;
 
 std::map<std::string,std::vector<std::string>> compile_vmcodes_atmel(std::map<std::string,std::vector<std::string>> vm_sources);
 
@@ -32,7 +34,6 @@ std::vector<std::string> _exit(VMInstr instr);
 std::vector<std::string> iadd(VMInstr instr);
 std::vector<std::string> isub(VMInstr instr);
 std::vector<std::string> imul(VMInstr instr);
-std::vector<std::string> idiv(VMInstr instr);
 std::vector<std::string> imod(VMInstr instr);
 std::vector<std::string> ineg(VMInstr instr);
 

@@ -40,12 +40,13 @@ map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_s
 
 
 		//add startup codes
-		asm_cmds.push_back("section .text");
-		asm_cmds.push_back("global _start");
+		asm_cmds.push_back(".include \"m32def.inc\"");
 
 		//define our own subroutine label as global,
 		//so it can be correctly linked
-		asm_cmds.push_back("global "+subr_name);
+		
+		//asm_cmds.push_back("global "+subr_name);
+		
 		//TODO: define the external labels that 
 		//might be jumped to, but are not in this file
 		for(auto const& vmcmd : vmcodes){
@@ -54,7 +55,8 @@ map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_s
 				instr.cmd.compare("call")==0
 				|| instr.cmd.compare("pushsubroutine")==0
 			){
-				asm_cmds.push_back("extern "+instr.arg1);
+				//TODO: worry about it later
+				//asm_cmds.push_back("extern "+instr.arg1);
 			}
 		}
 
@@ -102,17 +104,11 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["swap"]=swap;
 	func_map["dup"]=dup;
 	
-	//these 2 will probably not be implemented,
-	//as i found no matching instruction in the book.
-	//also, they are not very important
-	//func_map["fneq"]=fneq;//not implemented
-	//func_map["feq"]=feq;	//not implemented
 	//integer arithmetic
 	func_map["iadd"]=iadd;
 	func_map["isub"]=isub;
 	func_map["imod"]=imod;
 	func_map["imul"]=imul;
-	func_map["idiv"]=idiv;
 
 	func_map["dec"]=dec;
 	func_map["inc"]=inc;
@@ -177,12 +173,11 @@ vector<string> cconst(VMInstr instr){
 
 vector<string> pop(VMInstr instr){
 	//TODO
-	const int byte_offset_32_bit=4;
 
 	if(instr.arg1.compare("")==0 && instr.arg2.compare("")==0){
 		//simply pop the value to discard it
 		return {
-			
+			"pop r16"
 		};
 	}
 
@@ -199,11 +194,11 @@ vector<string> pop(VMInstr instr){
 			"mov eax,ebp",
 
 			//eax-=1
-			"mov ebx,"+to_string(byte_offset_32_bit),
+			"mov ebx,"+to_string(byte_offset_8_bit),
 			"sub eax,ebx",
 
 			//eax-=index
-			"mov ebx,"+to_string(index*byte_offset_32_bit),
+			"mov ebx,"+to_string(index*byte_offset_8_bit),
 			"sub eax,ebx",
 
 			"pop ebx",
@@ -216,10 +211,10 @@ vector<string> pop(VMInstr instr){
 			"",
 			"; pop ARG "+to_string(index),
 			
-			"mov eax,"+to_string(2*byte_offset_32_bit),
+			"mov eax,"+to_string(2*byte_offset_8_bit),
 
 			"add eax,ebp",
-			"add eax,"+to_string(index*byte_offset_32_bit),
+			"add eax,"+to_string(index*byte_offset_8_bit),
 
 			"pop ebx",
 
@@ -235,7 +230,6 @@ vector<string> push(VMInstr instr){
 	//TODO
 	const string segment = instr.arg1;
 	const int index = stoi(instr.arg2);
-	const int byte_offset_32_bit=4;
 
 	if(segment.compare("LOCAL")==0){
 		//locals are on the stack in order
@@ -248,10 +242,10 @@ vector<string> push(VMInstr instr){
 			
 			"mov eax,ebp",
 			
-			"mov ebx,"+to_string(byte_offset_32_bit),
+			"mov ebx,"+to_string(byte_offset_8_bit),
 			"sub eax,ebx",
 
-			"mov ebx,"+to_string(index*byte_offset_32_bit),
+			"mov ebx,"+to_string(index*byte_offset_8_bit),
 			"sub eax,ebx",
 			
 			"mov eax,[eax]",
@@ -267,9 +261,9 @@ vector<string> push(VMInstr instr){
 			"",
 			"; push ARG "+to_string(index),
 
-			"mov eax,"+to_string(2*byte_offset_32_bit),
+			"mov eax,"+to_string(2*byte_offset_8_bit),
 			"add eax,ebp",
-			"add eax,"+to_string(index*byte_offset_32_bit),
+			"add eax,"+to_string(index*byte_offset_8_bit),
 
 			"mov eax,[eax]",
 			
@@ -322,10 +316,10 @@ vector<string> subroutine(VMInstr instr){
 			full_name+":",
 
 			//fake return address for main
-			"mov eax,0",
-			"push eax",
+			"ldi r16,0",
+			"push r16",
 
-			//*
+			//TODO: find ebp 
 			"mov ebp,esp"
 		};
 	}else{
@@ -338,12 +332,12 @@ vector<string> subroutine(VMInstr instr){
 
 			"push ebp",
 			//swap
-			"pop ebx",
-			"pop eax",
-			"push ebx",
-			"push eax",
+			"pop r16",
+			"pop r17",
+			"push r16",
+			"push r17",
 
-			//*
+			//TODO
 			"mov ebp,esp"
 		};
 	}
@@ -408,16 +402,6 @@ vector<string> imul(VMInstr instr){
 	};
 }
 
-vector<string> idiv(VMInstr instr){
-	//TODO
-	return {
-		"",
-		"; idiv:",
-		
-		"pop r16",
-		"pop r17"
-	};
-}
 
 vector<string> imod(VMInstr instr){
 	//https://www.mikrocontroller.net/topic/23001
@@ -729,7 +713,6 @@ vector<string> label(VMInstr instr){
 
 vector<string> arraystore(VMInstr instr){
 	//TODO
-	const int byte_offset_32_bit = 4;
 	return {
 		"",
 		"; arraystore:",
@@ -754,7 +737,6 @@ vector<string> arrayread(VMInstr instr){
 	meaning this vm command reads from the array at the specified index,
 	and places the value on top of the stack
 	*/
-	const int byte_offset_32_bit = 4;
 	return {
 		"",
 		";arrayread:",
