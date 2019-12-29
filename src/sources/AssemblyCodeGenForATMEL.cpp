@@ -76,7 +76,7 @@ map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_s
 
 vector<string> compile_vm_instr(VMInstr instr){
 	if(DEBUG){
-		cout << "AssemblyCodeGen::compile_vm_instr" << endl;
+		cout << "AssemblyCodeGenForATMEL::compile_vm_instr" << endl;
 	}
 	//returns the assembly codes generated for a given
 	//vm instruction.
@@ -160,28 +160,30 @@ vector<string> compile_vm_instr(VMInstr instr){
 //			VMInstr Compilation subroutines:
 
 vector<string> iconst(VMInstr instr){
-	//cout << "DEBUG " << instr.arg1 << " stoi" << endl << flush;
+	//TODO
 
 	const int i = stoi(instr.arg1);
 	return {
-		"push dword "+to_string(i)+"	; iconst"
+		
 	};
 }
 
 
 vector<string> cconst(VMInstr instr){
+	//TODO
 	return {
-		"push dword '"+instr.arg1+"'	; cconst"		
+		
 	};
 }
 
 vector<string> pop(VMInstr instr){
+	//TODO
 	const int byte_offset_32_bit=4;
 
 	if(instr.arg1.compare("")==0 && instr.arg2.compare("")==0){
 		//simply pop the value to discard it
 		return {
-			"pop eax"
+			
 		};
 	}
 
@@ -231,6 +233,7 @@ vector<string> pop(VMInstr instr){
 }
 
 vector<string> push(VMInstr instr){
+	//TODO
 	const string segment = instr.arg1;
 	const int index = stoi(instr.arg2);
 	const int byte_offset_32_bit=4;
@@ -280,12 +283,14 @@ vector<string> push(VMInstr instr){
 }
 
 vector<string> dup(VMInstr instr){
+	//TODO
 	return {
 		""
 	};
 }
 
 vector<string> swap(VMInstr instr){
+	//TODO
 	//swaps the 2 values on top of stack
 	return {
 		"",
@@ -294,6 +299,7 @@ vector<string> swap(VMInstr instr){
 }
 
 vector<string> subroutine(VMInstr instr){
+	//TODO
 	const string full_name = instr.arg1;
 	const string subr_name = full_name.substr(full_name.find("_")+1);
 	//   *
@@ -341,6 +347,7 @@ vector<string> subroutine(VMInstr instr){
 }
 
 vector<string> call(VMInstr instr){
+	//TODO
 	string subr_name = instr.arg1;
 	return {
 		"",
@@ -351,12 +358,14 @@ vector<string> call(VMInstr instr){
 }
 
 vector<string> _return(VMInstr instr){
+	//TODO
 	return {
 		"ret"
 	};
 }
 
 vector<string> _exit(VMInstr instr){
+	//TODO
 	return {
 		"",
 		"; exit:",
@@ -368,12 +377,9 @@ vector<string> _exit(VMInstr instr){
 
 //https://stackoverflow.com/questions/37775144/how-to-load-the-value-stored-in-extended-registereax-into-st0-of-floating-poin
 
-//cerr << "NOT IMPLEMENTED" << endl;
-//exit(1);
-
 
 vector<string> iadd(VMInstr instr){
-	
+	//TODO
 	return {
 		"",
 		";  iadd : "
@@ -381,6 +387,7 @@ vector<string> iadd(VMInstr instr){
 }
 
 vector<string> isub(VMInstr instr){
+	//TODO
 	return {
 		"",
 		";	isub: "
@@ -388,6 +395,7 @@ vector<string> isub(VMInstr instr){
 }
 
 vector<string> imul(VMInstr instr){
+	//TODO
 	return {
 		"",
 		"; imul:"
@@ -395,6 +403,7 @@ vector<string> imul(VMInstr instr){
 }
 
 vector<string> idiv(VMInstr instr){
+	//TODO
 	return {
 		"",
 		"; idiv:"
@@ -402,10 +411,7 @@ vector<string> idiv(VMInstr instr){
 }
 
 vector<string> iexp(VMInstr instr){
-	//calculates the powers.
-	//this could also be implemented as an assembly subroutine
-	//which is just added to every executable,
-	//and is just called.
+	//TODO
 
 	unsigned int seed=38293;
 	const string unique = to_string(rand_r(&seed));
@@ -420,7 +426,7 @@ vector<string> iexp(VMInstr instr){
 }
 
 vector<string> imod(VMInstr instr){
-	//https://stackoverflow.com/questions/8021772/assembly-language-how-to-do-modulo
+	//TODO
 	return {
 		"",
 		"; imod: "
@@ -428,6 +434,7 @@ vector<string> imod(VMInstr instr){
 }
 
 vector<string> ineg(VMInstr instr){
+	//TODO
 	return {
 		"",
 		"; ineg:"
@@ -435,6 +442,7 @@ vector<string> ineg(VMInstr instr){
 }
 
 vector<string> _and(VMInstr instr){
+	//TODO
 	return {
 		"",
 		"; and:"
@@ -442,9 +450,9 @@ vector<string> _and(VMInstr instr){
 }
 
 vector<string> _not(VMInstr instr){
+	//TODO
 	//logical not
-    //https://www.tutorialspoint.com/assembly_programming/assembly_logical_instructions.htm
-
+    
 	const vector<string> res{
 		"",
 		"; not:",
@@ -455,6 +463,7 @@ vector<string> _not(VMInstr instr){
 }
 
 vector<string> _or(VMInstr instr){
+	//TODO
 	return {
 		"",
 		"; or: ",
@@ -464,6 +473,7 @@ vector<string> _or(VMInstr instr){
 }
 
 vector<string> ieq(VMInstr instr){
+	//TODO
 	unsigned int seed=20;
 	const string unique = to_string(rand_r(&seed));
 
@@ -480,6 +490,7 @@ vector<string> ieq(VMInstr instr){
 
 
 vector<string> igt(VMInstr instr){
+	//TODO
 	unsigned int seed=30;
 	const string unique = to_string(rand_r(&seed));
 
@@ -497,6 +508,7 @@ vector<string> igt(VMInstr instr){
 //https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
 
 vector<string> igeq(VMInstr instr){
+	//TODO
 	unsigned int seed=439;
 	const string unique = to_string(rand_r(&seed));
 
@@ -511,6 +523,7 @@ vector<string> igeq(VMInstr instr){
 }
 
 vector<string> ineq(VMInstr instr){
+	//TODO
 	unsigned int seed=47389;
 	const string unique = to_string(rand_r(&seed));
 
@@ -527,6 +540,7 @@ vector<string> ineq(VMInstr instr){
 
 
 vector<string> ilt(VMInstr instr){
+	//TODO
 	unsigned int seed=7237;
 	const string unique = to_string(rand_r(&seed));
 
@@ -543,6 +557,7 @@ vector<string> ilt(VMInstr instr){
 
 
 vector<string> ileq(VMInstr instr){
+	//TODO
 	unsigned int seed=329;
 	const string unique = to_string(rand_r(&seed));
 
@@ -559,6 +574,7 @@ vector<string> ileq(VMInstr instr){
 
 
 vector<string> inc(const VMInstr instr){
+	//TODO
 	//increments the value on top of stack
 	
 	return {
@@ -567,6 +583,7 @@ vector<string> inc(const VMInstr instr){
 }
 
 vector<string> dec(VMInstr instr){
+	//TODO
 	//decrements the value on top of stack
 
 	return {
@@ -575,6 +592,7 @@ vector<string> dec(VMInstr instr){
 }
 
 vector<string> _goto(VMInstr instr){
+	//TODO
 	const string label = instr.arg1;
 	return {
 		"",
@@ -585,6 +603,7 @@ vector<string> _goto(VMInstr instr){
 }
 
 vector<string> if_goto(VMInstr instr){
+	//TODO
 	const string subr_name = instr.arg1;
 	return {
 		"",
@@ -594,6 +613,7 @@ vector<string> if_goto(VMInstr instr){
 }
 
 vector<string> label(VMInstr instr){
+	//TODO
 	const string label=instr.arg1;
 	return {
 		label+":"
@@ -601,6 +621,7 @@ vector<string> label(VMInstr instr){
 }
 
 vector<string> arraystore(VMInstr instr){
+	//TODO
 	const int byte_offset_32_bit = 4;
 	return {
 		"",
@@ -611,6 +632,8 @@ vector<string> arraystore(VMInstr instr){
 }
 
 vector<string> arrayread(VMInstr instr){
+	//TODO
+	
 	/*
 	arrayread, stack looks like:
 	|undefined
@@ -633,6 +656,8 @@ vector<string> arrayread(VMInstr instr){
 }
 
 vector<string> lshiftl(VMInstr instr){
+	//TODO
+	
 	const string comment = "	;lshiftl";
 	const vector<string> res{
 		"",
@@ -644,6 +669,8 @@ vector<string> lshiftl(VMInstr instr){
 }
 
 vector<string> lshiftr(VMInstr instr){
+	//TODO
+	
 	const string comment = "	;lshiftl";
 	const vector<string> res{
 		"",
@@ -655,6 +682,8 @@ vector<string> lshiftr(VMInstr instr){
 }
 
 vector<string> ror(VMInstr instr){
+	//TODO
+	
 	//example: ror 3
 	//rotates the bits of the element on top of stack to the right by the specified amount of bits
 	string n = instr.arg1;
@@ -667,6 +696,8 @@ vector<string> ror(VMInstr instr){
 }
 
 vector<string> rol(VMInstr instr){
+	//TODO
+	
 	//example: rol 3
 	//rotates the bits of the element on top of stack to the left by the specified amount of bits
 	string n = instr.arg1;
