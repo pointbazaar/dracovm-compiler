@@ -11,8 +11,19 @@ using namespace std;
 
 namespace AssemblyCodeGenForATMEL{
 
-//https://en.wikipedia.org/wiki/X86_instruction_listings
-//https://c9x.me/x86/
+/*
+ The ATMEL AVR microcontrollers start at 
+ 8 bit controllers AFAIK.
+ 
+The Controller simulated by MDX
+is also an 8 bit controller.
+We want to have pointers as 
+arguments and local variables.
+These pointers most of the time
+do not fit into 8 bit.
+Therefore we aligned everything to be 16 bit
+
+*/
 
 map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_sources){
 	
@@ -41,6 +52,12 @@ map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_s
 
 		//add startup codes
 		asm_cmds.push_back(".include \"m32def.inc\"");
+		
+		//init stack pointer
+		asm_cmds.push_back("ldi r16, LOW(RAMEND)");
+		asm_cmds.push_back("out SPL, r16");
+		asm_cmds.push_back("ldi r16, HIGH(RAMEND)");
+		asm_cmds.push_back("out SPH, r16");
 
 		//define our own subroutine label as global,
 		//so it can be correctly linked
