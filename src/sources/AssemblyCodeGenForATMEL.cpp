@@ -113,7 +113,6 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["imod"]=imod;
 	func_map["imul"]=imul;
 	func_map["idiv"]=idiv;
-	func_map["iexp"]=iexp;
 
 	func_map["dec"]=dec;
 	func_map["inc"]=inc;
@@ -492,7 +491,6 @@ vector<string> _or(VMInstr instr){
 }
 
 vector<string> ieq(VMInstr instr){
-	//TODO
 	unsigned int seed=20;
 	const string unique = to_string(rand_r(&seed));
 
@@ -502,8 +500,23 @@ vector<string> ieq(VMInstr instr){
 	return {
 		"",
 		"; ieq:",
-
 		
+		"pop r16",
+		"pop r17",
+		
+		"cp r16,r17",
+		"breq "+label_true,
+		
+		//case false:
+		"ldi r16,0",
+		"rjmp "+label_end,
+		
+		label_true+":",
+		"ldi r16,1",
+		
+		
+		label_end+":",
+		"push r16"
 	};
 }
 
