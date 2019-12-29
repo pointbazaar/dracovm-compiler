@@ -5,11 +5,27 @@ class VMInstr;
 
 namespace AssemblyCodeGenForATMEL{
 	
+//common registers used for calculations:
+//r16,r17,r18
+	
+//this register can change any instruction
+const string tmp_reg = " r19 ";
+
+//Registers X,Y,Z use r26 to r31
+
+//Z is used as base pointer for our stackframe
+const string baseptr_low = " ZL ";
+const string baseptr_high = " ZH ";
+
 const int byte_offset_8_bit = 1;
 
 std::map<std::string,std::vector<std::string>> compile_vmcodes_atmel(std::map<std::string,std::vector<std::string>> vm_sources);
 
 std::vector<std::string> compile_vm_instr(VMInstr instr);
+
+//for our 16 bit alignment:
+std::string push_0();
+std::string pop_0();
 
 //subroutines for translating individual VM Instructions
 
@@ -80,10 +96,6 @@ std::vector<std::string> dec(VMInstr instr);
 std::vector<std::string> _goto(VMInstr instr);
 std::vector<std::string> if_goto(VMInstr instr);
 std::vector<std::string> label(VMInstr instr);
-
-//array related
-std::vector<std::string> arraystore(VMInstr instr);
-std::vector<std::string> arrayread(VMInstr instr);
 
 //bit shifting, logical
 std::vector<std::string> lshiftl(VMInstr instr);

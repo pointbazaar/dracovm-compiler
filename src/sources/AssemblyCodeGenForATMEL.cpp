@@ -23,6 +23,22 @@ These pointers most of the time
 do not fit into 8 bit.
 Therefore we aligned everything to be 16 bit
 
+after pushing any 8 bit value, we push 0
+before popping any 8 bit value, we pop and dump.
+* 
+
+when a pointer is on stack,
+the low byte of the pointer should be above
+the high byte of the pointer.
+ 
+STACK (example) (stack grows down)
+|-----
+|8 bit value  <- value low
+|0			  <- value high (always 0 for 8 bit value)
+|-----
+|XL	<- pointer low
+|XH
+|-----
 */
 
 map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_sources){
@@ -150,10 +166,6 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["exit"]=_exit;
 	func_map["label"]=label;
 
-	//array related
-	func_map["arrayread"]=arrayread;
-	func_map["arraystore"]=arraystore;
-
 	//logic
 	func_map["and"]=_and;
 	func_map["or"]=_or;
@@ -171,11 +183,21 @@ vector<string> compile_vm_instr(VMInstr instr){
 
 // ---- VMInstr Compilation subroutines -----
 
+string push_0(){
+	return 
+	"ldi r19, 0 \npush r19 ";
+}
+
+string pop_0(){
+	return "pop r19";
+}
+
 vector<string> iconst(VMInstr instr){
 	const int i = stoi(instr.arg1);
 	return {
 		"ldi r16, "+to_string(i),
-		"push r16"
+		"push r16",
+		push_0()
 	};
 }
 
@@ -184,107 +206,169 @@ vector<string> cconst(VMInstr instr){
 	const int i= (int)(instr.arg1[0]);
 	return {
 		"ldi r16, "+to_string(i),
-		"push r16"
+		"push r16",
+		push_0()
 	};
 }
 
 vector<string> pop(VMInstr instr){
-	//TODO
-
 	if(instr.arg1.compare("")==0 && instr.arg2.compare("")==0){
 		//simply pop the value to discard it
 		return {
+			pop_0(),
 			"pop r16"
 		};
 	}
-
 	const string segment = instr.arg1;
 	const int index      = stoi(instr.arg2);
-
 	if(segment.compare("LOCAL")==0){
-		//ebp is on the caller's retun address, with the local variable below
-
+		//base pointer is on the caller's retun address, with the local variable below
+		//subs. eax=X, ebx=Y
+		
 		return {
 			"",
 			"; pop LOCAL "+to_string(index),
 			
-			"mov eax,ebp",
+			"mov XL,"+baseptr_low,
+			"mov XH,"+baseptr_high,
 
-			//eax-=1
-			"mov ebx,"+to_string(byte_offset_8_bit),
-			"sub eax,ebx",
+			//X-=1
+			"ldi YL,"+to_string(byte_offset_8_bit),
+			"ldi YH, 0",
+			
+			//just calc for XL,YL, 
+			//as it is small difference
+			"sub XL,YL",
 
-			//eax-=index
-			"mov ebx,"+to_string(index*byte_offset_8_bit),
-			"sub eax,ebx",
+			//X-=index
+			"ldi YL,"+to_string(index*byte_offset_8_bit),
+			"ldi YH,0",
+			
+			//just calc for XL,YL, 
+			//as it is small difference
+			"sub XL,YL",
 
-			"pop ebx",
-			"mov [eax],ebx"
+			"pop YH",
+			"pop YL",
+			
+			"st X+, YL", //mov [X], YL;  X++
+			"st X, YH",
 		};
 	}else if(segment.compare("ARG")==0){
-		//ebp is on the caller's return address, with the arguments above
-		
+		//base pointer is on the caller's return address, with the arguments above
+		//subs. eax=X, ebx=Y
 		return {
 			"",
 			"; pop ARG "+to_string(index),
 			
-			"mov eax,"+to_string(2*byte_offset_8_bit),
+			"ldi XH,0",
+			"ldi XL,"+to_string(2*byte_offset_8_bit),
 
-			"add eax,ebp",
-			"add eax,"+to_string(index*byte_offset_8_bit),
+			//"add eax,ebp",
+			//X is not going to have high value
+			//use Y to save XL
+			"mov YL,XL",
+			"mov XL, "+baseptr_low,
+			"mov XH, "+baseptr_low,
+			//add saved XL
+			"add XL,YL",
+			
+			//http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
+			"adiw X,"+to_string(index*byte_offset_8_bit),
 
-			"pop ebx",
+			//"pop ebx",
+			"pop YH",
+			"pop YL",
 
-			"mov [eax],ebx"
+			//"mov [eax],ebx"
+			"st X+, YL", //mov [X], YL;  X++
+			"st X, YH",
 		};
 	}else{
-		cerr << "FATAL (AssemblyCodeGen.cpp) , instr: " << segment << endl;
+		cerr << "FATAL (AssemblyCodeGenForATMEL.cpp) , instr: " << segment << endl;
 		exit(1);
 	}
 }
 
 vector<string> push(VMInstr instr){
-	//TODO
+	
 	const string segment = instr.arg1;
 	const int index = stoi(instr.arg2);
 
 	if(segment.compare("LOCAL")==0){
 		//locals are on the stack in order
-		//ebp is on the caller's return address, with the local variables below
+		//base pointer is on the caller's return address, with the local variables below
 
-		//eax=ebp-index-1
+		//eax=base_pointer - index - 1
+		//subs. eax=X, ebx=Y
 		return {
 			"",
 			";	push LOCAL "+to_string(index),
 			
-			"mov eax,ebp",
+			//"mov eax,ebp",
+			"mov XL,"+baseptr_low,
+			"mov XH,"+baseptr_high,
 			
-			"mov ebx,"+to_string(byte_offset_8_bit),
-			"sub eax,ebx",
+			//"mov ebx,"+to_string(byte_offset_8_bit),
+			"ldi YH,0",
+			"ldi YL,"+to_string(byte_offset_8_bit),
+			
+			//"sub eax,ebx",
+			"sub XL, YL",
+			"subc XH, YH",
 
-			"mov ebx,"+to_string(index*byte_offset_8_bit),
-			"sub eax,ebx",
+			//"mov ebx,"+to_string(index*byte_offset_8_bit),
+			"ldi YH,0",
+			"ldi YL,"+to_string(index*byte_offset_8_bit),
 			
-			"mov eax,[eax]",
-			"push eax"
+			//"sub eax,ebx",
+			"sub XL, YL",
+			"subc XH, YH",
+			
+			//"mov eax,[eax]",
+			"ld r16, X+",	//X+ is postincrement
+			"ld r17, X",
+			"mov XL,r16",
+			"mov XH,r17",
+			
+			//"push eax"
+			"push XL",
+			"push XH"
 		};
 	}else if(segment.compare("ARG")==0){
+		//TODO
 		//arguments are on the stack in reverse order
-		//ebp is on the caller's return address, with the arguments above
+		//base pointer is on the caller's return address, with the arguments above
 		
-		//eax=ebp+index+2*(4 byte)
-
+		//eax=base pointer +index+2*(4 byte)
+		//subs. eax=X, ebx=Y
 		return {
 			"",
 			"; push ARG "+to_string(index),
 
-			"mov eax,"+to_string(2*byte_offset_8_bit),
-			"add eax,ebp",
-			"add eax,"+to_string(index*byte_offset_8_bit),
-
-			"mov eax,[eax]",
+			//"mov eax,"+to_string(2*byte_offset_8_bit),
+			"ldi XL,"+to_string(2*byte_offset_8_bit),
+			"ldi XH,0",
 			
-			"push eax"
+			//"add eax,ebp",
+			"add XL,"+baseptr_low,
+			"adc XH,"+baseptr_high,
+			
+			//"add eax,"+to_string(index*byte_offset_8_bit),
+			"ldi r17,0",
+			"ldi r16,"+to_string(index*byte_offset_8_bit),
+			"add XL,r16",
+			"adc XH,r17",
+
+			//"mov eax,[eax]",
+			"ld r16, X+",	//X+ is postincrement
+			"ld r17, X",
+			"mov XL,r16",
+			"mov XH,r17"
+			
+			//"push eax"
+			"push XL",
+			"push XH"
 		};
 	}else{
 		cerr << "FATAL" << endl;
@@ -293,9 +377,14 @@ vector<string> push(VMInstr instr){
 }
 
 vector<string> dup(VMInstr instr){
-	//TODO
 	return {
-		""
+		pop_0(),
+		"pop r16",
+		
+		"push r16",
+		push_0(),
+		"push r16",
+		push_0()
 	};
 }
 
@@ -305,18 +394,26 @@ vector<string> swap(VMInstr instr){
 	return {
 		"",
 		"; swap:",
+		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
+		
 		"push r16",
-		"push r17"
+		push_0(),
+		
+		"push r17",
+		push_0()
 	};
 }
 
 vector<string> subroutine(VMInstr instr){
-	//TODO
+	
 	const string full_name = instr.arg1;
 	const string subr_name = full_name.substr(full_name.find("_")+1);
-	//   *
+	
 	//to provide a base to reference arguments and local variables
     //ebp will point to the return address of the caller
     //above it there are the current subroutines arguments,
@@ -324,7 +421,7 @@ vector<string> subroutine(VMInstr instr){
 
 	if(subr_name.compare("main")==0){
 		//we need not save ebp of the caller, as there is no caller
-      	//our ebp is iconst 0, to reference local variables, we need an ebp
+      	//our basepointer is iconst 0, to reference local variables, we need an ebp
 		return {
 			"",
 			"; subroutine :",
@@ -335,27 +432,34 @@ vector<string> subroutine(VMInstr instr){
 			//fake return address for main
 			"ldi r16,0",
 			"push r16",
-
-			//TODO: find ebp 
-			"mov ebp,esp"
+			push_0(),
+ 
+			"mov "+baseptr_low+",SPL",
+			"mov "+baseptr_high+",SPH",
 		};
 	}else{
-		//save the ebp of the caller
-      	//push ebp
+		//save the base pointer of the caller
+      	//push base pointer
 		return {
 			"; subroutine:",
 			//jump label for the subroutine
 			full_name+":",
 
-			"push ebp",
+			"push "+baseptr_low,
+			"push "+baseptr_high,
+			
 			//swap
+			pop_0(),
 			"pop r16",
+			pop_0(),
 			"pop r17",
 			"push r16",
+			push_0(),
 			"push r17",
+			push_0(),
 
-			//TODO
-			"mov ebp,esp"
+			"mov "+baseptr_low+",SPL",
+			"mov "+baseptr_high+",SPH",
 		};
 	}
 }
@@ -369,7 +473,7 @@ vector<string> call(VMInstr instr){
 
 vector<string> _return(VMInstr instr){
 	return {
-		"ret"
+		"ret"	//ret pops a 16bit address
 	};
 }
 
@@ -384,16 +488,23 @@ vector<string> _exit(VMInstr instr){
 
 	};
 }
+
 //<3 data sheets
 
 vector<string> iadd(VMInstr instr){
 	return {
 		"",
 		";  iadd : ",
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
+		
 		"add r16, r17",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 }
 
@@ -401,10 +512,16 @@ vector<string> isub(VMInstr instr){
 	return {
 		"",
 		";	isub: ",
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
+		
 		"sub r17, r16",
-		"push r17"
+		
+		"push r17",
+		push_0()
 	};
 }
 
@@ -412,10 +529,17 @@ vector<string> imul(VMInstr instr){
 	return {
 		"",
 		"; imul:",
+		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
+		
 		"muls r16,r17",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 }
 
@@ -426,13 +550,18 @@ vector<string> imod(VMInstr instr){
 	return {
 		"",
 		"; imod: ",
+		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"dec r16",
 		"and r17, r16",
 		
-		"push r17"	//push our result
+		"push r17",
+		push_0()
 	};
 }
 
@@ -440,9 +569,14 @@ vector<string> ineg(VMInstr instr){
 	return {
 		"",
 		"; ineg:",
+		
+		pop_0(),
 		"pop r16",
+		
 		"neg r16",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 }
 
@@ -451,11 +585,16 @@ vector<string> _and(VMInstr instr){
 		"",
 		"; and:",
 		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"and r16,r17",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 }
 
@@ -466,12 +605,13 @@ vector<string> _not(VMInstr instr){
 		"",
 		"; not:",
 		
+		pop_0(),
 		"pop r16",
 		
 		"com r16",
 		
-		"push r16"
-		
+		"push r16",
+		push_0()
 	};
 	return res;
 }
@@ -482,12 +622,16 @@ vector<string> _or(VMInstr instr){
 		"",
 		"; or: ",
 		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"or r16,r17",
 		
-		"push r16"
+		"push r16",
+		push_0()
 	};
 }
 
@@ -502,7 +646,10 @@ vector<string> ieq(VMInstr instr){
 		"",
 		"; ieq:",
 		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"cp r16,r17",
@@ -517,7 +664,8 @@ vector<string> ieq(VMInstr instr){
 		
 		
 		label_end+":",
-		"push r16"
+		"push r16",
+		push_0()
 	};
 }
 
@@ -533,7 +681,10 @@ vector<string> igt(VMInstr instr){
 		"",
 		"; igt:",
 		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"cp r16,r17",
@@ -548,7 +699,8 @@ vector<string> igt(VMInstr instr){
 		
 		
 		label_end+":",
-		"push r16"
+		"push r16",
+		push_0()
 	
 	};
 }
@@ -567,7 +719,10 @@ vector<string> igeq(VMInstr instr){
 		"",
 		"; igeq:",
 		
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"cp r16,r17",
@@ -582,7 +737,8 @@ vector<string> igeq(VMInstr instr){
 		
 		
 		label_end+":",
-		"push r16"
+		"push r16",
+		push_0()
 	
 	};
 }
@@ -598,7 +754,10 @@ vector<string> ineq(VMInstr instr){
 		"",
 		"; ineq:",
 
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"cp r16,r17",
@@ -613,7 +772,8 @@ vector<string> ineq(VMInstr instr){
 		
 		
 		label_end+":",
-		"push r16"
+		"push r16",
+		push_0()
 	};
 }
 
@@ -629,7 +789,10 @@ vector<string> ilt(VMInstr instr){
 		"",
 		"; ilt:",
 
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"cp r16,r17",
@@ -644,7 +807,8 @@ vector<string> ilt(VMInstr instr){
 		
 		
 		label_end+":",
-		"push r16"
+		"push r16",
+		push_0()
 	};
 }
 
@@ -660,7 +824,10 @@ vector<string> ileq(VMInstr instr){
 		"",
 		"; ileq:",
 
+		pop_0(),
 		"pop r16",
+		
+		pop_0(),
 		"pop r17",
 		
 		"cp r16,r17",
@@ -675,7 +842,8 @@ vector<string> ileq(VMInstr instr){
 		
 		
 		label_end+":",
-		"push r16"
+		"push r16",
+		push_0()
 	};
 }
 
@@ -684,9 +852,13 @@ vector<string> inc(const VMInstr instr){
 	//increments the value on top of stack
 	
 	return {
+		pop_0(),
 		"pop r16",
+		
 		"inc r16",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 }
 
@@ -694,9 +866,13 @@ vector<string> dec(VMInstr instr){
 	//decrements the value on top of stack
 
 	return {
+		pop_0(),
 		"pop r16",
+		
 		"dec r16",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 }
 
@@ -714,6 +890,7 @@ vector<string> if_goto(VMInstr instr){
 		"",
 		"; if-goto:",
 		
+		pop_0(),
 		"pop r16",
 		
 		"cpi r16, 0x01",
@@ -728,47 +905,20 @@ vector<string> label(VMInstr instr){
 	};
 }
 
-vector<string> arraystore(VMInstr instr){
-	//TODO
-	return {
-		"",
-		"; arraystore:",
-		
-		
-	};
-}
 
-vector<string> arrayread(VMInstr instr){
-	//TODO
-	
-	/*
-	arrayread, stack looks like:
-	|undefined
-	|array address
-	|array index <- esp
-
-	after execution of this command, stack looks like:
-	|undefined
-	|array[index] <- esp
-
-	meaning this vm command reads from the array at the specified index,
-	and places the value on top of the stack
-	*/
-	return {
-		"",
-		";arrayread:",
-
-	};
-}
 
 vector<string> lshiftl(VMInstr instr){
 	const vector<string> res{
 		"",
 		"; lshiftl:",
 		
+		pop_0(),
 		"pop r16",
+		
 		"lsl r16",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 	return res;
 }
@@ -778,9 +928,13 @@ vector<string> lshiftr(VMInstr instr){
 		"",
 		"; lshiftr:",
 
+		pop_0(),
 		"pop r16",
+		
 		"lsr r16",
-		"push r16"
+		
+		"push r16",
+		push_0()
 	};
 	return res;
 }
