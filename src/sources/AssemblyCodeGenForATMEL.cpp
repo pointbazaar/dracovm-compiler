@@ -11,6 +11,8 @@ using namespace std;
 
 namespace AssemblyCodeGenForATMEL{
 
+int label_counter=0;
+
 /*
  The ATMEL AVR microcontrollers start at 
  8 bit controllers AFAIK.
@@ -649,8 +651,7 @@ vector<string> _or(VMInstr instr){
 }
 
 vector<string> ieq(VMInstr instr){
-	unsigned int seed=20;
-	const string unique = to_string(rand_r(&seed));
+	const string unique = to_string(label_counter++);
 
 	const string label_true = "eq_push"+unique;
 	const string label_end = "eq_end"+unique;
@@ -684,8 +685,7 @@ vector<string> ieq(VMInstr instr){
 
 
 vector<string> igt(VMInstr instr){
-	unsigned int seed=30;
-	const string unique = to_string(rand_r(&seed));
+	const string unique = to_string(label_counter++);
 
 	const string label_true = "eq_push"+unique;
 	const string label_end = "eq_end"+unique;
@@ -722,8 +722,7 @@ vector<string> igt(VMInstr instr){
 //https://stackoverflow.com/questions/8201613/printing-a-character-to-standard-output-in-assembly-x86
 
 vector<string> igeq(VMInstr instr){
-	unsigned int seed=439;
-	const string unique = to_string(rand_r(&seed));
+	const string unique = to_string(label_counter++);
 
 	const string label_true = "eq_push"+unique;
 	const string label_end = "eq_end"+unique;
@@ -757,8 +756,7 @@ vector<string> igeq(VMInstr instr){
 }
 
 vector<string> ineq(VMInstr instr){
-	unsigned int seed=47389;
-	const string unique = to_string(rand_r(&seed));
+	const string unique = to_string(label_counter++);
 
 	const string label_true = "ineq_push"+unique;
 	const string label_end = "ineq_end"+unique;
@@ -792,8 +790,7 @@ vector<string> ineq(VMInstr instr){
 
 
 vector<string> ilt(VMInstr instr){
-	unsigned int seed=7237;
-	const string unique = to_string(rand_r(&seed));
+	const string unique = to_string(label_counter++);
 
 	const string label_true = "eq_push"+unique;
 	const string label_end = "eq_end"+unique;
@@ -827,8 +824,7 @@ vector<string> ilt(VMInstr instr){
 
 
 vector<string> ileq(VMInstr instr){
-	unsigned int seed=329;
-	const string unique = to_string(rand_r(&seed));
+	const string unique = to_string(label_counter++);
 
 	const string label_false = "eq_push"+unique;
 	const string label_end = "eq_end"+unique;
