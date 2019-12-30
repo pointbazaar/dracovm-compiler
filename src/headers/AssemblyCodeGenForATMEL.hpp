@@ -9,13 +9,13 @@ namespace AssemblyCodeGenForATMEL{
 //r16,r17,r18
 	
 //this register can change any instruction
-const string tmp_reg = " r19 ";
+const std::string tmp_reg = " r19 ";
 
 //Registers X,Y,Z use r26 to r31
 
 //Z is used as base pointer for our stackframe
-const string baseptr_low = " ZL ";
-const string baseptr_high = " ZH ";
+const std::string baseptr_low = " ZL ";
+const std::string baseptr_high = " ZH ";
 
 const int byte_offset_8_bit = 1;
 

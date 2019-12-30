@@ -59,19 +59,31 @@ int main(int argc, char* argv[]){
 		cout << "VM Code Files to compile: " << endl << endl;
 	}
 	
-	vector <string> filenames;
+	vector <string> filenames;	//filenames given as argument to our program
+	vector <string> options; //options given as arguments to our program
 
 	for(int i=1;i<argc;i++){
-		string filename = argv[i];
-		filenames.push_back(filename);
-		if(DEBUG){
-			cout << " - " << filename << endl;
+		string arg(argv[i]);
+
+		//is it an option ?
+		if(arg.rfind("-",0)==0){
+			//it is an option
+			options.push_back(arg);
+
+		}else{
+			//it should be a filname filename
+
+			string filename = arg;
+			filenames.push_back(filename);
+			if(DEBUG){
+				cout << " - " << filename << endl;
+			}
 		}
 	}
 
 	cout << endl;
 
-	bool success = compile_main(filenames);
+	bool success = compile_main(filenames,options);
 
 	if(success){
 		cout << "BUILD SUCCESSFUL" << endl;

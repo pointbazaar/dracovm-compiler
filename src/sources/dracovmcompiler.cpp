@@ -1,16 +1,22 @@
+//C++ Headers
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <algorithm>
 
+//Project Headers
 #include "dracovmcompiler.hpp"
 #include "AssemblyCodeGen.hpp"
+#include "AssemblyCodeGenForATMEL.hpp"
 #include "BuiltinSubroutines.hpp"
 
 using namespace std;
+using namespace AssemblyCodeGenForATMEL;
 
-bool compile_main(vector<string> filenames){
+bool compile_main(vector<string> filenames, vector<string> options){
+
 	if(DEBUG){
 		cout << "dracovmcompiler::compile_main" << endl;
 	}
@@ -76,17 +82,32 @@ bool compile_main(vector<string> filenames){
 	//for now, to complete the rewrite quickly, just compile,
 	//without incremental compilation
 
-	return compile_main2(vm_sources);
+	return compile_main2(vm_sources,options);
 }
 
-bool compile_main2(map<string,vector<string>> vm_sources){
+bool compile_main2(map<string,vector<string>> vm_sources, vector<string> options){
 	//https://eli.thegreenplace.net/2013/07/09/library-order-in-static-linking
 
 	if(DEBUG){
 		cout << "dracovmcompiler::compile_main2" << endl;
 	}
 
-	map<string,vector<string>> asm_codes = compile_vmcodes(vm_sources);
+	map<string,vector<string>> asm_codes;
+
+	if(find(options.begin(),options.end(),"-targetATMEL") != options.end()){
+
+		if(DEBUG){
+			cout << "generating assembly codes for ATMEL AVRs" << endl;
+		}
+		asm_codes = compile_vmcodes_atmel(vm_sources);
+	}else{
+		if(DEBUG){
+			cout << "generating assembly codes for x86 compatible processors" << endl;
+		}
+		asm_codes = compile_vmcodes(vm_sources);
+	}
+
+	
 
 	vector<string> obj_files;
 

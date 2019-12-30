@@ -46,6 +46,7 @@ map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_s
 	if(DEBUG){
 		cout << "AssemblyCodeGenForATMEL::compile_vmcodes" << endl;
 	}
+
 	map<string,vector<string>> results;
 
 	for(auto const& entry : vm_sources){
@@ -67,6 +68,10 @@ map<string,vector<string>> compile_vmcodes_atmel(map<string,vector<string>> vm_s
 
 
 		//add startup codes
+		if(DEBUG){
+			cout << "adding Startup Codes " << endl;
+		}
+		
 		asm_cmds.push_back(".include \"m32def.inc\"");
 		
 		//init stack pointer
