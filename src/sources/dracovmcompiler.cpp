@@ -93,9 +93,10 @@ bool compile_main2(map<string,vector<string>> vm_sources, vector<string> options
 	}
 
 	map<string,vector<string>> asm_codes;
+	bool targetATMEL = false;
 
 	if(find(options.begin(),options.end(),"-targetATMEL") != options.end()){
-
+		targetATMEL=true;
 		if(DEBUG){
 			cout << "generating assembly codes for ATMEL AVRs" << endl;
 		}
@@ -106,8 +107,6 @@ bool compile_main2(map<string,vector<string>> vm_sources, vector<string> options
 		}
 		asm_codes = compile_vmcodes(vm_sources);
 	}
-
-	
 
 	vector<string> obj_files;
 
@@ -134,12 +133,22 @@ bool compile_main2(map<string,vector<string>> vm_sources, vector<string> options
 
 		file.close();
 
-		//call nasm
-		//the format is elf
-		//the debugging symbol format is dwarf,
-		//as this is what worked with my gdb
-		const string call1 = "nasm -f elf -F dwarf -g "+asm_filename(filename);
-		//for understanding and debugging
+		string call1;
+
+		if(targetATMEL){
+
+			call1 = "avra -I /usr/share/avra "+asm_filename(filename);
+
+		}else{
+			//call nasm
+			//the format is elf
+			//the debugging symbol format is dwarf,
+			//as this is what worked with my gdb
+			call1 = "nasm -f elf -F dwarf -g "+asm_filename(filename);
+			//for understanding and debugging
+		}
+
+
 		if(DEBUG){
 			cout << call1 << endl;
 		}
@@ -149,59 +158,68 @@ bool compile_main2(map<string,vector<string>> vm_sources, vector<string> options
 		
 		obj_files.push_back(obj_filename(filename));
 	}
-	if(DEBUG){
-		cout << "call nasm to compile builtin subroutines" << endl;
-	}
-	{
-		//add the builtin subroutines
-		//every subroutine should have its own .asm file,
-		//and the builtin subroutines also
-		const map<string,vector<string>> builtin_asms = compile_builtin_subroutines();
 
-		for(auto const& builtin : builtin_asms){
-			const string filename = builtin.first;
-			const vector<string> asms = builtin.second;
+	//currently we have no way to support the builtin subroutines, as there is no OS
+	if(!targetATMEL){	
 
-			ofstream file;
-			cout << "write to: " << asm_filename(filename) << endl;
-			file.open(asm_filename(filename));
+		if(DEBUG){
+			cout << "call nasm to compile builtin subroutines" << endl;
+		}
 
-			file << "section .text" << endl;
-			
-			//declare this subroutine as global so it is found by the linker
-			file << "global " << filename << endl; 
+		{
+			//add the builtin subroutines
+			//every subroutine should have its own .asm file,
+			//and the builtin subroutines also
+			const map<string,vector<string>> builtin_asms = compile_builtin_subroutines();
 
-			for(string line : asms){
-				file << line << endl;
+			for(auto const& builtin : builtin_asms){
+				const string filename = builtin.first;
+				const vector<string> asms = builtin.second;
+
+				ofstream file;
+				cout << "write to: " << asm_filename(filename) << endl;
+				file.open(asm_filename(filename));
+
+				file << "section .text" << endl;
+				
+				//declare this subroutine as global so it is found by the linker
+				file << "global " << filename << endl; 
+
+				for(string line : asms){
+					file << line << endl;
+				}
+
+				file.close();
+
+				//TODO: consider the alternative for ATMEL
+				//call nasm
+				//the debugging symbol format is dwarf,
+				//as this is what worked with my gdb
+				const string call1 = "nasm -f elf -F dwarf -g "+asm_filename(filename);
+				//for understanding and debugging
+				cout << call1 << endl;
+
+				bool exitzero2 =  ( WEXITSTATUS(system(call1.c_str())) == 0);
+				success &= exitzero2;
+
+				obj_files.push_back(obj_filename(filename));
 			}
-
-			file.close();
-
-
-			//call nasm
-			//the debugging symbol format is dwarf,
-			//as this is what worked with my gdb
-			const string call1 = "nasm -f elf -F dwarf -g "+asm_filename(filename);
-			//for understanding and debugging
-			cout << call1 << endl;
-
-			bool exitzero2 =  ( WEXITSTATUS(system(call1.c_str())) == 0);
-			success &= exitzero2;
-
-			obj_files.push_back(obj_filename(filename));
 		}
 	}
 
-	//call ld to link all the object files
-	//and specify the name of the excutable to be generated (-o main)
-	const string call2 = "ld -melf_i386 -o main "+join(obj_files," ");
-	//for understanding and debugging
-	if(DEBUG){
-		cout << call2 << endl;
-	}
 
-	bool exitzero3 = ( WEXITSTATUS(system(call2.c_str()))==0);
-	success &= exitzero3;
+	if(!targetATMEL){
+		//call ld to link all the object files
+		//and specify the name of the excutable to be generated (-o main)
+		const string call2 = "ld -melf_i386 -o main "+join(obj_files," ");
+		//for understanding and debugging
+		if(DEBUG){
+			cout << call2 << endl;
+		}
+
+		bool exitzero3 = ( WEXITSTATUS(system(call2.c_str()))==0);
+		success &= exitzero3;
+	}
 
 	return success;
 }
