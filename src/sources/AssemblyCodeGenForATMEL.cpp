@@ -439,8 +439,12 @@ vector<string> subroutine(VMInstr instr){
 			"push r16",
 			push_0(),
  
-			"mov "+baseptr_low+",SPL",
-			"mov "+baseptr_high+",SPH",
+			//"mov "+baseptr_low+",SPL",
+			//"mov "+baseptr_high+",SPH",
+			"ldi XL, SPL",
+			"clr XH",
+			"ld "+baseptr_low+", X+",
+			"ld "+baseptr_high+", X"
 		};
 	}else{
 		//save the base pointer of the caller
@@ -463,8 +467,12 @@ vector<string> subroutine(VMInstr instr){
 			"push r17",
 			push_0(),
 
-			"mov "+baseptr_low+",SPL",
-			"mov "+baseptr_high+",SPH",
+			//"mov "+baseptr_low+",SPL",
+			//"mov "+baseptr_high+",SPH",
+			"ldi XL, SPL",
+			"clr XH",
+			"ld "+baseptr_low+", X+",
+			"ld "+baseptr_high+", X",
 		};
 	}
 }
@@ -644,8 +652,8 @@ vector<string> ieq(VMInstr instr){
 	unsigned int seed=20;
 	const string unique = to_string(rand_r(&seed));
 
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
+	const string label_true = "eq_push"+unique;
+	const string label_end = "eq_end"+unique;
 
 	return {
 		"",
@@ -679,8 +687,8 @@ vector<string> igt(VMInstr instr){
 	unsigned int seed=30;
 	const string unique = to_string(rand_r(&seed));
 
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
+	const string label_true = "eq_push"+unique;
+	const string label_end = "eq_end"+unique;
 
 	return {
 		"",
@@ -717,8 +725,8 @@ vector<string> igeq(VMInstr instr){
 	unsigned int seed=439;
 	const string unique = to_string(rand_r(&seed));
 
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
+	const string label_true = "eq_push"+unique;
+	const string label_end = "eq_end"+unique;
 
 	return {
 		"",
@@ -752,8 +760,8 @@ vector<string> ineq(VMInstr instr){
 	unsigned int seed=47389;
 	const string unique = to_string(rand_r(&seed));
 
-	const string label_true = ".ineq_push"+unique;
-	const string label_end = ".ineq_end"+unique;
+	const string label_true = "ineq_push"+unique;
+	const string label_end = "ineq_end"+unique;
 
 	return {
 		"",
@@ -787,8 +795,8 @@ vector<string> ilt(VMInstr instr){
 	unsigned int seed=7237;
 	const string unique = to_string(rand_r(&seed));
 
-	const string label_true = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
+	const string label_true = "eq_push"+unique;
+	const string label_end = "eq_end"+unique;
 
 	return {
 		"",
@@ -822,8 +830,8 @@ vector<string> ileq(VMInstr instr){
 	unsigned int seed=329;
 	const string unique = to_string(rand_r(&seed));
 
-	const string label_false = ".eq_push"+unique;
-	const string label_end = ".eq_end"+unique;
+	const string label_false = "eq_push"+unique;
+	const string label_end = "eq_end"+unique;
 
 	return {
 		"",
