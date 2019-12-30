@@ -322,7 +322,7 @@ vector<string> push(VMInstr instr){
 			
 			//"sub eax,ebx",
 			"sub XL, YL",
-			"subc XH, YH",
+			"sbc XH, YH",
 
 			//"mov ebx,"+to_string(index*byte_offset_8_bit),
 			"ldi YH,0",
@@ -330,7 +330,7 @@ vector<string> push(VMInstr instr){
 			
 			//"sub eax,ebx",
 			"sub XL, YL",
-			"subc XH, YH",
+			"sbc XH, YH",
 			
 			//"mov eax,[eax]",
 			"ld r16, X+",	//X+ is postincrement
