@@ -76,9 +76,6 @@ bool test_if_goto();
 bool test_lshiftl();
 bool test_lshiftr();
 
-//later
-bool test_iexp();
-
 //floating point multiplication, division
 bool test_fmul1();
 bool test_fmul2();
@@ -171,9 +168,6 @@ int main(int argc, char* argv[]){
 
 		test_lshiftl(),		//46
 		test_lshiftr(),		//47
-
-		//later
-		test_iexp(),			//48
 
 		//floating point multiplication, division
 		//(these may depend on flt,fgt, and so on, so these tests should
@@ -1307,20 +1301,6 @@ bool test_lshiftr(){
 	};
 
 	return 1==testrun("LSHIFTR_main",vmcodes);
-}
-
-
-bool test_iexp(){
-	const vector<string> vmcodes={
-		"subroutine IEXP_main 0 args 0 locals",
-
-		"iconst 2",
-		"iconst 3",
-		"iexp",
-		"exit"
-	};
-
-	return 8==testrun("IEXP_main",vmcodes);
 }
 
 bool test_fmul1(){

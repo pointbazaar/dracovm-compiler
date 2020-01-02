@@ -129,7 +129,6 @@ vector<string> compile_vm_instr(VMInstr instr){
 	func_map["imod"]=imod;
 	func_map["imul"]=imul;
 	func_map["idiv"]=idiv;
-	func_map["iexp"]=iexp;
 
 	func_map["dec"]=dec;
 	func_map["inc"]=inc;
@@ -607,42 +606,6 @@ vector<string> idiv(VMInstr instr){
 		//idiv should also work for signed values
 		"idiv ecx",
 		"push eax"
-	};
-}
-
-vector<string> iexp(VMInstr instr){
-	//calculates the powers.
-	//this could also be implemented as an assembly subroutine
-	//which is just added to every executable,
-	//and is just called.
-
-	const string unique = to_string(label_counter++);
-
-	const string label_calc = ".iexp_calc"+unique;
-	const string label_end = ".iexp_end"+unique;
-
-	return {
-		"",
-		"; iexp:",
-
-		"pop ecx",	//pop the power
-		"pop eax",	//pop the base
-
-		//we can use power=ecx as a counter
-		//we can use edx as accumulator
-		"mov edx,1",
-
-		label_calc+":",
-		"imul edx,eax",
-		"dec ecx",
-
-		"cmp ecx,0",
-		"jz "+label_end,
-		"jmp "+label_calc,
-
-
-		label_end+":",
-		"push edx"
 	};
 }
 

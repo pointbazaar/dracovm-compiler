@@ -17,12 +17,13 @@ the RETURNS is what is left on the stack after operands have been popped
 	COMMAND	RETURNS	    COMMENT
 
 	//arithmetic 
-	add	a+b	integer     addition
-	sub	a-b	integer     subtraction
-	mul	a*b	integer     multiplication
-	div	a/b	integer     division
+	iadd/fadd	a+b	int/float     addition
+	isub/fsub	a-b	int/float     subtraction
+	imul/fmul	a*b	int/float     multiplication
+	imod/fmod	a%b int/float	  modulo
+	idiv/fdiv	a/b	int/float     division
 
-	neg	-b	integer     inversion
+	ineg/fneg	-b	int/float     inversion
 
 
 	eq	1 or 0	        equality
