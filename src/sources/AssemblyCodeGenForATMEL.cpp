@@ -219,6 +219,9 @@ vector<string> cconst(VMInstr instr){
 }
 
 vector<string> pop(VMInstr instr){
+	//we multiply all the offsets by 2, 
+	//as we align everything to 16 bit, in order to support pointers
+
 	if(instr.arg1.compare("")==0 && instr.arg2.compare("")==0){
 		//simply pop the value to discard it
 		return {
@@ -240,7 +243,7 @@ vector<string> pop(VMInstr instr){
 			"mov XH,"+baseptr_high,
 
 			//X-=1
-			"ldi YL,"+to_string(byte_offset_8_bit),
+			"ldi YL,"+to_string(byte_offset_8_bit*2),
 			"ldi YH, 0",
 			
 			//just calc for XL,YL, 
@@ -248,7 +251,7 @@ vector<string> pop(VMInstr instr){
 			"sub XL,YL",
 
 			//X-=index
-			"ldi YL,"+to_string(index*byte_offset_8_bit),
+			"ldi YL,"+to_string(index*byte_offset_8_bit*2),
 			"ldi YH,0",
 			
 			//just calc for XL,YL, 
@@ -269,7 +272,7 @@ vector<string> pop(VMInstr instr){
 			"; pop ARG "+to_string(index),
 			
 			"ldi XH,0",
-			"ldi XL,"+to_string(2*byte_offset_8_bit),
+			"ldi XL,"+to_string(2*byte_offset_8_bit*2),
 
 			//"add eax,ebp",
 			//X is not going to have high value
@@ -281,7 +284,7 @@ vector<string> pop(VMInstr instr){
 			"add XL,YL",
 			
 			//http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
-			"adiw X,"+to_string(index*byte_offset_8_bit),
+			"adiw X,"+to_string(index*byte_offset_8_bit*2),
 
 			//"pop ebx",
 			"pop YH",
@@ -298,6 +301,8 @@ vector<string> pop(VMInstr instr){
 }
 
 vector<string> push(VMInstr instr){
+	//we multiply all the offsets by 2, 
+	//as we align everything to 16 bit, in order to support pointers
 	
 	const string segment = instr.arg1;
 	const int index = stoi(instr.arg2);
@@ -318,7 +323,7 @@ vector<string> push(VMInstr instr){
 			
 			//"mov ebx,"+to_string(byte_offset_8_bit),
 			"ldi YH,0",
-			"ldi YL,"+to_string(byte_offset_8_bit),
+			"ldi YL,"+to_string(byte_offset_8_bit*2),
 			
 			//"sub eax,ebx",
 			"sub XL, YL",
@@ -326,7 +331,7 @@ vector<string> push(VMInstr instr){
 
 			//"mov ebx,"+to_string(index*byte_offset_8_bit),
 			"ldi YH,0",
-			"ldi YL,"+to_string(index*byte_offset_8_bit),
+			"ldi YL,"+to_string(index*byte_offset_8_bit*2),
 			
 			//"sub eax,ebx",
 			"sub XL, YL",
@@ -354,7 +359,7 @@ vector<string> push(VMInstr instr){
 			"; push ARG "+to_string(index),
 
 			//"mov eax,"+to_string(2*byte_offset_8_bit),
-			"ldi XL,"+to_string(2*byte_offset_8_bit),
+			"ldi XL,"+to_string(2*byte_offset_8_bit*2),
 			"ldi XH,0",
 			
 			//"add eax,ebp",
@@ -363,7 +368,7 @@ vector<string> push(VMInstr instr){
 			
 			//"add eax,"+to_string(index*byte_offset_8_bit),
 			"ldi r17,0",
-			"ldi r16,"+to_string(index*byte_offset_8_bit),
+			"ldi r16,"+to_string(index*byte_offset_8_bit*2),
 			"add XL,r16",
 			"adc XH,r17",
 
