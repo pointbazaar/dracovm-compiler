@@ -1,3 +1,5 @@
+![logo](https://raw.githubusercontent.com/pointbazaar/dragon-lexer/master/img/dragon-logo.png)
+
 # DracoVM Compiler
 
 [![Build Status](https://travis-ci.org/pointbazaar/dracovm-compiler.svg?branch=master)](https://travis-ci.org/pointbazaar/dracovm-compiler)
